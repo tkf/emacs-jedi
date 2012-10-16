@@ -1,5 +1,8 @@
 ENV = env
 
+serve:
+	@$(ENV)/bin/python jediepcserver.py
+
 requirements: requirements-deps
 	pip install --environment $(ENV) --requirement requirements.txt
 

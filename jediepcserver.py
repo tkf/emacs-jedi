@@ -27,8 +27,7 @@ import jedi
 import sexpdata
 
 
-def complete(arg):
-    (source, line, column, source_path) = arg
+def complete(source, line, column, source_path):
     source = source.value()
     source_path = source_path.value()
     script = jedi.Script(source, line, column, source_path)

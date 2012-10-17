@@ -81,6 +81,7 @@
     (lambda (reply)
       (setq jedi:complete-reply reply))))
 
+;;;###autoload
 (defun jedi:complete ()
   "Complete code at point."
   (interactive)
@@ -113,6 +114,7 @@
     (requires . -1)
     (symbol . "s")))
 
+;;;###autoload
 (defun jedi:ac-setup ()
   "Add Jedi AC sources to `ac-sources'."
   (interactive)

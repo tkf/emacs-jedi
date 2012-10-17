@@ -69,10 +69,6 @@
     (requires . -1)
     (symbol . "s")))
 
-(defun jedi:ac-complete (matches)
-  (setq jedi:ac-direct-matches matches)  ; let-binding won't work
-  (auto-complete '(ac-source-jedi-direct)))
-
 
 ;;; Completion
 

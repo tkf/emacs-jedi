@@ -3,10 +3,10 @@ ENV = env
 serve:
 	@$(ENV)/bin/python jediepcserver.py
 
-requirements: requirements-deps
+requirements: _env
 	pip install --environment $(ENV) --requirement requirements.txt
 
-requirements-deps: $(ENV)/bin/activate
+_env: $(ENV)/bin/activate
 $(ENV)/bin/activate: env
 
 env:

@@ -12,9 +12,6 @@ elpa:
 clean-elpa:
 	rm -rf elpa
 
-serve:
-	@$(ENV)/bin/python jediepcserver.py
-
 requirements: _env
 	pip install --environment $(ENV) --requirement requirements.txt
 

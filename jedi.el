@@ -91,7 +91,14 @@
 ;;; AC source
 
 (defun jedi:ac-direct-matches ()
-  (mapcar (lambda (x) (plist-get x :word)) jedi:complete-reply))
+  (mapcar
+   (lambda (x)
+     (destructuring-bind (&key word doc &allow-other-keys)
+         x
+       (unless (equal doc "")
+         (put-text-property 0 (length word) 'document doc word))
+       word))
+   jedi:complete-reply))
 
 (defun jedi:ac-direct-prefix ()
   (or (ac-prefix-default)

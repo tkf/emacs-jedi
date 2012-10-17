@@ -35,11 +35,16 @@
 
 (defvar jedi:epc nil)
 
+(defvar jedi:server-command
+  (list (expand-file-name "env/bin/python" jedi:source-dir)
+        "jediepcserver.py"))
+
 (defun jedi:start-epc ()
   (if jedi:epc
       (message "Jedi server is already started!")
     (let ((default-directory jedi:source-dir))
-      (setq jedi:epc (epc:start-epc "make" '("serve"))))))
+      (setq jedi:epc (epc:start-epc (car jedi:server-command)
+                                    (cdr jedi:server-command))))))
 
 (defun jedi:stop-epc ()
   (interactive)

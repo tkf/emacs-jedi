@@ -34,13 +34,12 @@ import json
 json.l")
 
 (ert-deftest jedi:complete-request ()
-  (should (equal
-           (deferred:sync!
-             (with-temp-buffer
-               (erase-buffer)
-               (insert jedi:testing-sample-source)
-               (jedi:complete-request)))
-           '("load" "loads"))))
+  (deferred:sync!
+    (with-temp-buffer
+      (erase-buffer)
+      (insert jedi:testing-sample-source)
+      (jedi:complete-request)))
+  (should (equal (jedi:ac-direct-matches) '("load" "loads"))))
 
 (provide 'test-jedi)
 

@@ -59,8 +59,8 @@
 
 ;;; Completion
 
-(defvar jedi:ac-direct-matches nil
-  "Variable to store completion candidates for `auto-completion'.")
+(defvar jedi:complete-reply nil
+  "Last reply to `jedi:complete-request'.")
 
 (defvar jedi:complete-request-point nil
   "The point where `jedi:complete-request' is called.")
@@ -73,14 +73,13 @@
      (source-path buffer-file-name)
      (point       (point)))
   "Request ``Script(...).complete`` and return a deferred object.
-`jedi:ac-direct-matches' is set to the completions sent from the
-server."
+`jedi:complete-reply' is set to the reply sent from the server."
   (setq jedi:complete-request-point point)
   (deferred:nextc (epc:call-deferred (jedi:get-epc)
                                      'complete
                                      (list source line column source-path))
-    (lambda (completions)
-      (setq jedi:ac-direct-matches completions))))
+    (lambda (reply)
+      (setq jedi:complete-reply reply))))
 
 (defun jedi:complete ()
   "Complete code at point."
@@ -90,6 +89,9 @@ server."
 
 
 ;;; AC source
+
+(defun jedi:ac-direct-matches ()
+  (mapcar (lambda (x) (plist-get x :word)) jedi:complete-reply))
 
 (defun jedi:ac-direct-prefix ()
   (or (ac-prefix-default)

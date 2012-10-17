@@ -24,17 +24,19 @@ If not, see <http://www.gnu.org/licenses/>.
 """
 
 import jedi
-import sexpdata
 
 
 def complete(source, line, column, source_path):
     source = source.value()
     source_path = source_path.value()
     script = jedi.Script(source, line, column, source_path)
-    completions = []
+    reply = []
     for comp in script.complete():
-        completions.append(sexpdata.String(comp.word))
-    return completions
+        reply.append(dict(
+            word=comp.word,
+            doc=comp.doc,
+        ))
+    return reply
 
 
 def jedi_epc_server(address='localhost', port=0):

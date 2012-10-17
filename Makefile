@@ -1,4 +1,16 @@
 ENV = env
+CARTON = carton
+EMACS = emacs
+
+test: elpa _env
+	EMACS=${EMACS} ${CARTON} exec ${EMACS} -batch \
+		-L . -l test-jedi.el -f ert-run-tests-batch-and-exit
+
+elpa:
+	${CARTON} install
+
+clean-elpa:
+	rm -rf elpa
 
 serve:
 	@$(ENV)/bin/python jediepcserver.py

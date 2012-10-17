@@ -2,7 +2,7 @@ ENV = env
 CARTON = carton
 EMACS = emacs
 
-test: elpa _env
+test: elpa requirements
 	EMACS=${EMACS} ${CARTON} exec ${EMACS} -batch \
 		-L . -l test-jedi.el -f ert-run-tests-batch-and-exit
 

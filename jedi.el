@@ -59,7 +59,8 @@
 
 (defun jedi:ac-direct-prefix ()
   (or (ac-prefix-default)
-      (and (looking-back "\\.") (point))))
+      (when (= jedi:complete-request-point (point))
+        jedi:complete-request-point)))
 
 ;; (makunbound 'ac-source-jedi-direct)
 (ac-define-source jedi-direct
@@ -72,15 +73,20 @@
 
 ;;; Completion
 
+(defvar jedi:complete-request-point nil
+  "The point where `jedi:complete-request' is called.")
+
 (defun* jedi:complete-request
     (&optional
      (source      (buffer-substring-no-properties (point-min) (point-max)))
      (line        (count-lines (point-min) (point)))
      (column      (current-column))
-     (source-path buffer-file-name))
+     (source-path buffer-file-name)
+     (point       (point)))
   "Request ``Script(...).complete`` and return a deferred object.
 `jedi:ac-direct-matches' is set to the completions sent from the
 server."
+  (setq jedi:complete-request-point point)
   (deferred:nextc (epc:call-deferred (jedi:get-epc)
                                      'complete
                                      (list source line column source-path))

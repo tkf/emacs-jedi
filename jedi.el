@@ -113,6 +113,10 @@
     (requires . -1)
     (symbol . "s")))
 
+(defun jedi:ac-setup ()
+  "Add Jedi AC sources to `ac-sources'."
+  (interactive)
+  (add-to-list 'ac-sources 'ac-source-jedi-direct))
 
 (provide 'jedi)
 

@@ -65,6 +65,7 @@
 (ac-define-source jedi-direct
   '((candidates . jedi:ac-direct-matches)
     (prefix jedi:ac-direct-prefix)
+    (init . jedi:complete-request)
     (requires . -1)
     (symbol . "s")))
 
@@ -75,17 +76,26 @@
 
 ;;; Completion
 
-(defun jedi:complete (source line column source-path)
-  (interactive (list (buffer-substring-no-properties (point-min) (point-max))
-                     (count-lines (point-min) (point))
-                     (current-column)
-                     buffer-file-name))
-  (deferred:$
-    (epc:call-deferred (jedi:get-epc) 'complete
-                       (list source line column source-path))
-    (deferred:nextc it
-      (lambda (completions)
-        (jedi:ac-complete completions)))))
+(defun* jedi:complete-request
+    (&optional
+     (source      (buffer-substring-no-properties (point-min) (point-max)))
+     (line        (count-lines (point-min) (point)))
+     (column      (current-column))
+     (source-path buffer-file-name))
+  "Request ``Script(...).complete`` and return a deferred object.
+`jedi:ac-direct-matches' is set to the completions sent from the
+server."
+  (deferred:nextc (epc:call-deferred (jedi:get-epc)
+                                     'complete
+                                     (list source line column source-path))
+    (lambda (completions)
+      (setq jedi:ac-direct-matches completions))))
+
+(defun jedi:complete ()
+  "Complete code at point."
+  (interactive)
+  (deferred:nextc (jedi:complete-request)
+    (lambda () (auto-complete '(ac-source-jedi-direct)))))
 
 
 (provide 'jedi)

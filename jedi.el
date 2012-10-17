@@ -52,26 +52,10 @@
   (or jedi:epc (jedi:start-epc)))
 
 
-;;; AC source
+;;; Completion
 
 (defvar jedi:ac-direct-matches nil
   "Variable to store completion candidates for `auto-completion'.")
-
-(defun jedi:ac-direct-prefix ()
-  (or (ac-prefix-default)
-      (when (= jedi:complete-request-point (point))
-        jedi:complete-request-point)))
-
-;; (makunbound 'ac-source-jedi-direct)
-(ac-define-source jedi-direct
-  '((candidates . jedi:ac-direct-matches)
-    (prefix jedi:ac-direct-prefix)
-    (init . jedi:complete-request)
-    (requires . -1)
-    (symbol . "s")))
-
-
-;;; Completion
 
 (defvar jedi:complete-request-point nil
   "The point where `jedi:complete-request' is called.")
@@ -98,6 +82,22 @@ server."
   (interactive)
   (deferred:nextc (jedi:complete-request)
     (lambda () (auto-complete '(ac-source-jedi-direct)))))
+
+
+;;; AC source
+
+(defun jedi:ac-direct-prefix ()
+  (or (ac-prefix-default)
+      (when (= jedi:complete-request-point (point))
+        jedi:complete-request-point)))
+
+;; (makunbound 'ac-source-jedi-direct)
+(ac-define-source jedi-direct
+  '((candidates . jedi:ac-direct-matches)
+    (prefix jedi:ac-direct-prefix)
+    (init . jedi:complete-request)
+    (requires . -1)
+    (symbol . "s")))
 
 
 (provide 'jedi)

@@ -57,9 +57,15 @@
 (defvar jedi:ac-direct-matches nil
   "Variable to store completion candidates for `auto-completion'.")
 
+(defun jedi:ac-direct-prefix ()
+  (or (ac-prefix-default)
+      (and (looking-back "\\.") (point))))
+
 ;; (makunbound 'ac-source-jedi-direct)
 (ac-define-source jedi-direct
   '((candidates . jedi:ac-direct-matches)
+    (prefix jedi:ac-direct-prefix)
+    (requires . -1)
     (symbol . "s")))
 
 (defun jedi:ac-complete (matches)

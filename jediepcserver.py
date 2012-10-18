@@ -27,9 +27,7 @@ import jedi
 
 
 def complete(source, line, column, source_path):
-    source = source.value()
-    source_path = source_path.value()
-    script = jedi.Script(source, line, column, source_path)
+    script = jedi.Script(source, line, column, source_path or '')
     reply = []
     for comp in script.complete():
         reply.append(dict(

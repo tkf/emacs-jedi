@@ -55,6 +55,11 @@ def candidate_symbol(comp):
     return '?'
 
 
+def candidates_description(comp):
+    desc = comp.description
+    return desc if desc and desc != 'None' else ''
+
+
 def complete(source, line, column, source_path):
     script = jedi.Script(source, line, column, source_path or '')
     reply = []
@@ -62,7 +67,7 @@ def complete(source, line, column, source_path):
         reply.append(dict(
             word=comp.word,
             doc=comp.doc,
-            description=comp.description,
+            description=candidates_description(comp),
             symbol=candidate_symbol(comp),
         ))
     return reply

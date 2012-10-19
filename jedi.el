@@ -99,9 +99,7 @@
        (put-text-property 0 (length word) 'symbol symbol word)
        (unless (equal doc "")
          (put-text-property 0 (length word) 'document doc word))
-       ;; FIXME: use `description'
-       ;; (cons (concat word " " description) word)
-       word))
+       (cons (concat word " " description) word)))
    jedi:complete-reply))
 
 (defun jedi:ac-direct-prefix ()

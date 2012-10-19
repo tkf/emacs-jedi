@@ -62,7 +62,8 @@
 (defvar jedi:complete-reply nil
   "Last reply to `jedi:complete-request'.")
 
-(defvar jedi:complete-request-point nil
+(defvar jedi:complete-request-point 0
+  ;; It is passed to `=', so do not initialize this value by `nil'.
   "The point where `jedi:complete-request' is called.")
 
 (defun* jedi:complete-request

@@ -24,6 +24,31 @@ If not, see <http://www.gnu.org/licenses/>.
 """
 
 import jedi
+from jedi import parsing
+from jedi import evaluate
+
+
+def candidate_symbol(comp):
+    """
+    Return a character representing completion type.
+
+    :type comp: jedi.api.Completion
+    :arg  comp: A completion object returned by `jedi.Script.complete`.
+
+    .. TODO:: This function extremely depends on internal details.
+       I need to fix this at some point.
+
+    See also how `jedi.Completion.complete` is computed.
+
+    """
+    funcs = (parsing.Function, evaluate.Function)
+    if comp._completion_parent.isinstance(funcs):
+        return 'f'
+    if isinstance(comp.base, parsing.Module):
+        return 'm'
+    if isinstance(comp.base, parsing.Param):
+        return '='
+    return '?'
 
 
 def complete(source, line, column, source_path):
@@ -33,6 +58,8 @@ def complete(source, line, column, source_path):
         reply.append(dict(
             word=comp.word,
             doc=comp.doc,
+            description=comp.description,
+            symbol=candidate_symbol(comp),
         ))
     return reply
 

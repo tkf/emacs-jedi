@@ -94,10 +94,13 @@
 (defun jedi:ac-direct-matches ()
   (mapcar
    (lambda (x)
-     (destructuring-bind (&key word doc &allow-other-keys)
+     (destructuring-bind (&key word doc description symbol)
          x
+       (put-text-property 0 (length word) 'symbol symbol word)
        (unless (equal doc "")
          (put-text-property 0 (length word) 'document doc word))
+       ;; FIXME: use `description'
+       ;; (cons (concat word " " description) word)
        word))
    jedi:complete-reply))
 
@@ -111,8 +114,7 @@
   '((candidates . jedi:ac-direct-matches)
     (prefix jedi:ac-direct-prefix)
     (init . jedi:complete-request)
-    (requires . -1)
-    (symbol . "s")))
+    (requires . -1)))
 
 ;;;###autoload
 (defun jedi:ac-setup ()

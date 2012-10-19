@@ -42,7 +42,11 @@ def candidate_symbol(comp):
 
     """
     funcs = (parsing.Function, evaluate.Function)
-    if comp._completion_parent.isinstance(funcs):
+    try:
+        is_func = comp.name.parent().isinstance(funcs)
+    except AttributeError:
+        is_func = False
+    if is_func:
         return 'f'
     if isinstance(comp.base, parsing.Module):
         return 'm'

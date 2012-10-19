@@ -96,12 +96,10 @@
    (lambda (x)
      (destructuring-bind (&key word doc description symbol)
          x
-       (put-text-property 0 (length word) 'symbol symbol word)
-       (unless (equal doc "")
-         (put-text-property 0 (length word) 'document doc word))
-       ;; FIXME: use `description'
-       ;; (cons (concat word " " description) word)
-       word))
+       (popup-make-item word
+                        :symbol symbol
+                        :document (unless (equal doc "") doc)
+                        :summary description)))
    jedi:complete-reply))
 
 (defun jedi:ac-direct-prefix ()

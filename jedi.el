@@ -333,6 +333,10 @@ value to nil means to use minibuffer instead of tooltip."
 
 (defvar jedi:doc-buffer-name "*jedi:doc*")
 
+(defcustom jedi:doc-mode 'rst-mode
+  "Major mode to use when showing document."
+  :group 'jedi)
+
 (defun jedi:show-doc ()
   "Goto definition of the object at point."
   (interactive)
@@ -352,6 +356,8 @@ value to nil means to use minibuffer instead of tooltip."
               (when has-doc
                 (progn
                   (goto-char (point-min))
+                  (when (fboundp jedi:doc-mode)
+                    (funcall jedi:doc-mode))
                   (pop-to-buffer (current-buffer)))))))))
 
 

@@ -182,12 +182,21 @@ deferred object."
                 (jedi:get-in-function-call--tooltip-show reply)
                 (setq jedi:get-in-function-call--d nil)))))))
 
+(defcustom jedi:tooltip-method '(pos-tip popup)
+  "Configuration for `jedi:tooltip-show'.
+This is a list which may contain symbol(s) `pos-tip' and/or
+`popup'.  It determines tooltip method to use.  Setting this
+value to nil means to use minibuffer instead of tooltip."
+  :group 'jedi)
+
 (defun jedi:tooltip-show (string)
   (cond
-   ((and window-system (featurep 'pos-tip))
+   ((and (memq 'pos-tip jedi:tooltip-method) window-system
+         (featurep 'pos-tip))
     (pos-tip-show (jedi:string-fill-paragraph string)
                   'popup-tip-face nil nil 0))
-   ((featurep 'popup)
+   ((and (memq 'popup jedi:tooltip-method)
+         (featurep 'popup))
     (popup-tip string))
    (t (when (stringp string)
         (let ((message-log-max nil))

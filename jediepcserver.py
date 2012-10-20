@@ -105,6 +105,7 @@ def goto(source, line, column, source_path):
 
 
 def jedi_epc_server(address='localhost', port=0, sys_path=[]):
+    sys_path = map(os.path.expandvars, map(os.path.expanduser, sys_path))
     sys.path = sys_path + sys.path
     from epc.server import EPCServer
     server = EPCServer((address, port))

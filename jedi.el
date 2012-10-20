@@ -145,11 +145,28 @@ deferred object."
                      'get_in_function_call
                      (list source line column source-path)))
 
+(defun* jedi:get-in-function-call--construct-call-signature
+    (&key params index call_name)
+  (concat call_name "(" (mapconcat #'identity params ", ") ")"))
+
+(defun jedi:get-in-function-call--tooltip-show (args)
+  (when args
+    (jedi:tooltip-show
+     (apply #'jedi:get-in-function-call--construct-call-signature args))))
+
+(defun jedi:get-in-function-call ()
+  "Manually show call signature tooltip."
+  (interactive)
+  (deferred:nextc
+    (jedi:get-in-function-call-request)
+    #'jedi:get-in-function-call--tooltip-show))
+
 (defvar jedi:get-in-function-call--d nil)
 (defvar jedi:get-in-function-call-timeout 3000)
 (defvar jedi:get-in-function-call-delay 1000)
 
 (defun jedi:get-in-function-call-when-idle ()
+  "Show tooltip when Emacs is ilde."
   (unless jedi:get-in-function-call--d
     (setq jedi:get-in-function-call--d
           (deferred:$
@@ -162,12 +179,7 @@ deferred object."
                   (jedi:get-in-function-call-request))))
             (deferred:nextc it
               (lambda (reply)
-                (when reply
-                  (destructuring-bind (&key params index call_name)
-                      reply
-                    (jedi:tooltip-show
-                     (concat call_name "("
-                             (mapconcat #'identity params ", ") ")"))))
+                (jedi:get-in-function-call--tooltip-show reply)
                 (setq jedi:get-in-function-call--d nil)))))))
 
 (defun jedi:tooltip-show (string)

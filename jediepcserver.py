@@ -91,7 +91,8 @@ def get_in_function_call(source, line, column, source_path):
         return []  # nil
 
 
-def jedi_epc_server(address='localhost', port=0):
+def jedi_epc_server(address='localhost', port=0, sys_path=[]):
+    sys.path = sys_path + sys.path
     from epc.server import EPCServer
     server = EPCServer((address, port))
     server.register_function(complete)
@@ -116,6 +117,9 @@ def main(args=None):
         '--address', default='localhost')
     parser.add_argument(
         '--port', default=0, type=int)
+    parser.add_argument(
+        '--sys-path', default=[], action='append',
+        help='paths to be inserted at the top of `sys.path`.')
     ns = parser.parse_args(args)
 
     add_virtualenv_path()

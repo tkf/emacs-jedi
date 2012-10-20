@@ -1,22 +1,12 @@
-.. Emacs Jedi documentation master file, created by
-   sphinx-quickstart on Sat Oct 20 14:53:06 2012.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
 Welcome to Emacs Jedi's documentation!
 ======================================
 
-Contents:
+.. el:package:: jedi
 
-.. toctree::
-   :maxdepth: 2
-
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-
+.. el:function:: jedi:setup
+.. el:function:: jedi:ac-setup
+.. el:variable:: jedi:server-command
+.. el:variable:: jedi:server-args
+.. el:variable:: jedi:get-in-function-call-timeout
+.. el:variable:: jedi:get-in-function-call-delay
+.. el:variable:: jedi:tooltip-method

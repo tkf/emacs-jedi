@@ -42,9 +42,11 @@
 
 (defvar jedi:epc nil)
 
-(defvar jedi:server-command
+(defcustom jedi:server-command
   (list (expand-file-name "env/bin/python" jedi:source-dir)
-        "jediepcserver.py"))
+        (expand-file-name "jediepcserver.py" jedi:source-dir))
+  "Command used to run Jedi server."
+  :group 'jedi)
 
 (defun jedi:start-epc ()
   (if jedi:epc

@@ -145,21 +145,30 @@ deferred object."
                      'get_in_function_call
                      (list source line column source-path)))
 
-(defvar jedi:get-in-function-call--requesting nil)
+(defvar jedi:get-in-function-call--d nil)
+(defvar jedi:get-in-function-call-timeout 3000)
+(defvar jedi:get-in-function-call-delay 1000)
 
-(defun jedi:get-in-function-call ()
-  (interactive)
-  (unless jedi:get-in-function-call--requesting
-    (setq jedi:get-in-function-call--requesting t)
-    (deferred:nextc (jedi:get-in-function-call-request)
-      (lambda (reply)
-        (when reply
-          (destructuring-bind (&key params index call_name)
-              reply
-            (jedi:tooltip-show
-             (concat call_name "("
-                     (mapconcat #'identity params ", ") ")"))))
-        (setq jedi:get-in-function-call--requesting nil)))))
+(defun jedi:get-in-function-call-when-idle ()
+  (unless jedi:get-in-function-call--d
+    (setq jedi:get-in-function-call--d
+          (deferred:$
+            (deferred:wait-idle jedi:get-in-function-call-delay)
+            (deferred:nextc it
+              (lambda ()
+                (deferred:timeout
+                  jedi:get-in-function-call-timeout
+                  nil
+                  (jedi:get-in-function-call-request))))
+            (deferred:nextc it
+              (lambda (reply)
+                (when reply
+                  (destructuring-bind (&key params index call_name)
+                      reply
+                    (jedi:tooltip-show
+                     (concat call_name "("
+                             (mapconcat #'identity params ", ") ")"))))
+                (setq jedi:get-in-function-call--d nil)))))))
 
 (defun jedi:tooltip-show (string)
   (cond
@@ -184,7 +193,7 @@ deferred object."
 ;;; Jedi mode
 
 (defun jedi:handle-post-command ()
-  (jedi:get-in-function-call))
+  (jedi:get-in-function-call-when-idle))
 
 (define-minor-mode jedi-mode
   "Jedi mode."

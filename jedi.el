@@ -169,8 +169,16 @@ deferred object."
     #'jedi:get-in-function-call--tooltip-show))
 
 (defvar jedi:get-in-function-call--d nil)
-(defvar jedi:get-in-function-call-timeout 3000)
-(defvar jedi:get-in-function-call-delay 1000)
+
+(defcustom jedi:get-in-function-call-timeout 3000
+  "Cancel request to server for call signature after this period
+specified in in millisecond."
+  :group 'jedi)
+
+(defcustom  jedi:get-in-function-call-delay 1000
+  "How long Jedi should wait before showing call signature
+tooltip in millisecond."
+  :group 'jedi)
 
 (defun jedi:get-in-function-call-when-idle ()
   "Show tooltip when Emacs is ilde."

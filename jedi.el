@@ -109,6 +109,28 @@ Jedi server (e.g., when you changed `jedi:server-command' or
 (defun jedi:get-epc ()
   (or jedi:epc (jedi:start-server)))
 
+(defun jedi:start-dedicated-server (command)
+  "Start Jedi server dedicated to this buffer.
+This is useful, for exmaple, when you want to use different
+`sys.path' for some buffer.  When invoked as an interactive
+command, it asks you how to start the Jedi server.  You can edit
+the command in minibuffer to specify the way Jedi server ran.
+See also: `jedi:server-args'."
+  (interactive
+   (list (split-string-and-unquote
+          (read-string "Run Jedi server: "
+                       (mapconcat
+                        #'identity
+                        (append jedi:server-command
+                                jedi:server-args)
+                        " ")))))
+  (if (and (local-variable-p 'jedi:epc) jedi:epc)
+      (message "Dedicated Jedi server is already running!")
+    (make-local-variable 'jedi:epc)
+    (let ((jedi:server-command command)
+          (jedi:server-args nil))
+      (jedi:start-server))))
+
 
 ;;; Completion
 

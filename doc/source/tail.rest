@@ -20,5 +20,6 @@ Command
 =======
 
 .. el:function:: jedi:stop-server
+.. el:function:: jedi:start-dedicated-server
 .. el:function:: jedi:complete
 .. el:function:: jedi:get-in-function-call

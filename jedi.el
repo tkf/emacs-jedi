@@ -42,14 +42,50 @@
 
 (defvar jedi:epc nil)
 
+(defvar jedi:server-script
+  (expand-file-name "jediepcserver.py" jedi:source-dir)
+  "Full path to Jedi server script file ``jediepcserver.py``.")
+
 (defcustom jedi:server-command
-  (list (expand-file-name "env/bin/python" jedi:source-dir)
-        (expand-file-name "jediepcserver.py" jedi:source-dir))
-  "Command used to run Jedi server."
+  (list (let ((py (expand-file-name "env/bin/python" jedi:source-dir)))
+          (if (file-exists-p py) py "python"))
+        jedi:server-script)
+  "Command used to run Jedi server.
+
+If you setup Jedi requirements using ``make requirements`` command,
+`jedi:server-command' should be automatically set to::
+
+    '(\"JEDI:SOURCE-DIR/env/bin/python\"
+      \"JEDI:SOURCE-DIR/jediepcserver.py\")
+
+Otherwise, it should be set to::
+
+    '(\"python\" \"JEDI:SOURCE-DIR/jediepcserver.py\")
+
+If you want to use your favorite Python executable, set
+`jedi:server-command' using::
+
+    (setq jedi:server-command
+          (list \"YOUR-FAVORITE-PYTHON\" jedi:server-script))
+
+If you want to pass some arguments to the Jedi server command,
+use `jedi:server-command'."
   :group 'jedi)
 
 (defcustom jedi:server-args nil
-  "Command line arguments ot be appended to `jedi:server-command'."
+  "Command line arguments to be appended to `jedi:server-command'.
+
+If you want to add some special `sys.path' when starting Jedi
+server, do something like this::
+
+    (setq jedi:server-args
+          '(\"--sys-path\" \"MY/SPECIAL/PATH\"
+            \"--sys-path\" \"MY/OTHER/SPECIAL/PATH\"))
+
+To see what other arguments Jedi server can take, execute the
+following command::
+
+    python jediepcserver.py --help"
   :group 'jedi)
 
 (defun jedi:start-epc ()

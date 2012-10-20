@@ -41,8 +41,6 @@ Manual install
    `load-path`.
 3. Install Jedi_ and python-epc_ by ``make requirements`` or ``pip
    install jedi epc`` if you want to determine where to install them.
-   If you don't use the make command, you need to set
-   `jedi:server-command` appropriately.
 4. Add ``(require 'jedi)`` in your Emacs configuration.
 
 

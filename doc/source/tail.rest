@@ -1,5 +1,5 @@
-Welcome to Emacs Jedi's documentation!
-======================================
+Configuration
+-------------
 
 .. el:package:: jedi
 

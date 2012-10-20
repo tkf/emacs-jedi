@@ -97,6 +97,9 @@ following command::
                                             jedi:server-args))))))
 
 (defun jedi:stop-epc ()
+  "Stop Jedi server.  Use this command when you want to restart
+Jedi server (e.g., when you changed `jedi:server-command' or
+`jedi:server-args')."
   (interactive)
   (if jedi:epc
       (epc:stop-epc jedi:epc)
@@ -282,7 +285,7 @@ toolitp when inside of function call."
 ;;;###autoload
 (defun jedi:setup ()
   "Fully setup jedi.el for current buffer.
-It setup `ac-sources' (calls `jedi:ac-setup') and turn
+It setups `ac-sources' (calls `jedi:ac-setup') and turns
 `jedi-mode' on.
 
 This function is intended to be called from `python-mode-hook',

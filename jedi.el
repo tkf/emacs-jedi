@@ -302,7 +302,7 @@ value to nil means to use minibuffer instead of tooltip."
                      'goto
                      (list source line column source-path)))
 
-(defun jedi:goto (&optional other-window)
+(defun jedi:goto-definition (&optional other-window)
   "Goto definition of the object at point."
   (interactive "P")
   (lexical-let ((other-window other-window))

@@ -39,7 +39,7 @@ json.l")
       (erase-buffer)
       (insert jedi:testing-sample-source)
       (jedi:complete-request)))
-  (should (equal (mapcar #'cdr (jedi:ac-direct-matches)) '("load" "loads"))))
+  (should (equal (jedi:ac-direct-matches) '("load" "loads"))))
 
 (provide 'test-jedi)
 

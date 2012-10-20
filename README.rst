@@ -49,8 +49,12 @@ Manual install
 Setup
 =====
 
-All you need to do is to call `jedi:ac-setup` in python buffer.
+All you need to do is to call `jedi:setup` in python buffer.
 To do that, add the following in your Emacs configuration::
+
+   (add-hook 'python-mode-hook 'jedi:setup)
+
+If auto-completion is all you need, use `jedi:ac-setup` instead::
 
    (add-hook 'python-mode-hook 'jedi:ac-setup)
 

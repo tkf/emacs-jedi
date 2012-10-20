@@ -208,7 +208,9 @@ deferred object."
   (jedi:get-in-function-call-when-idle))
 
 (define-minor-mode jedi-mode
-  "Jedi mode."
+  "Jedi mode.
+When `jedi-mode' is on, call signature is automatically shown as
+toolitp when inside of function call."
   :group 'jedi
   (if jedi-mode
       (add-hook 'post-command-hook 'jedi:handle-post-command nil t)
@@ -219,6 +221,17 @@ deferred object."
 
 ;;;###autoload
 (defun jedi:setup ()
+  "Fully setup jedi.el for current buffer.
+It setup `ac-sources' (calls `jedi:ac-setup') and turn
+`jedi-mode' on.
+
+This function is intended to be called from `python-mode-hook',
+like this::
+
+       (add-hook 'python-mode-hook 'jedi:setup)
+
+You can also call this function as a command, to quickly test
+what jedi can do."
   (interactive)
   (jedi:ac-setup)
   (jedi-mode 1))

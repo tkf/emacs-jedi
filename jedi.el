@@ -48,12 +48,17 @@
   "Command used to run Jedi server."
   :group 'jedi)
 
+(defcustom jedi:server-args nil
+  "Command line arguments ot be appended to `jedi:server-command'."
+  :group 'jedi)
+
 (defun jedi:start-epc ()
   (if jedi:epc
       (message "Jedi server is already started!")
     (let ((default-directory jedi:source-dir))
       (setq jedi:epc (epc:start-epc (car jedi:server-command)
-                                    (cdr jedi:server-command))))))
+                                    (append (cdr jedi:server-command)
+                                            jedi:server-args))))))
 
 (defun jedi:stop-epc ()
   (interactive)

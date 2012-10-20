@@ -99,7 +99,8 @@ following command::
 (defun jedi:stop-server ()
   "Stop Jedi server.  Use this command when you want to restart
 Jedi server (e.g., when you changed `jedi:server-command' or
-`jedi:server-args')."
+`jedi:server-args').  Jedi srever will be restarted automatically
+later when it is needed."
   (interactive)
   (if jedi:epc
       (epc:stop-epc jedi:epc)

@@ -1,0 +1,245 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Jedi.el - a Python auto-completion for Emacs &mdash; Emacs Jedi 0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Emacs Jedi 0 documentation" href="#" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li><a href="#">Emacs Jedi 0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="jedi-el-a-python-auto-completion-for-emacs">
+<h1>Jedi.el - a Python auto-completion for Emacs<a class="headerlink" href="#jedi-el-a-python-auto-completion-for-emacs" title="Permalink to this headline">¶</a></h1>
+<p>Jedi.el is a Python auto-completion package for Emacs.</p>
+<p>Links:</p>
+<ul class="simple">
+<li><a class="reference external" href="http://tkf.github.com/emacs-jedi/">Documentation (at GitHub Pages)</a></li>
+<li><a class="reference external" href="https://github.com/tkf/emacs-jedi">Repository (at GitHub)</a></li>
+<li><a class="reference external" href="https://github.com/tkf/emacs-jedi/issues">Issue tracker (at GitHub)</a></li>
+</ul>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
+<p>Jedi.el uses <a class="reference external" href="https://github.com/davidhalter/jedi">jedi</a> library to compute completion and <a class="reference external" href="https://github.com/kiwanami/emacs-epc">EPC</a> (an RPC
+stack for Emacs Lisp) and its <a class="reference external" href="https://github.com/tkf/python-epc">Python binding</a> to commentate with
+Python process.  It also uses excellent Emacs <a class="reference external" href="https://github.com/auto-complete/auto-complete">auto-complete</a> module to
+start completion automatically.  As Jedi.el always calls Python
+function asynchronously (thanks to <a class="reference external" href="https://github.com/kiwanami/emacs-epc">EPC</a>), it will not block your Emacs
+while your are editing.</p>
+</div>
+<div class="section" id="install">
+<h2>Install<a class="headerlink" href="#install" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="el-get">
+<h3>el-get<a class="headerlink" href="#el-get" title="Permalink to this headline">¶</a></h3>
+<p>The easiest way to install Jedi.el is to use <a class="reference external" href="https://github.com/dimitri/el-get">el-get</a>:
+just do <tt class="docutils literal"><span class="pre">M-x</span> <span class="pre">el-get-install</span> <span class="pre">jedi</span></tt>.
+You need to have <cite>virtualenv</cite> to automatically install Python module
+dependencies.  If your el-get does not have the recipes for Jedi.el
+yet, get them from <a class="reference external" href="https://github.com/dimitri/el-get/pull/927">this pull request</a>.</p>
+</div>
+<div class="section" id="manual-install">
+<h3>Manual install<a class="headerlink" href="#manual-install" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic simple">
+<li>Install <a class="reference external" href="https://github.com/kiwanami/emacs-epc">EPC</a> and <a class="reference external" href="https://github.com/auto-complete/auto-complete">auto-complete</a>.</li>
+<li>Install Jedi.el.  Download this repository and add it to
+<cite>load-path</cite>.</li>
+<li>Install <a class="reference external" href="https://github.com/davidhalter/jedi">Jedi</a> and <a class="reference external" href="https://github.com/tkf/python-epc">python-epc</a> by <tt class="docutils literal"><span class="pre">make</span> <span class="pre">requirements</span></tt> or <tt class="docutils literal"><span class="pre">pip</span>
+<span class="pre">install</span> <span class="pre">jedi</span> <span class="pre">epc</span></tt> if you want to determine where to install them.</li>
+<li>Add <tt class="docutils literal"><span class="pre">(require</span> <span class="pre">'jedi)</span></tt> in your Emacs configuration.</li>
+</ol>
+</div>
+</div>
+<div class="section" id="setup">
+<h2>Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h2>
+<p>All you need to do is to call <cite>jedi:setup</cite> in python buffer.
+To do that, add the following in your Emacs configuration:</p>
+<div class="highlight-cl"><div class="highlight"><pre><span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;python-mode-hook</span> <span class="ss">&#39;jedi:setup</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If auto-completion is all you need, use <cite>jedi:ac-setup</cite> instead:</p>
+<div class="highlight-cl"><div class="highlight"><pre><span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;python-mode-hook</span> <span class="ss">&#39;jedi:ac-setup</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If you want to manually invoke completion, use something like this:</p>
+<div class="highlight-cl"><div class="highlight"><pre><span class="p">(</span><span class="nv">define-key</span> <span class="nv">python-mode-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;&lt;C-tab&gt;&quot;</span><span class="p">)</span> <span class="ss">&#39;jedi:complete</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="jedi:setup">
+<em class="property">function </em><tt class="descname">jedi:setup</tt><a class="headerlink" href="#jedi:setup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fully setup jedi.el for current buffer.
+It setups <tt class="xref el el-symbol docutils literal"><span class="pre">ac-sources</span></tt> (calls <a class="reference internal" href="#jedi:ac-setup" title="jedi:ac-setup"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:ac-setup</span></tt></a>) and turns
+<tt class="xref el el-symbol docutils literal"><span class="pre">jedi-mode</span></tt> on.</p>
+<p>This function is intended to be called from <tt class="xref el el-symbol docutils literal"><span class="pre">python-mode-hook</span></tt>,
+like this:</p>
+<div class="highlight-cl"><div class="highlight"><pre><span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;python-mode-hook</span> <span class="ss">&#39;jedi:setup</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You can also call this function as a command, to quickly test
+what jedi can do.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="jedi:ac-setup">
+<em class="property">function </em><tt class="descname">jedi:ac-setup</tt><a class="headerlink" href="#jedi:ac-setup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add Jedi AC sources to <tt class="xref el el-symbol docutils literal"><span class="pre">ac-sources</span></tt>.</p>
+</dd></dl>
+
+<dl class="variable">
+<dt id="jedi:server-command">
+<em class="property">variable </em><tt class="descname">jedi:server-command</tt><a class="headerlink" href="#jedi:server-command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Command used to run Jedi server.</p>
+<p>If you setup Jedi requirements using <tt class="docutils literal"><span class="pre">make</span> <span class="pre">requirements</span></tt> command,
+<a class="reference internal" href="#jedi:server-command" title="jedi:server-command"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:server-command</span></tt></a> should be automatically set to:</p>
+<div class="highlight-cl"><div class="highlight"><pre><span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;JEDI:SOURCE-DIR/env/bin/python&quot;</span>
+  <span class="s">&quot;JEDI:SOURCE-DIR/jediepcserver.py&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Otherwise, it should be set to:</p>
+<div class="highlight-cl"><div class="highlight"><pre><span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;python&quot;</span> <span class="s">&quot;JEDI:SOURCE-DIR/jediepcserver.py&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If you want to use your favorite Python executable, set
+<a class="reference internal" href="#jedi:server-command" title="jedi:server-command"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:server-command</span></tt></a> using:</p>
+<div class="highlight-cl"><div class="highlight"><pre><span class="p">(</span><span class="k">setq</span> <span class="nv">jedi:server-command</span>
+      <span class="p">(</span><span class="nb">list</span> <span class="s">&quot;YOUR-FAVORITE-PYTHON&quot;</span> <span class="nv">jedi:server-script</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>If you want to pass some arguments to the Jedi server command,
+use <a class="reference internal" href="#jedi:server-command" title="jedi:server-command"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:server-command</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="variable">
+<dt id="jedi:server-args">
+<em class="property">variable </em><tt class="descname">jedi:server-args</tt><a class="headerlink" href="#jedi:server-args" title="Permalink to this definition">¶</a></dt>
+<dd><p>Command line arguments to be appended to <a class="reference internal" href="#jedi:server-command" title="jedi:server-command"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:server-command</span></tt></a>.</p>
+<p>If you want to add some special <tt class="xref el el-symbol docutils literal"><span class="pre">sys.path</span></tt> when starting Jedi
+server, do something like this:</p>
+<div class="highlight-cl"><div class="highlight"><pre><span class="p">(</span><span class="k">setq</span> <span class="nv">jedi:server-args</span>
+      <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;--sys-path&quot;</span> <span class="s">&quot;MY/SPECIAL/PATH&quot;</span>
+        <span class="s">&quot;--sys-path&quot;</span> <span class="s">&quot;MY/OTHER/SPECIAL/PATH&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>To see what other arguments Jedi server can take, execute the
+following command:</p>
+<div class="highlight-cl"><div class="highlight"><pre><span class="nv">python</span> <span class="nv">jediepcserver.py</span> <span class="nv">--help</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="variable">
+<dt id="jedi:get-in-function-call-timeout">
+<em class="property">variable </em><tt class="descname">jedi:get-in-function-call-timeout</tt><a class="headerlink" href="#jedi:get-in-function-call-timeout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cancel request to server for call signature after this period
+specified in in millisecond.</p>
+</dd></dl>
+
+<dl class="variable">
+<dt id="jedi:get-in-function-call-delay">
+<em class="property">variable </em><tt class="descname">jedi:get-in-function-call-delay</tt><a class="headerlink" href="#jedi:get-in-function-call-delay" title="Permalink to this definition">¶</a></dt>
+<dd><p>How long Jedi should wait before showing call signature
+tooltip in millisecond.</p>
+</dd></dl>
+
+<dl class="variable">
+<dt id="jedi:tooltip-method">
+<em class="property">variable </em><tt class="descname">jedi:tooltip-method</tt><a class="headerlink" href="#jedi:tooltip-method" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configuration for <tt class="xref el el-symbol docutils literal"><span class="pre">jedi:tooltip-show</span></tt>.
+This is a list which may contain symbol(s) <tt class="xref el el-symbol docutils literal"><span class="pre">pos-tip</span></tt> and/or
+<tt class="xref el el-symbol docutils literal"><span class="pre">popup</span></tt>.  It determines tooltip method to use.  Setting this
+value to nil means to use minibuffer instead of tooltip.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="command">
+<h2>Command<a class="headerlink" href="#command" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="jedi:stop-server">
+<em class="property">function </em><tt class="descname">jedi:stop-server</tt><a class="headerlink" href="#jedi:stop-server" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stop Jedi server.  Use this command when you want to restart
+Jedi server (e.g., when you changed <a class="reference internal" href="#jedi:server-command" title="jedi:server-command"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:server-command</span></tt></a> or
+<a class="reference internal" href="#jedi:server-args" title="jedi:server-args"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:server-args</span></tt></a>).  Jedi srever will be restarted automatically
+later when it is needed.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="jedi:start-dedicated-server">
+<em class="property">function </em><big>(</big><tt class="descname">jedi:start-dedicated-server </tt><em>command</em><big>)</big><a class="headerlink" href="#jedi:start-dedicated-server" title="Permalink to this definition">¶</a></dt>
+<dd><p>Start Jedi server dedicated to this buffer.
+This is useful, for exmaple, when you want to use different
+<tt class="xref el el-symbol docutils literal"><span class="pre">sys.path</span></tt> for some buffer.  When invoked as an interactive
+command, it asks you how to start the Jedi server.  You can edit
+the command in minibuffer to specify the way Jedi server ran.
+See also: <a class="reference internal" href="#jedi:server-args" title="jedi:server-args"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:server-args</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="jedi:complete">
+<em class="property">function </em><tt class="descname">jedi:complete</tt><a class="headerlink" href="#jedi:complete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Complete code at point.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="jedi:get-in-function-call">
+<em class="property">function </em><tt class="descname">jedi:get-in-function-call</tt><a class="headerlink" href="#jedi:get-in-function-call" title="Permalink to this definition">¶</a></dt>
+<dd><p>Manually show call signature tooltip.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li><a href="#">Emacs Jedi 0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Takafumi Arakaki.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

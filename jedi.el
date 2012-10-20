@@ -282,7 +282,7 @@ toolitp when inside of function call."
 ;;;###autoload
 (defun jedi:setup ()
   "Fully setup jedi.el for current buffer.
-It setup `ac-sources' (calls `jedi:ac-setup') and turn
+It setups `ac-sources' (calls `jedi:ac-setup') and turns
 `jedi-mode' on.
 
 This function is intended to be called from `python-mode-hook',

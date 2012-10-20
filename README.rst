@@ -2,14 +2,22 @@
  Jedi.el - a Python auto-completion for Emacs
 ==============================================
 
-.. warning:: Work in progress!
+Jedi.el is a Python auto-completion package for Emacs.
+
+Links:
+
+* `Documentation (at GitHub Pages) <http://tkf.github.com/emacs-jedi/>`_
+* `Repository (at GitHub) <https://github.com/tkf/emacs-jedi>`_
+* `Issue tracker (at GitHub) <https://github.com/tkf/emacs-jedi/issues>`_
 
 
-Jedi.el is a Python auto-completion package for Emacs.  It uses jedi_
-library to compute completion and EPC_ (an RPC stack for Emacs Lisp)
-and its `Python binding`_ to commentate with Python process.  It also
-uses excellent Emacs auto-complete_ module to start completion
-automatically.
+Requirements
+============
+
+Jedi.el uses jedi_ library to compute completion and EPC_ (an RPC
+stack for Emacs Lisp) and its `Python binding`_ to commentate with
+Python process.  It also uses excellent Emacs auto-complete_ module to
+start completion automatically.
 
 .. _jedi: https://github.com/davidhalter/jedi
 .. _EPC: https://github.com/kiwanami/emacs-epc

@@ -73,10 +73,26 @@ def complete(source, line, column, source_path):
     return reply
 
 
+def get_in_function_call(source, line, column, source_path):
+    script = jedi.Script(source, line, column, source_path or '')
+    call_def = script.get_in_function_call()
+    if call_def:
+        return dict(
+            # p.get_code(False) should do the job.  But jedi-vim use replace.
+            # So follow what jedi-vim does...
+            params=[p.get_code().replace('\n', '') for p in call_def.params],
+            index=call_def.index,
+            call_name=call_def.call_name,
+        )
+    else:
+        return []  # nil
+
+
 def jedi_epc_server(address='localhost', port=0):
     from epc.server import EPCServer
     server = EPCServer((address, port))
     server.register_function(complete)
+    server.register_function(get_in_function_call)
     return server
 
 

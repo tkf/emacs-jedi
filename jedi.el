@@ -28,6 +28,13 @@
 
 (require 'epc)
 (require 'auto-complete)
+(declare-function pos-tip-show "pos-tip")
+
+
+(defgroup jedi nil
+  "Auto-completion for Python."
+  :group 'completion
+  :prefix "jedi:")
 
 (defvar jedi:source-dir (if load-file-name
                             (file-name-directory load-file-name)
@@ -66,6 +73,7 @@
   ;; It is passed to `=', so do not initialize this value by `nil'.
   "The point where `jedi:complete-request' is called.")
 
+;; Make a macro to define EPC request
 (defun* jedi:complete-request
     (&optional
      (source      (buffer-substring-no-properties (point-min) (point-max)))
@@ -120,6 +128,80 @@
   "Add Jedi AC sources to `ac-sources'."
   (interactive)
   (add-to-list 'ac-sources 'ac-source-jedi-direct))
+
+
+;;; Call signature (get_in_function_call)
+
+(defun* jedi:get-in-function-call-request
+    (&optional
+     (source      (buffer-substring-no-properties (point-min) (point-max)))
+     (line        (count-lines (point-min) (point)))
+     (column      (current-column))
+     (source-path buffer-file-name)
+     (point       (point)))
+  "Request ``Script(...).get_in_function_call`` and return a
+deferred object."
+  (epc:call-deferred (jedi:get-epc)
+                     'get_in_function_call
+                     (list source line column source-path)))
+
+(defvar jedi:get-in-function-call--requesting nil)
+
+(defun jedi:get-in-function-call ()
+  (interactive)
+  (unless jedi:get-in-function-call--requesting
+    (setq jedi:get-in-function-call--requesting t)
+    (deferred:nextc (jedi:get-in-function-call-request)
+      (lambda (reply)
+        (when reply
+          (destructuring-bind (&key params index call_name)
+              reply
+            (jedi:tooltip-show
+             (concat call_name "("
+                     (mapconcat #'identity params ", ") ")"))))
+        (setq jedi:get-in-function-call--requesting nil)))))
+
+(defun jedi:tooltip-show (string)
+  (cond
+   ((and window-system (featurep 'pos-tip))
+    (pos-tip-show (jedi:string-fill-paragraph string)
+                  'popup-tip-face nil nil 0))
+   ((featurep 'popup)
+    (popup-tip string))
+   (t (when (stringp string)
+        (let ((message-log-max nil))
+          (message string))))))
+
+(defun jedi:string-fill-paragraph (string &optional justify)
+  (with-temp-buffer
+    (erase-buffer)
+    (insert string)
+    (goto-char (point-min))
+    (fill-paragraph justify)
+    (buffer-string)))
+
+
+;;; Jedi mode
+
+(defun jedi:handle-post-command ()
+  (jedi:get-in-function-call))
+
+(define-minor-mode jedi-mode
+  "Jedi mode."
+  :group 'jedi
+  (if jedi-mode
+      (add-hook 'post-command-hook 'jedi:handle-post-command nil t)
+    (remove-hook 'post-command-hook 'jedi:handle-post-command t)))
+
+
+;;; Setup
+
+;;;###autoload
+(defun jedi:setup ()
+  (interactive)
+  (jedi:ac-setup)
+  (jedi-mode 1))
+
 
 (provide 'jedi)
 

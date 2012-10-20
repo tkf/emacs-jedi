@@ -94,14 +94,10 @@ def get_in_function_call(source, line, column, source_path):
 def goto(source, line, column, source_path):
     script = jedi.Script(source, line, column, source_path or '')
     definitions = script.goto()
-    if definitions:
-        d = definitions[0]
-        return dict(
-            line_nr=d.line_nr,
-            module_path=d.module_path,
-        )
-    else:
-        return []  # nil
+    return [dict(
+        line_nr=d.line_nr,
+        module_path=d.module_path,
+    ) for d in definitions]
 
 
 def get_definition(source, line, column, source_path):

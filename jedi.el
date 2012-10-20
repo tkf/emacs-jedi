@@ -310,7 +310,7 @@ value to nil means to use minibuffer instead of tooltip."
       (lambda (reply)
         (when reply
           (destructuring-bind (&key line_nr module_path)
-              reply
+              (car reply)
             (funcall (if other-window #'find-file-other-window #'find-file)
                      module_path)
             (goto-char (point-min))

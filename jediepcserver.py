@@ -26,9 +26,7 @@ If not, see <http://www.gnu.org/licenses/>.
 import os
 import sys
 
-import jedi
-from jedi import parsing
-from jedi import evaluate
+jedi = None  # I will load it later
 
 
 def candidate_symbol(comp):
@@ -44,16 +42,16 @@ def candidate_symbol(comp):
     See also how `jedi.Completion.complete` is computed.
 
     """
-    funcs = (parsing.Function, evaluate.Function)
+    funcs = (jedi.parsing.Function, jedi.evaluate.Function)
     try:
         is_func = comp.name.parent().isinstance(funcs)
     except AttributeError:
         is_func = False
     if is_func:
         return 'f'
-    if isinstance(comp.base, parsing.Module):
+    if isinstance(comp.base, jedi.parsing.Module):
         return 'm'
-    if isinstance(comp.base, parsing.Param):
+    if isinstance(comp.base, jedi.parsing.Param):
         return '='
     return '?'
 
@@ -113,7 +111,11 @@ def get_definition(source, line, column, source_path):
 
 def jedi_epc_server(address='localhost', port=0, sys_path=[]):
     sys_path = map(os.path.expandvars, map(os.path.expanduser, sys_path))
-    sys.path = sys_path + sys.path
+    sys.path = [''] + filter(None, sys_path + sys.path)
+    # Workaround Jedi's module cache.  Use this workaround until Jedi
+    # got an API to set module paths.
+    # See also: https://github.com/davidhalter/jedi/issues/36
+    import_jedi()
     from epc.server import EPCServer
     server = EPCServer((address, port))
     server.register_function(complete)
@@ -121,6 +123,14 @@ def jedi_epc_server(address='localhost', port=0, sys_path=[]):
     server.register_function(goto)
     server.register_function(get_definition)
     return server
+
+
+def import_jedi():
+    global jedi
+    import jedi
+    import jedi.parsing
+    import jedi.evaluate
+    return jedi
 
 
 def add_virtualenv_path():

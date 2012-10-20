@@ -290,7 +290,6 @@ value to nil means to use minibuffer instead of tooltip."
 
 ;;; Goto
 
-
 (defun* jedi:goto-request
     (&optional
      (source      (buffer-substring-no-properties (point-min) (point-max)))
@@ -316,6 +315,43 @@ value to nil means to use minibuffer instead of tooltip."
                      module_path)
             (goto-char (point-min))
             (forward-line (1- line_nr))))))))
+
+
+;;; Goto
+
+
+(defun* jedi:get-definition-request
+    (&optional
+     (source      (buffer-substring-no-properties (point-min) (point-max)))
+     (line        (count-lines (point-min) (point)))
+     (column      (current-column))
+     (source-path buffer-file-name)
+     (point       (point)))
+  "Request ``Script(...).get_definition`` and return a deferred object."
+  (epc:call-deferred (jedi:get-epc)
+                     'get_definition
+                     (list source line column source-path)))
+
+(defvar jedi:doc-buffer-name "*jedi:doc*")
+
+(defun jedi:show-doc ()
+  "Goto definition of the object at point."
+  (interactive)
+  (deferred:nextc (jedi:get-definition-request)
+    (lambda (reply)
+      (when reply
+        (with-current-buffer (get-buffer-create jedi:doc-buffer-name)
+          (erase-buffer)
+          (mapc
+           (lambda (def)
+             (destructuring-bind
+                 (&key doc desc_with_module line_nr module_path)
+                 def
+               (unless (or (null doc) (equal doc ""))
+                 (insert "Docstring for " desc_with_module "\n\n" doc))))
+           reply)
+          (goto-char (point-min))
+          (pop-to-buffer (current-buffer)))))))
 
 
 ;;; Jedi mode

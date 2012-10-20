@@ -104,6 +104,17 @@ def goto(source, line, column, source_path):
         return []  # nil
 
 
+def get_definition(source, line, column, source_path):
+    script = jedi.Script(source, line, column, source_path or '')
+    definitions = script.get_definition()
+    return [dict(
+        doc=d.doc,
+        desc_with_module=d.desc_with_module,
+        line_nr=d.line_nr,
+        module_path=d.module_path,
+    ) for d in definitions]
+
+
 def jedi_epc_server(address='localhost', port=0, sys_path=[]):
     sys_path = map(os.path.expandvars, map(os.path.expanduser, sys_path))
     sys.path = sys_path + sys.path
@@ -112,6 +123,7 @@ def jedi_epc_server(address='localhost', port=0, sys_path=[]):
     server.register_function(complete)
     server.register_function(get_in_function_call)
     server.register_function(goto)
+    server.register_function(get_definition)
     return server
 
 

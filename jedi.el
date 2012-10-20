@@ -288,6 +288,36 @@ value to nil means to use minibuffer instead of tooltip."
     (buffer-string)))
 
 
+;;; Goto
+
+
+(defun* jedi:goto-request
+    (&optional
+     (source      (buffer-substring-no-properties (point-min) (point-max)))
+     (line        (count-lines (point-min) (point)))
+     (column      (current-column))
+     (source-path buffer-file-name)
+     (point       (point)))
+  "Request ``Script(...).goto`` and return a deferred object."
+  (epc:call-deferred (jedi:get-epc)
+                     'goto
+                     (list source line column source-path)))
+
+(defun jedi:goto (&optional other-window)
+  "Goto definition of the object at point."
+  (interactive "P")
+  (lexical-let ((other-window other-window))
+    (deferred:nextc (jedi:goto-request)
+      (lambda (reply)
+        (when reply
+          (destructuring-bind (&key line_nr module_path)
+              reply
+            (funcall (if other-window #'find-file-other-window #'find-file)
+                     module_path)
+            (goto-char (point-min))
+            (forward-line (1- line_nr))))))))
+
+
 ;;; Jedi mode
 
 (defun jedi:handle-post-command ()

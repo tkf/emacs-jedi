@@ -91,12 +91,26 @@ def get_in_function_call(source, line, column, source_path):
         return []  # nil
 
 
+def goto(source, line, column, source_path):
+    script = jedi.Script(source, line, column, source_path or '')
+    definitions = script.goto()
+    if definitions:
+        d = definitions[0]
+        return dict(
+            line_nr=d.line_nr,
+            module_path=d.module_path,
+        )
+    else:
+        return []  # nil
+
+
 def jedi_epc_server(address='localhost', port=0, sys_path=[]):
     sys.path = sys_path + sys.path
     from epc.server import EPCServer
     server = EPCServer((address, port))
     server.register_function(complete)
     server.register_function(get_in_function_call)
+    server.register_function(goto)
     return server
 
 

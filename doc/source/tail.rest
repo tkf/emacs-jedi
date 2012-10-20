@@ -10,3 +10,11 @@ Configuration
 .. el:variable:: jedi:get-in-function-call-timeout
 .. el:variable:: jedi:get-in-function-call-delay
 .. el:variable:: jedi:tooltip-method
+
+
+Command
+-------
+
+.. el:function:: jedi:stop-epc
+.. el:function:: jedi:complete
+.. el:function:: jedi:get-in-function-call

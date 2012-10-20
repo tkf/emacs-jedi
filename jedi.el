@@ -317,8 +317,7 @@ value to nil means to use minibuffer instead of tooltip."
             (forward-line (1- line_nr))))))))
 
 
-;;; Goto
-
+;;; Show document (get-definition)
 
 (defun* jedi:get-definition-request
     (&optional
@@ -339,19 +338,21 @@ value to nil means to use minibuffer instead of tooltip."
   (interactive)
   (deferred:nextc (jedi:get-definition-request)
     (lambda (reply)
-      (when reply
-        (with-current-buffer (get-buffer-create jedi:doc-buffer-name)
-          (erase-buffer)
-          (mapc
-           (lambda (def)
-             (destructuring-bind
-                 (&key doc desc_with_module line_nr module_path)
-                 def
-               (unless (or (null doc) (equal doc ""))
-                 (insert "Docstring for " desc_with_module "\n\n" doc))))
-           reply)
-          (goto-char (point-min))
-          (pop-to-buffer (current-buffer)))))))
+      (with-current-buffer (get-buffer-create jedi:doc-buffer-name)
+        (erase-buffer)
+        (loop with has-doc = nil
+              for def in reply
+              do (destructuring-bind
+                     (&key doc desc_with_module line_nr module_path)
+                     def
+                   (unless (or (null doc) (equal doc ""))
+                     (insert "Docstring for " desc_with_module "\n\n" doc)
+                     (setq has-doc t)))
+              finally do
+              (when has-doc
+                (progn
+                  (goto-char (point-min))
+                  (pop-to-buffer (current-buffer)))))))))
 
 
 ;;; Jedi mode

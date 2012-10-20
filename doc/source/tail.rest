@@ -1,5 +1,5 @@
 Configuration
--------------
+=============
 
 .. el:package:: jedi
 
@@ -13,7 +13,7 @@ Configuration
 
 
 Command
--------
+=======
 
 .. el:function:: jedi:stop-epc
 .. el:function:: jedi:complete

@@ -23,6 +23,9 @@ If not, see <http://www.gnu.org/licenses/>.
 
 """
 
+import os
+import sys
+
 import jedi
 from jedi import parsing
 from jedi import evaluate
@@ -96,6 +99,16 @@ def jedi_epc_server(address='localhost', port=0):
     return server
 
 
+def add_virtualenv_path():
+    """Add virtualenv's site-packages to `sys.path`."""
+    venv = os.path.abspath(os.getenv('VIRTUAL_ENV'))
+    if not venv:
+        return
+    path = os.path.join(
+        venv, 'lib', 'python%d.%d' % sys.version_info[:2], 'site-packages')
+    sys.path.insert(0, path)
+
+
 def main(args=None):
     from argparse import ArgumentParser
     parser = ArgumentParser(description=__doc__)
@@ -105,6 +118,7 @@ def main(args=None):
         '--port', default=0, type=int)
     ns = parser.parse_args(args)
 
+    add_virtualenv_path()
     server = jedi_epc_server(**vars(ns))
     server.print_port()  # needed for Emacs client
 

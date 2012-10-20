@@ -132,7 +132,7 @@ def main(args=None):
     parser.add_argument(
         '--port', default=0, type=int)
     parser.add_argument(
-        '--sys-path', default=[], action='append',
+        '--sys-path', '-p', default=[], action='append',
         help='paths to be inserted at the top of `sys.path`.')
     ns = parser.parse_args(args)
 

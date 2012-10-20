@@ -88,7 +88,7 @@ following command::
     python jediepcserver.py --help"
   :group 'jedi)
 
-(defun jedi:start-epc ()
+(defun jedi:start-server ()
   (if jedi:epc
       (message "Jedi server is already started!")
     (let ((default-directory jedi:source-dir))
@@ -96,7 +96,7 @@ following command::
                                     (append (cdr jedi:server-command)
                                             jedi:server-args))))))
 
-(defun jedi:stop-epc ()
+(defun jedi:stop-server ()
   "Stop Jedi server.  Use this command when you want to restart
 Jedi server (e.g., when you changed `jedi:server-command' or
 `jedi:server-args')."
@@ -107,7 +107,7 @@ Jedi server (e.g., when you changed `jedi:server-command' or
   (setq jedi:epc nil))
 
 (defun jedi:get-epc ()
-  (or jedi:epc (jedi:start-epc)))
+  (or jedi:epc (jedi:start-server)))
 
 
 ;;; Completion

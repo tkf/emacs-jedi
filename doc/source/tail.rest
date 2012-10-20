@@ -15,6 +15,6 @@ Configuration
 Command
 =======
 
-.. el:function:: jedi:stop-epc
+.. el:function:: jedi:stop-server
 .. el:function:: jedi:complete
 .. el:function:: jedi:get-in-function-call

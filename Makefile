@@ -1,6 +1,8 @@
 ENV = env
 CARTON = carton
-EMACS = emacs
+ifndef EMACS
+	EMACS = emacs
+endif
 
 .PHONY : test test-1 clean-elpa requirements env clean-env clean
 

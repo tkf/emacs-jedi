@@ -20,7 +20,7 @@ clean-elpa:
 	rm -rf elpa
 
 requirements: env
-	pip install --environment $(ENV) --requirement requirements.txt
+	$(ENV)/bin/pip install --requirement requirements.txt
 
 env: $(ENV)/bin/activate
 $(ENV)/bin/activate:

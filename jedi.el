@@ -3,6 +3,7 @@
 ;; Copyright (C) 2012 Takafumi Arakaki
 
 ;; Author: Takafumi Arakaki <aka.tkf at gmail.com>
+;; Package-Requires: ((epc "0.1.0") (auto-complete "1.4"))
 
 ;; This file is NOT part of GNU Emacs.
 

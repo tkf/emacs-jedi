@@ -15,7 +15,7 @@ Requirements
 ============
 
 Jedi.el uses jedi_ library to compute completion and EPC_ (an RPC
-stack for Emacs Lisp) and its `Python binding`_ to commentate with
+stack for Emacs Lisp) and its `Python binding`_ to communicate with
 Python process.  It also uses excellent Emacs auto-complete_ module to
 start completion automatically.  As Jedi.el always calls Python
 function asynchronously (thanks to EPC_), it will not block your Emacs

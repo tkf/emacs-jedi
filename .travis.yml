@@ -1,18 +1,16 @@
-language: emacs-lisp
+language: python
+python:
+  - "2.6"
+  - "2.7"
 env:
   matrix:
     # - EMACS=emacs
-    - PYTHON=python2.7 EMACS=emacs24
-    - PYTHON=python2.6 EMACS=emacs24
-    - PYTHON=python2.7 EMACS=emacs-snapshot
-    - PYTHON=python2.6 EMACS=emacs-snapshot
+    - EMACS=emacs24
+    - EMACS=emacs-snapshot
   global:
     - CARTON=$HOME/.carton/bin/carton
 before_install:
-  - sudo apt-get install -qq python-virtualenv
-  - if [ "$PYTHON" = "python2.6" ]; then
-        sudo apt-get install -qq python2.6;
-    fi
+  - pip install -q virtualenv
   - curl -fsSkL https://raw.github.com/rejeep/carton/master/go | sh
   - if [ "$EMACS" = "emacs24" ]; then
         sudo add-apt-repository -y ppa:cassou/emacs &&

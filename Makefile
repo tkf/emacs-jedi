@@ -1,5 +1,10 @@
 ENV = env
+ifndef PYTHON
+	PYTHON = python
+endif
+
 CARTON = carton
+
 ifndef EMACS
 	EMACS = emacs
 endif
@@ -24,7 +29,7 @@ requirements: env
 
 env: $(ENV)/bin/activate
 $(ENV)/bin/activate:
-	virtualenv $(ENV)
+	virtualenv --python=$(PYTHON) $(ENV)
 
 clean-env:
 	rm -rf $(ENV)

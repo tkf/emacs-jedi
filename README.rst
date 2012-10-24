@@ -1,8 +1,6 @@
-==============================================
- Jedi.el - a Python auto-completion for Emacs
-==============================================
-
-Jedi.el is a Python auto-completion package for Emacs.
+============================================
+ Jedi.el - Python auto-completion for Emacs
+============================================
 
 Links:
 
@@ -11,8 +9,13 @@ Links:
 * `Issue tracker (at GitHub) <https://github.com/tkf/emacs-jedi/issues>`_
 
 
-Requirements
-============
+What is it?
+===========
+
+Jedi.el is a Python auto-completion package for Emacs.
+It aims at helping your Python coding in a non-destructive way.
+It also helps you to find information about Python objects, such as
+docstring, function arguments and code location.
 
 Jedi.el uses jedi_ library to compute completion and EPC_ (an RPC
 stack for Emacs Lisp) and its `Python binding`_ to communicate with
@@ -26,6 +29,25 @@ while your are editing.
 .. _Python binding: python-epc_
 .. _python-epc: https://github.com/tkf/python-epc
 .. _auto-complete: https://github.com/auto-complete/auto-complete
+
+
+Requirements
+============
+
+Emacs lisp modules:
+
+- EPC_
+- auto-complete_
+
+Python modules:
+
+- Jedi_
+- python-epc_
+
+Optional dependencies for automatic installation:
+
+- virtualenv
+- make
 
 
 Install

@@ -35,21 +35,25 @@ Requirements
 ============
 
 Emacs lisp modules:
-
+-------------------
 - EPC_
+- deferred.el_ (> v0.3)
 - auto-complete_
 
-If you have old deferred.el installed, you need to update it to the
-latest version (> v0.3).  EPC_ depends on deferred.el.
+If your completion popup is broken when the completion candidates
+width are large, try the newest version of popup.el_.
+
+.. _deferred.el: https://github.com/kiwanami/emacs-deferred
+.. _popup.el: https://github.com/auto-complete/popup-el
 
 Python modules:
-
+---------------
 - Jedi_
 - python-epc_
 - argparse (for Python 2.6)
 
 Optional dependencies for automatic installation:
-
+-------------------------------------------------
 - virtualenv
 - make
 

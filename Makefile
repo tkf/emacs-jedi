@@ -11,7 +11,8 @@ ifndef EMACS
 	EMACS = emacs
 endif
 
-.PHONY : test test-1 clean-elpa requirements env clean-env clean travis-ci
+.PHONY : test test-1 clean-elpa requirements env clean-env clean \
+	print-deps travis-ci
 
 test: elpa requirements
 	make EMACS=${EMACS} CARTON=${CARTON} test-1
@@ -38,4 +39,11 @@ clean-env:
 
 clean: clean-env clean-elpa
 
-travis-ci: test
+print-deps: requirements
+	@echo "------------------- Python dependencies --------------------"
+	$(ENV)/bin/python --version
+	$(ENV)/bin/python print_deps.py
+	ls -d env/lib/python*/site-packages/*egg-info
+	@echo "------------------------------------------------------------"
+
+travis-ci: print-deps test

@@ -26,6 +26,7 @@
 
 ;;; Code:
 
+(eval-when-compile (require 'cl))
 (require 'ert)
 (require 'jedi)
 
@@ -42,6 +43,42 @@ json.l")
   (should (equal (sort (jedi:ac-direct-matches) #'string-lessp)
                  '("load" "loads"))))
 
+(ert-deftest jedi:get-in-function-call-request ()
+  (destructuring-bind (&key params index call_name)
+      (deferred:sync!
+        (with-temp-buffer
+          (erase-buffer)
+          (insert "isinstance(obj,")
+          (jedi:get-in-function-call-request)))
+    (should (equal params '("object" "class_or_type_or_tuple")))
+    (should (equal index 1))
+    (should (equal call_name "isinstance"))))
+
+(ert-deftest jedi:goto-request ()
+  (let ((reply
+         (deferred:sync!
+           (with-temp-buffer
+             (erase-buffer)
+             (insert "import json" "\n" "json.load")
+             (jedi:goto-request)))))
+    (destructuring-bind (&key line_nr module_path)
+        (car reply)
+      (should (integerp line_nr))
+      (should (stringp module_path)))))
+
+(ert-deftest jedi:get-definition-request ()
+  (let ((reply
+         (deferred:sync!
+           (with-temp-buffer
+             (erase-buffer)
+             (insert "import json" "\n" "json.load")
+             (jedi:get-definition-request)))))
+    (destructuring-bind (&key doc desc_with_module line_nr module_path)
+        (car reply)
+      (should (stringp doc))
+      (should (stringp desc_with_module))
+      (should (integerp line_nr))
+      (should (stringp module_path)))))
 
 (provide 'test-jedi)
 

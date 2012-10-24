@@ -7,6 +7,13 @@ Links:
 * `Documentation (at GitHub Pages) <http://tkf.github.com/emacs-jedi/>`_
 * `Repository (at GitHub) <https://github.com/tkf/emacs-jedi>`_
 * `Issue tracker (at GitHub) <https://github.com/tkf/emacs-jedi/issues>`_
+* `Travis CI <https://travis-ci.org/#!/tkf/emacs-jedi>`_ |build-status|
+
+.. |build-status|
+   image:: https://secure.travis-ci.org/tkf/emacs-jedi.png
+           ?branch=master
+   :target: http://travis-ci.org/tkf/emacs-jedi
+   :alt: Build Status
 
 
 What is it?

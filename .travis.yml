@@ -1,10 +1,13 @@
 language: emacs-lisp
 env:
-  # - EMACS=emacs
-  - PYTHON=python2.7 EMACS=emacs24
-  - PYTHON=python2.6 EMACS=emacs24
-  - PYTHON=python2.7 EMACS=emacs-snapshot
-  - PYTHON=python2.6 EMACS=emacs-snapshot
+  matrix:
+    # - EMACS=emacs
+    - PYTHON=python2.7 EMACS=emacs24
+    - PYTHON=python2.6 EMACS=emacs24
+    - PYTHON=python2.7 EMACS=emacs-snapshot
+    - PYTHON=python2.6 EMACS=emacs-snapshot
+  global:
+    - CARTON=$HOME/.carton/bin/carton
 before_install:
   - sudo apt-get install -qq python-virtualenv
   - curl -fsSkL https://raw.github.com/rejeep/carton/master/go | sh
@@ -20,4 +23,4 @@ before_install:
           emacs-snapshot-el emacs-snapshot-gtk emacs-snapshot;
     fi
 script:
-  make travis-ci CARTON=$HOME/.carton/bin/carton
+  make travis-ci

@@ -3,7 +3,9 @@ ifndef PYTHON
 	PYTHON = python
 endif
 
-CARTON = carton
+ifndef CARTON
+	CARTON = carton
+endif
 
 ifndef EMACS
 	EMACS = emacs

@@ -1,0 +1,23 @@
+language: emacs-lisp
+env:
+  # - EMACS=emacs
+  - PYTHON=python2.7 EMACS=emacs24
+  - PYTHON=python2.6 EMACS=emacs24
+  - PYTHON=python2.7 EMACS=emacs-snapshot
+  - PYTHON=python2.6 EMACS=emacs-snapshot
+before_install:
+  - sudo apt-get install -qq python-virtualenv
+  - curl -fsSkL https://raw.github.com/rejeep/carton/master/go | sh
+  - if [ "$EMACS" = "emacs24" ]; then
+        sudo add-apt-repository -y ppa:cassou/emacs &&
+        sudo apt-get update -qq &&
+        sudo apt-get install -qq emacs24 emacs24-el;
+    fi
+  - if [ "$EMACS" = 'emacs-snapshot' ]; then
+      sudo add-apt-repository -y ppa:cassou/emacs &&
+      sudo apt-get update -qq &&
+      sudo apt-get install -qq
+          emacs-snapshot-el emacs-snapshot-gtk emacs-snapshot;
+    fi
+script:
+  make travis-ci CARTON=$HOME/.carton/bin/carton

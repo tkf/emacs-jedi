@@ -1,10 +1,18 @@
 ENV = env
-CARTON = carton
+ifndef PYTHON
+	PYTHON = python
+endif
+
+ifndef CARTON
+	CARTON = carton
+endif
+
 ifndef EMACS
 	EMACS = emacs
 endif
 
-.PHONY : test test-1 clean-elpa requirements env clean-env clean
+.PHONY : test test-1 clean-elpa requirements env clean-env clean \
+	print-deps travis-ci
 
 test: elpa requirements
 	make EMACS=${EMACS} CARTON=${CARTON} test-1
@@ -24,9 +32,18 @@ requirements: env
 
 env: $(ENV)/bin/activate
 $(ENV)/bin/activate:
-	virtualenv $(ENV)
+	virtualenv --python=$(PYTHON) $(ENV)
 
 clean-env:
 	rm -rf $(ENV)
 
 clean: clean-env clean-elpa
+
+print-deps: requirements
+	@echo "------------------- Python dependencies --------------------"
+	$(ENV)/bin/python --version
+	$(ENV)/bin/python print_deps.py
+	ls -d env/lib/python*/site-packages/*egg-info
+	@echo "------------------------------------------------------------"
+
+travis-ci: print-deps test

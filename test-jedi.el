@@ -39,7 +39,9 @@ json.l")
       (erase-buffer)
       (insert jedi:testing-sample-source)
       (jedi:complete-request)))
-  (should (equal (jedi:ac-direct-matches) '("load" "loads"))))
+  (should (equal (sort (jedi:ac-direct-matches) #'string-lessp)
+                 '("load" "loads"))))
+
 
 (provide 'test-jedi)
 

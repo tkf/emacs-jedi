@@ -10,6 +10,9 @@ env:
     - CARTON=$HOME/.carton/bin/carton
 before_install:
   - sudo apt-get install -qq python-virtualenv
+  - if [ "$PYTHON" = "python2.6" ]; then
+        sudo apt-get install -qq python2.6
+    fi
   - curl -fsSkL https://raw.github.com/rejeep/carton/master/go | sh
   - if [ "$EMACS" = "emacs24" ]; then
         sudo add-apt-repository -y ppa:cassou/emacs &&

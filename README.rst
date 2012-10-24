@@ -39,6 +39,9 @@ Emacs lisp modules:
 - EPC_
 - auto-complete_
 
+If you have old deferred.el installed, you need to update it to the
+latest version (> v0.3).  EPC_ depends on deferred.el.
+
 Python modules:
 
 - Jedi_

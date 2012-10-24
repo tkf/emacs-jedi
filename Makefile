@@ -9,7 +9,7 @@ ifndef EMACS
 	EMACS = emacs
 endif
 
-.PHONY : test test-1 clean-elpa requirements env clean-env clean
+.PHONY : test test-1 clean-elpa requirements env clean-env clean travis-ci
 
 test: elpa requirements
 	make EMACS=${EMACS} CARTON=${CARTON} test-1
@@ -35,3 +35,5 @@ clean-env:
 	rm -rf $(ENV)
 
 clean: clean-env clean-elpa
+
+travis-ci: test

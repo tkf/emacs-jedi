@@ -43,6 +43,7 @@ Python modules:
 
 - Jedi_
 - python-epc_
+- argparse (for Python 2.6)
 
 Optional dependencies for automatic installation:
 

@@ -11,15 +11,23 @@ ifndef EMACS
 	EMACS = emacs
 endif
 
-.PHONY : test test-1 clean-elpa requirements env clean-env clean \
+.PHONY : test test-1 tryout clean-elpa requirements env clean-env clean \
 	print-deps travis-ci
 
 test: elpa requirements
 	make EMACS=${EMACS} CARTON=${CARTON} test-1
 
 test-1:
-	EMACS=${EMACS} ${CARTON} exec ${EMACS} -batch \
+	EMACS=${EMACS} ${CARTON} exec ${EMACS} -Q -batch \
 		-L . -l test-jedi.el -f ert-run-tests-batch-and-exit
+
+compile: elpa
+	rm -rf *.elc
+	EMACS=$(EMACS) ${CARTON} exec ${EMACS} -Q -batch \
+		-L . -f batch-byte-compile *.el
+
+tryout: compile requirements
+	EMACS=$(EMACS) ${CARTON} exec ${EMACS} -Q -L . -l tryout-jedi.el
 
 elpa:
 	${CARTON} install

@@ -30,15 +30,12 @@
 (require 'ert)
 (require 'jedi)
 
-(defvar jedi:testing-sample-source "
-import json
-json.l")
 
 (ert-deftest jedi:complete-request ()
   (deferred:sync!
     (with-temp-buffer
       (erase-buffer)
-      (insert jedi:testing-sample-source)
+      (insert "import json" "\n" "json.l")
       (jedi:complete-request)))
   (should (equal (sort (jedi:ac-direct-matches) #'string-lessp)
                  '("load" "loads"))))

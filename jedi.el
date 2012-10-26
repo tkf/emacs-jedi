@@ -167,6 +167,16 @@ See also: `jedi:server-args'."
   (deferred:nextc (jedi:complete-request)
     (lambda () (auto-complete '(ac-source-jedi-direct)))))
 
+(defcustom jedi:complete-on-dot nil
+  "Non-`nil' means automatically start completion after inserting a \".\""
+  :group 'jedi)
+
+(defun jedi:dot-complete ()
+  "Insert dot and complete code at point."
+  (interactive)
+  (insert ".")
+  (jedi:complete))
+
 
 ;;; AC source
 
@@ -364,6 +374,8 @@ value to nil means to use minibuffer instead of tooltip."
 
 ;;; Jedi mode
 
+(defvar jedi-mode-map (make-sparse-keymap))
+
 (defun jedi:handle-post-command ()
   (jedi:get-in-function-call-when-idle))
 
@@ -371,7 +383,12 @@ value to nil means to use minibuffer instead of tooltip."
   "Jedi mode.
 When `jedi-mode' is on, call signature is automatically shown as
 toolitp when inside of function call."
+  :keymap jedi-mode-map
   :group 'jedi
+  (let ((map jedi-mode-map))
+    (if jedi:complete-on-dot
+        (define-key map "." 'jedi:dot-complete)
+      (define-key map "." nil)))
   (if jedi-mode
       (add-hook 'post-command-hook 'jedi:handle-post-command nil t)
     (remove-hook 'post-command-hook 'jedi:handle-post-command t)))

@@ -7,7 +7,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Jedi.el - a Python auto-completion for Emacs &mdash; Emacs Jedi 0 documentation</title>
+    <title>Jedi.el - Python auto-completion for Emacs &mdash; Emacs Jedi 0 documentation</title>
     
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -41,23 +41,55 @@
       <div class="documentwrapper">
           <div class="body">
             
-  <div class="section" id="jedi-el-a-python-auto-completion-for-emacs">
-<h1>Jedi.el - a Python auto-completion for Emacs<a class="headerlink" href="#jedi-el-a-python-auto-completion-for-emacs" title="Permalink to this headline">¶</a></h1>
-<p>Jedi.el is a Python auto-completion package for Emacs.</p>
+  <div class="section" id="jedi-el-python-auto-completion-for-emacs">
+<h1>Jedi.el - Python auto-completion for Emacs<a class="headerlink" href="#jedi-el-python-auto-completion-for-emacs" title="Permalink to this headline">¶</a></h1>
 <p>Links:</p>
 <ul class="simple">
 <li><a class="reference external" href="http://tkf.github.com/emacs-jedi/">Documentation (at GitHub Pages)</a></li>
 <li><a class="reference external" href="https://github.com/tkf/emacs-jedi">Repository (at GitHub)</a></li>
 <li><a class="reference external" href="https://github.com/tkf/emacs-jedi/issues">Issue tracker (at GitHub)</a></li>
+<li><a class="reference external" href="https://travis-ci.org/#!/tkf/emacs-jedi">Travis CI</a> <a class="reference external" href="http://travis-ci.org/tkf/emacs-jedi"><img alt="Build Status" src="https://secure.travis-ci.org/tkf/emacs-jedi.png?branch=master" /></a></li>
 </ul>
-<div class="section" id="requirements">
-<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="what-is-it">
+<h2>What is it?<a class="headerlink" href="#what-is-it" title="Permalink to this headline">¶</a></h2>
+<p>Jedi.el is a Python auto-completion package for Emacs.
+It aims at helping your Python coding in a non-destructive way.
+It also helps you to find information about Python objects, such as
+docstring, function arguments and code location.</p>
 <p>Jedi.el uses <a class="reference external" href="https://github.com/davidhalter/jedi">jedi</a> library to compute completion and <a class="reference external" href="https://github.com/kiwanami/emacs-epc">EPC</a> (an RPC
-stack for Emacs Lisp) and its <a class="reference external" href="https://github.com/tkf/python-epc">Python binding</a> to commentate with
+stack for Emacs Lisp) and its <a class="reference external" href="https://github.com/tkf/python-epc">Python binding</a> to communicate with
 Python process.  It also uses excellent Emacs <a class="reference external" href="https://github.com/auto-complete/auto-complete">auto-complete</a> module to
 start completion automatically.  As Jedi.el always calls Python
 function asynchronously (thanks to <a class="reference external" href="https://github.com/kiwanami/emacs-epc">EPC</a>), it will not block your Emacs
 while your are editing.</p>
+</div>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="emacs-lisp-modules">
+<h3>Emacs lisp modules:<a class="headerlink" href="#emacs-lisp-modules" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><a class="reference external" href="https://github.com/kiwanami/emacs-epc">EPC</a></li>
+<li><a class="reference external" href="https://github.com/kiwanami/emacs-deferred">deferred.el</a> (&gt; v0.3)</li>
+<li><a class="reference external" href="https://github.com/auto-complete/auto-complete">auto-complete</a></li>
+</ul>
+<p>If your completion popup is broken when the completion candidates
+width are large, try the newest version of <a class="reference external" href="https://github.com/auto-complete/popup-el">popup.el</a>.</p>
+</div>
+<div class="section" id="python-modules">
+<h3>Python modules:<a class="headerlink" href="#python-modules" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><a class="reference external" href="https://github.com/davidhalter/jedi">Jedi</a></li>
+<li><a class="reference external" href="https://github.com/tkf/python-epc">python-epc</a></li>
+<li>argparse (for Python 2.6)</li>
+</ul>
+</div>
+<div class="section" id="optional-dependencies-for-automatic-installation">
+<h3>Optional dependencies for automatic installation:<a class="headerlink" href="#optional-dependencies-for-automatic-installation" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>virtualenv</li>
+<li>make</li>
+</ul>
+</div>
 </div>
 <div class="section" id="install">
 <h2>Install<a class="headerlink" href="#install" title="Permalink to this headline">¶</a></h2>
@@ -118,6 +150,14 @@ what jedi can do.</p>
 <dt id="jedi:ac-setup">
 <em class="property">function </em><tt class="descname">jedi:ac-setup</tt><a class="headerlink" href="#jedi:ac-setup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add Jedi AC sources to <tt class="xref el el-symbol docutils literal"><span class="pre">ac-sources</span></tt>.</p>
+</dd></dl>
+
+<dl class="variable">
+<dt id="jedi:complete-on-dot">
+<em class="property">variable </em><tt class="descname">jedi:complete-on-dot</tt><a class="headerlink" href="#jedi:complete-on-dot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Non-<tt class="xref el el-symbol docutils literal"><span class="pre">nil</span></tt> means automatically start completion after inserting a dot.
+To make this option work, you need to use <a class="reference internal" href="#jedi:setup" title="jedi:setup"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:setup</span></tt></a> instead of
+<a class="reference internal" href="#jedi:ac-setup" title="jedi:ac-setup"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:ac-setup</span></tt></a> to start Jedi.</p>
 </dd></dl>
 
 <dl class="variable">

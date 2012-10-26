@@ -1,21 +1,31 @@
-==============================================
- Jedi.el - a Python auto-completion for Emacs
-==============================================
-
-Jedi.el is a Python auto-completion package for Emacs.
+============================================
+ Jedi.el - Python auto-completion for Emacs
+============================================
 
 Links:
 
 * `Documentation (at GitHub Pages) <http://tkf.github.com/emacs-jedi/>`_
 * `Repository (at GitHub) <https://github.com/tkf/emacs-jedi>`_
 * `Issue tracker (at GitHub) <https://github.com/tkf/emacs-jedi/issues>`_
+* `Travis CI <https://travis-ci.org/#!/tkf/emacs-jedi>`_ |build-status|
+
+.. |build-status|
+   image:: https://secure.travis-ci.org/tkf/emacs-jedi.png
+           ?branch=master
+   :target: http://travis-ci.org/tkf/emacs-jedi
+   :alt: Build Status
 
 
-Requirements
-============
+What is it?
+===========
+
+Jedi.el is a Python auto-completion package for Emacs.
+It aims at helping your Python coding in a non-destructive way.
+It also helps you to find information about Python objects, such as
+docstring, function arguments and code location.
 
 Jedi.el uses jedi_ library to compute completion and EPC_ (an RPC
-stack for Emacs Lisp) and its `Python binding`_ to commentate with
+stack for Emacs Lisp) and its `Python binding`_ to communicate with
 Python process.  It also uses excellent Emacs auto-complete_ module to
 start completion automatically.  As Jedi.el always calls Python
 function asynchronously (thanks to EPC_), it will not block your Emacs
@@ -26,6 +36,33 @@ while your are editing.
 .. _Python binding: python-epc_
 .. _python-epc: https://github.com/tkf/python-epc
 .. _auto-complete: https://github.com/auto-complete/auto-complete
+
+
+Requirements
+============
+
+Emacs lisp modules:
+-------------------
+- EPC_
+- deferred.el_ (> v0.3)
+- auto-complete_
+
+If your completion popup is broken when the completion candidates
+width are large, try the newest version of popup.el_.
+
+.. _deferred.el: https://github.com/kiwanami/emacs-deferred
+.. _popup.el: https://github.com/auto-complete/popup-el
+
+Python modules:
+---------------
+- Jedi_
+- python-epc_
+- argparse (for Python 2.6)
+
+Optional dependencies for automatic installation:
+-------------------------------------------------
+- virtualenv
+- make
 
 
 Install
@@ -80,6 +117,7 @@ Configuration
 
 .. el:function:: jedi:setup
 .. el:function:: jedi:ac-setup
+.. el:variable:: jedi:complete-on-dot
 .. el:variable:: jedi:server-command
 .. el:variable:: jedi:server-args
 .. el:variable:: jedi:get-in-function-call-timeout

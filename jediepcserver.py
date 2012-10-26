@@ -135,9 +135,10 @@ def import_jedi():
 
 def add_virtualenv_path():
     """Add virtualenv's site-packages to `sys.path`."""
-    venv = os.path.abspath(os.getenv('VIRTUAL_ENV'))
+    venv = os.getenv('VIRTUAL_ENV')
     if not venv:
         return
+    venv = os.path.abspath(venv)
     path = os.path.join(
         venv, 'lib', 'python%d.%d' % sys.version_info[:2], 'site-packages')
     sys.path.insert(0, path)

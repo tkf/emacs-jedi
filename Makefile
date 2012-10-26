@@ -20,6 +20,7 @@ test: elpa requirements
 test-1:
 	EMACS=${EMACS} ${CARTON} exec ${EMACS} -Q -batch \
 		-L . -l test-jedi.el -f ert-run-tests-batch-and-exit
+	nosetests test_jediepcserver.py
 
 compile: elpa
 	rm -rf *.elc

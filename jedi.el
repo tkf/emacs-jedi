@@ -168,7 +168,9 @@ See also: `jedi:server-args'."
     (lambda () (auto-complete '(ac-source-jedi-direct)))))
 
 (defcustom jedi:complete-on-dot nil
-  "Non-`nil' means automatically start completion after inserting a \".\""
+  "Non-`nil' means automatically start completion after inserting a dot.
+To make this option work, you need to use `jedi:setup' instead of
+`jedi:ac-setup' to start Jedi."
   :group 'jedi)
 
 (defun jedi:dot-complete ()

@@ -95,7 +95,10 @@ following command::
     (let ((default-directory jedi:source-dir))
       (setq jedi:epc (epc:start-epc (car jedi:server-command)
                                     (append (cdr jedi:server-command)
-                                            jedi:server-args))))))
+                                            jedi:server-args))))
+    (set-process-query-on-exit-flag
+     (epc:manager-server-process jedi:epc) nil))
+  jedi:epc)
 
 (defun jedi:stop-server ()
   "Stop Jedi server.  Use this command when you want to restart

@@ -333,6 +333,59 @@ value to nil means to use minibuffer instead of tooltip."
             (forward-line (1- line_nr))))))))
 
 
+;;; Related names
+
+(defun* jedi:related-names-request
+    (&optional
+     (source      (buffer-substring-no-properties (point-min) (point-max)))
+     (line        (count-lines (point-min) (point)))
+     (column      (current-column))
+     (source-path buffer-file-name)
+     (point       (point)))
+  "Request ``Script(...).related_names`` and return a deferred object."
+  (epc:call-deferred (jedi:get-epc)
+                     'related_names
+                     (list source line column source-path)))
+
+(defvar jedi:related-names--file-line nil)
+
+(defvar jedi:related-names--source
+  '((name . "Jedi Related Names")
+    (candidates . jedi:related-names--file-line)
+    (recenter)
+    (type . file-line)))
+
+(defun jedi:related-names--helm (helm)
+  (lexical-let ((helm helm))
+    (deferred:nextc (jedi:related-names-request)
+      (lambda (reply)
+        (let ((jedi:related-names--file-line
+               (mapcar
+                (lambda (x)
+                  (destructuring-bind
+                      (&key line_nr column module_name module_path description)
+                      x
+                    (format "%s:%s: %s - %s" module_path line_nr
+                            module_name description)))
+                reply)))
+          (funcall
+           helm
+           :sources 'jedi:related-names--source
+           :buffer (format "*%s jedi:related-names*" helm)))))))
+
+;;;###autoload
+(defun helm-jedi-related-names ()
+  "Find related names of the object at point using `helm' interface."
+  (interactive)
+  (jedi:related-names--helm 'helm))
+
+;;;###autoload
+(defun anything-jedi-related-names ()
+  "Find related names of the object at point using `anything' interface."
+  (interactive)
+  (jedi:related-names--helm 'anything))
+
+
 ;;; Show document (get-definition)
 
 (defun* jedi:get-definition-request

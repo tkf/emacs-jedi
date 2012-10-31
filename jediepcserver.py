@@ -98,6 +98,18 @@ def goto(source, line, column, source_path):
     ) for d in definitions]
 
 
+def related_names(source, line, column, source_path):
+    script = jedi.Script(source, line, column, source_path or '')
+    definitions = script.related_names()
+    return [dict(
+        column=d.column,
+        line_nr=d.line_nr,
+        module_path=d.module_path,
+        module_name=d.module_name,
+        description=d.description,
+    ) for d in definitions]
+
+
 def get_definition(source, line, column, source_path):
     script = jedi.Script(source, line, column, source_path or '')
     definitions = script.get_definition()
@@ -121,6 +133,7 @@ def jedi_epc_server(address='localhost', port=0, sys_path=[]):
     server.register_function(complete)
     server.register_function(get_in_function_call)
     server.register_function(goto)
+    server.register_function(related_names)
     server.register_function(get_definition)
     return server
 

@@ -157,6 +157,7 @@ def jedi_epc_server(address='localhost', port=0, port_file=sys.stdout,
 
     port_file.write(str(server.server_address[1]))  # needed for Emacs client
     port_file.write("\n")
+    port_file.flush()
     if port_file is not sys.stdout:
         port_file.close()
 
@@ -198,7 +199,7 @@ def main(args=None):
     parser.add_argument(
         '--port', default=0, type=int)
     parser.add_argument(
-        '--port-file', '-f', default='-', type=argparse.FileType('wt', 0),
+        '--port-file', '-f', default='-', type=argparse.FileType('wt'),
         help='file to write port on.  default is stdout.')
     parser.add_argument(
         '--sys-path', '-p', default=[], action='append',

@@ -121,6 +121,21 @@ def get_definition(source, line, column, source_path):
     ) for d in definitions]
 
 
+def get_jedi_version():
+    import epc
+    import sexpdata
+    try:
+        from pkg_resources import get_distribution
+        get_version = lambda x: get_distribution(x.__name__).version
+    except ImportError:
+        get_version = lambda x: getattr(x, '__version__', [])  # null
+    return [dict(
+        name=module.__name__,
+        file=module.__file__,
+        version=get_version(module),
+    ) for module in [jedi, epc, sexpdata]]
+
+
 def jedi_epc_server(address='localhost', port=0, port_file=sys.stdout,
                     sys_path=[], debugger=None):
     add_virtualenv_path()
@@ -137,6 +152,7 @@ def jedi_epc_server(address='localhost', port=0, port_file=sys.stdout,
     server.register_function(goto)
     server.register_function(related_names)
     server.register_function(get_definition)
+    server.register_function(get_jedi_version)
 
     port_file.write(str(server.server_address[1]))  # needed for Emacs client
     port_file.write("\n")

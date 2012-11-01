@@ -251,4 +251,6 @@ texinfo_documents = [
 
 elisp_packages = {
     'jedi': 'jedi:',
+    'helm': 'helm-',
+    'anything': 'anything-',
 }

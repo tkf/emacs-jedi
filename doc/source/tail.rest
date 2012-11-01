@@ -24,3 +24,11 @@ Command
 .. el:function:: jedi:start-dedicated-server
 .. el:function:: jedi:complete
 .. el:function:: jedi:get-in-function-call
+.. el:function:: jedi:goto-definition
+.. el:function:: jedi:show-doc
+
+.. el:package:: helm
+.. el:function:: helm-jedi-related-names
+
+.. el:package:: anything
+.. el:function:: anything-jedi-related-names

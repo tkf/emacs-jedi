@@ -122,7 +122,7 @@ def get_definition(source, line, column, source_path):
 
 
 def jedi_epc_server(address='localhost', port=0, port_file=sys.stdout,
-                    sys_path=[]):
+                    sys_path=[], debugger=None):
     add_virtualenv_path()
     sys_path = map(os.path.expandvars, map(os.path.expanduser, sys_path))
     sys.path = [''] + filter(None, sys_path + sys.path)
@@ -132,6 +132,7 @@ def jedi_epc_server(address='localhost', port=0, port_file=sys.stdout,
     import_jedi()
     from epc.server import EPCServer
     server = EPCServer((address, port))
+    getattr(server, 'set_debugger', lambda _: None)(debugger)
     server.register_function(complete)
     server.register_function(get_in_function_call)
     server.register_function(goto)
@@ -180,6 +181,12 @@ def main(args=None):
     parser.add_argument(
         '--sys-path', '-p', default=[], action='append',
         help='paths to be inserted at the top of `sys.path`.')
+    parser.add_argument(
+        '--pdb', dest='debugger', const='pdb', action='store_const',
+        help='start pdb when error occurs.')
+    parser.add_argument(
+        '--ipdb', dest='debugger', const='ipdb', action='store_const',
+        help='start ipdb when error occurs.')
     ns = parser.parse_args(args)
     jedi_epc_server(**vars(ns))
 

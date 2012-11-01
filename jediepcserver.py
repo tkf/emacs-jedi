@@ -25,6 +25,7 @@ If not, see <http://www.gnu.org/licenses/>.
 
 import os
 import sys
+import itertools
 
 jedi = None  # I will load it later
 
@@ -140,7 +141,7 @@ def jedi_epc_server(address='localhost', port=0, port_file=sys.stdout,
                     sys_path=[], debugger=None):
     add_virtualenv_path()
     sys_path = map(os.path.expandvars, map(os.path.expanduser, sys_path))
-    sys.path = [''] + filter(None, sys_path + sys.path)
+    sys.path = [''] + list(filter(None, itertools.chain(sys_path, sys.path)))
     # Workaround Jedi's module cache.  Use this workaround until Jedi
     # got an API to set module paths.
     # See also: https://github.com/davidhalter/jedi/issues/36

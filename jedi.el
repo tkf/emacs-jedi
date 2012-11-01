@@ -430,6 +430,24 @@ value to nil means to use minibuffer instead of tooltip."
                   (pop-to-buffer (current-buffer)))))))))
 
 
+;;; Meta info
+
+(defun jedi:get-jedi-version-request ()
+  "Request ``Script(...).get_jedi_version`` and return a deferred object."
+  (epc:call-deferred (jedi:get-epc) 'get_jedi_version nil))
+
+(defun jedi:show-jedi-version ()
+  (interactive)
+  (deferred:nextc (jedi:get-jedi-version-request)
+    (lambda (reply)
+      (let ((standard-output (get-buffer-create "*jedi:version*")))
+        (with-current-buffer standard-output
+          (emacs-lisp-mode)
+          (erase-buffer)
+          (pp reply)
+          (display-buffer standard-output))))))
+
+
 ;;; Jedi mode
 
 (defvar jedi-mode-map (make-sparse-keymap))

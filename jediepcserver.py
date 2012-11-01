@@ -121,7 +121,8 @@ def get_definition(source, line, column, source_path):
     ) for d in definitions]
 
 
-def jedi_epc_server(address='localhost', port=0, sys_path=[]):
+def jedi_epc_server(address='localhost', port=0, port_file=sys.stdout,
+                    sys_path=[], debugger=None):
     add_virtualenv_path()
     sys_path = map(os.path.expandvars, map(os.path.expanduser, sys_path))
     sys.path = [''] + filter(None, sys_path + sys.path)
@@ -129,14 +130,25 @@ def jedi_epc_server(address='localhost', port=0, sys_path=[]):
     # got an API to set module paths.
     # See also: https://github.com/davidhalter/jedi/issues/36
     import_jedi()
-    from epc.server import EPCServer
-    server = EPCServer((address, port))
+    import epc.server
+    server = epc.server.EPCServer((address, port))
     server.register_function(complete)
     server.register_function(get_in_function_call)
     server.register_function(goto)
     server.register_function(related_names)
     server.register_function(get_definition)
-    server.print_port()  # needed for Emacs client
+
+    port_file.write(str(server.server_address[1]))  # needed for Emacs client
+    port_file.write("\n")
+    if port_file is not sys.stdout:
+        port_file.close()
+
+    if debugger:
+        import logging
+        epc.server.setuplogfile()
+        server.logger.setLevel(logging.DEBUG)
+        server.set_debugger(debugger)
+
     server.serve_forever()
     server.logger.info('exit')
     return server
@@ -162,15 +174,24 @@ def add_virtualenv_path():
 
 
 def main(args=None):
-    from argparse import ArgumentParser
-    parser = ArgumentParser(description=__doc__)
+    import argparse
+    parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         '--address', default='localhost')
     parser.add_argument(
         '--port', default=0, type=int)
     parser.add_argument(
+        '--port-file', '-f', default='-', type=argparse.FileType('wt', 0),
+        help='file to write port on.  default is stdout.')
+    parser.add_argument(
         '--sys-path', '-p', default=[], action='append',
         help='paths to be inserted at the top of `sys.path`.')
+    parser.add_argument(
+        '--pdb', dest='debugger', const='pdb', action='store_const',
+        help='start pdb when error occurs.')
+    parser.add_argument(
+        '--ipdb', dest='debugger', const='ipdb', action='store_const',
+        help='start ipdb when error occurs.')
     ns = parser.parse_args(args)
     jedi_epc_server(**vars(ns))
 

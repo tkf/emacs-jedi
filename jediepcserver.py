@@ -121,7 +121,8 @@ def get_definition(source, line, column, source_path):
     ) for d in definitions]
 
 
-def jedi_epc_server(address='localhost', port=0, sys_path=[]):
+def jedi_epc_server(address='localhost', port=0, port_file=sys.stdout,
+                    sys_path=[]):
     add_virtualenv_path()
     sys_path = map(os.path.expandvars, map(os.path.expanduser, sys_path))
     sys.path = [''] + filter(None, sys_path + sys.path)
@@ -136,7 +137,12 @@ def jedi_epc_server(address='localhost', port=0, sys_path=[]):
     server.register_function(goto)
     server.register_function(related_names)
     server.register_function(get_definition)
-    server.print_port()  # needed for Emacs client
+
+    port_file.write(str(server.server_address[1]))  # needed for Emacs client
+    port_file.write("\n")
+    if port_file is not sys.stdout:
+        port_file.close()
+
     server.serve_forever()
     server.logger.info('exit')
     return server
@@ -162,12 +168,15 @@ def add_virtualenv_path():
 
 
 def main(args=None):
-    from argparse import ArgumentParser
-    parser = ArgumentParser(description=__doc__)
+    import argparse
+    parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         '--address', default='localhost')
     parser.add_argument(
         '--port', default=0, type=int)
+    parser.add_argument(
+        '--port-file', '-f', default='-', type=argparse.FileType('wt', 0),
+        help='file to write port on.  default is stdout.')
     parser.add_argument(
         '--sys-path', '-p', default=[], action='append',
         help='paths to be inserted at the top of `sys.path`.')

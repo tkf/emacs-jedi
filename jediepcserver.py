@@ -132,7 +132,6 @@ def jedi_epc_server(address='localhost', port=0, port_file=sys.stdout,
     import_jedi()
     import epc.server
     server = epc.server.EPCServer((address, port))
-    getattr(server, 'set_debugger', lambda _: None)(debugger)
     server.register_function(complete)
     server.register_function(get_in_function_call)
     server.register_function(goto)
@@ -148,6 +147,7 @@ def jedi_epc_server(address='localhost', port=0, port_file=sys.stdout,
         import logging
         epc.server.setuplogfile()
         server.logger.setLevel(logging.DEBUG)
+        server.set_debugger(debugger)
 
     server.serve_forever()
     server.logger.info('exit')

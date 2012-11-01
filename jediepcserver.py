@@ -130,8 +130,8 @@ def jedi_epc_server(address='localhost', port=0, port_file=sys.stdout,
     # got an API to set module paths.
     # See also: https://github.com/davidhalter/jedi/issues/36
     import_jedi()
-    from epc.server import EPCServer
-    server = EPCServer((address, port))
+    import epc.server
+    server = epc.server.EPCServer((address, port))
     getattr(server, 'set_debugger', lambda _: None)(debugger)
     server.register_function(complete)
     server.register_function(get_in_function_call)
@@ -143,6 +143,11 @@ def jedi_epc_server(address='localhost', port=0, port_file=sys.stdout,
     port_file.write("\n")
     if port_file is not sys.stdout:
         port_file.close()
+
+    if debugger:
+        import logging
+        epc.server.setuplogfile()
+        server.logger.setLevel(logging.DEBUG)
 
     server.serve_forever()
     server.logger.info('exit')

@@ -84,10 +84,14 @@ Manual install
 --------------
 
 1. Install EPC_ and auto-complete_.
-2. Install Jedi.el.  Download this repository and add it to
+2. Install Jedi.el.  Download the repository of Jedi.el and add it to
    `load-path`.
-3. Install Jedi_ and python-epc_ by ``make requirements`` or ``pip
-   install jedi epc`` if you want to determine where to install them.
+3. Install Jedi_ and python-epc_ by
+
+   - ``make requirements`` or
+   - ``pip install jedi epc`` if you want to determine where to
+     install them.
+
 4. Add ``(require 'jedi)`` in your Emacs configuration.
 
 
@@ -132,3 +136,11 @@ Command
 .. el:function:: jedi:start-dedicated-server
 .. el:function:: jedi:complete
 .. el:function:: jedi:get-in-function-call
+.. el:function:: jedi:goto-definition
+.. el:function:: jedi:show-doc
+
+.. el:package:: helm
+.. el:function:: helm-jedi-related-names
+
+.. el:package:: anything
+.. el:function:: anything-jedi-related-names

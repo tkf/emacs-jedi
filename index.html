@@ -105,10 +105,14 @@ yet, get them from <a class="reference external" href="https://github.com/dimitr
 <h3>Manual install<a class="headerlink" href="#manual-install" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li>Install <a class="reference external" href="https://github.com/kiwanami/emacs-epc">EPC</a> and <a class="reference external" href="https://github.com/auto-complete/auto-complete">auto-complete</a>.</li>
-<li>Install Jedi.el.  Download this repository and add it to
+<li>Install Jedi.el.  Download the repository of Jedi.el and add it to
 <cite>load-path</cite>.</li>
-<li>Install <a class="reference external" href="https://github.com/davidhalter/jedi">Jedi</a> and <a class="reference external" href="https://github.com/tkf/python-epc">python-epc</a> by <tt class="docutils literal"><span class="pre">make</span> <span class="pre">requirements</span></tt> or <tt class="docutils literal"><span class="pre">pip</span>
-<span class="pre">install</span> <span class="pre">jedi</span> <span class="pre">epc</span></tt> if you want to determine where to install them.</li>
+<li>Install <a class="reference external" href="https://github.com/davidhalter/jedi">Jedi</a> and <a class="reference external" href="https://github.com/tkf/python-epc">python-epc</a> by<ul>
+<li><tt class="docutils literal"><span class="pre">make</span> <span class="pre">requirements</span></tt> or</li>
+<li><tt class="docutils literal"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">jedi</span> <span class="pre">epc</span></tt> if you want to determine where to
+install them.</li>
+</ul>
+</li>
 <li>Add <tt class="docutils literal"><span class="pre">(require</span> <span class="pre">'jedi)</span></tt> in your Emacs configuration.</li>
 </ol>
 </div>
@@ -244,7 +248,7 @@ later when it is needed.</p>
 This is useful, for exmaple, when you want to use different
 <tt class="xref el el-symbol docutils literal"><span class="pre">sys.path</span></tt> for some buffer.  When invoked as an interactive
 command, it asks you how to start the Jedi server.  You can edit
-the command in minibuffer to specify the way Jedi server ran.
+the command in minibuffer to specify the way Jedi server run.
 See also: <a class="reference internal" href="#jedi:server-args" title="jedi:server-args"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:server-args</span></tt></a>.</p>
 </dd></dl>
 
@@ -258,6 +262,30 @@ See also: <a class="reference internal" href="#jedi:server-args" title="jedi:ser
 <dt id="jedi:get-in-function-call">
 <em class="property">function </em><tt class="descname">jedi:get-in-function-call</tt><a class="headerlink" href="#jedi:get-in-function-call" title="Permalink to this definition">¶</a></dt>
 <dd><p>Manually show call signature tooltip.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="jedi:goto-definition">
+<em class="property">function </em><big>(</big><tt class="descname">jedi:goto-definition </tt><em>&amp;optional</em> <em>other-window</em><big>)</big><a class="headerlink" href="#jedi:goto-definition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Goto definition of the object at point.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="jedi:show-doc">
+<em class="property">function </em><tt class="descname">jedi:show-doc</tt><a class="headerlink" href="#jedi:show-doc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Goto definition of the object at point.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="helm-jedi-related-names">
+<em class="property">function </em><tt class="descname">helm-jedi-related-names</tt><a class="headerlink" href="#helm-jedi-related-names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find related names of the object at point using <tt class="xref el el-symbol docutils literal"><span class="pre">helm</span></tt> interface.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="anything-jedi-related-names">
+<em class="property">function </em><tt class="descname">anything-jedi-related-names</tt><a class="headerlink" href="#anything-jedi-related-names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find related names of the object at point using <tt class="xref el el-symbol docutils literal"><span class="pre">anything</span></tt> interface.</p>
 </dd></dl>
 
 </div>

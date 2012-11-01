@@ -110,3 +110,17 @@ If auto-completion is all you need, use `jedi:ac-setup` instead::
 If you want to manually invoke completion, use something like this::
 
    (define-key python-mode-map (kbd "<C-tab>") 'jedi:complete)
+
+
+Debugging
+=========
+
+Start Jedi server in terminal.  When an error occurs, `ipdb` opens up.::
+
+   python jediepcserver.py --port-file jedi-port.log --ipdb
+
+Setup Jedi client like this.::
+
+  (setq jedi:server-command (list "cat" (expand-file-name
+                                         "jedi-port.log" jedi:source-dir))
+        jedi:server-args nil)

@@ -122,6 +122,7 @@ def get_definition(source, line, column, source_path):
 
 
 def jedi_epc_server(address='localhost', port=0, sys_path=[]):
+    add_virtualenv_path()
     sys_path = map(os.path.expandvars, map(os.path.expanduser, sys_path))
     sys.path = [''] + filter(None, sys_path + sys.path)
     # Workaround Jedi's module cache.  Use this workaround until Jedi
@@ -135,6 +136,9 @@ def jedi_epc_server(address='localhost', port=0, sys_path=[]):
     server.register_function(goto)
     server.register_function(related_names)
     server.register_function(get_definition)
+    server.print_port()  # needed for Emacs client
+    server.serve_forever()
+    server.logger.info('exit')
     return server
 
 
@@ -168,13 +172,7 @@ def main(args=None):
         '--sys-path', '-p', default=[], action='append',
         help='paths to be inserted at the top of `sys.path`.')
     ns = parser.parse_args(args)
-
-    add_virtualenv_path()
-    server = jedi_epc_server(**vars(ns))
-    server.print_port()  # needed for Emacs client
-
-    server.serve_forever()
-    server.logger.info('exit')
+    jedi_epc_server(**vars(ns))
 
 
 if __name__ == '__main__':

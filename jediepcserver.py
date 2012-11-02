@@ -26,6 +26,7 @@ If not, see <http://www.gnu.org/licenses/>.
 import os
 import sys
 import itertools
+import logging
 
 jedi = None  # I will load it later
 
@@ -160,7 +161,7 @@ def get_jedi_version():
 
 
 def jedi_epc_server(address='localhost', port=0, port_file=sys.stdout,
-                    sys_path=[], debugger=None):
+                    sys_path=[], debugger=None, log=None, log_level=None):
     add_virtualenv_path()
     sys_path = map(os.path.expandvars, map(os.path.expanduser, sys_path))
     sys.path = [''] + list(filter(None, itertools.chain(sys_path, sys.path)))
@@ -183,11 +184,19 @@ def jedi_epc_server(address='localhost', port=0, port_file=sys.stdout,
     if port_file is not sys.stdout:
         port_file.close()
 
+    if log:
+        handler = logging.FileHandler(filename=log, mode='w')
+        if log_level:
+            log_level = getattr(logging, log_level.upper())
+            handler.setLevel(log_level)
+            server.logger.setLevel(log_level)
+        server.logger.addHandler(handler)
     if debugger:
-        import logging
-        epc.server.setuplogfile()
-        server.logger.setLevel(logging.DEBUG)
         server.set_debugger(debugger)
+        handler = logging.StreamHandler()
+        handler.setLevel(logging.DEBUG)
+        server.logger.addHandler(handler)
+        server.logger.setLevel(logging.DEBUG)
 
     server.serve_forever()
     server.logger.info('exit')
@@ -228,6 +237,12 @@ def main(args=None):
     parser.add_argument(
         '--sys-path', '-p', default=[], action='append',
         help='paths to be inserted at the top of `sys.path`.')
+    parser.add_argument(
+        '--log', help='save server log to this file.')
+    parser.add_argument(
+        '--log-level',
+        choices=['CRITICAL', 'ERROR', 'WARN', 'INFO', 'DEBUG'],
+        help='logging level for log file.')
     parser.add_argument(
         '--pdb', dest='debugger', const='pdb', action='store_const',
         help='start pdb when error occurs.')

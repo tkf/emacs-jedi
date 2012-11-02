@@ -364,6 +364,10 @@ value to nil means to use minibuffer instead of tooltip."
   "Major mode to use when showing document."
   :group 'jedi)
 
+(defcustom jedi:doc-display-buffer 'display-buffer
+  "A function to be called with a buffer to show document."
+  :group 'jedi)
+
 (defun jedi:show-doc ()
   "Goto definition of the object at point."
   (interactive)
@@ -385,7 +389,7 @@ value to nil means to use minibuffer instead of tooltip."
                   (goto-char (point-min))
                   (when (fboundp jedi:doc-mode)
                     (funcall jedi:doc-mode))
-                  (pop-to-buffer (current-buffer)))))))))
+                  (funcall jedi:doc-display-buffer (current-buffer)))))))))
 
 
 ;;; Meta info

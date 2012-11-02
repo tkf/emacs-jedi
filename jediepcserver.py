@@ -30,6 +30,10 @@ import itertools
 jedi = None  # I will load it later
 
 
+PY3 = (sys.version_info[0] >= 3)
+NEED_ENCODE = not PY3
+
+
 def candidate_symbol(comp):
     """
     Return a character representing completion type.
@@ -67,6 +71,9 @@ def candidates_description(comp):
 
 
 def complete(source, line, column, source_path):
+    if NEED_ENCODE:
+        source = source.encode()
+        source_path = source_path and source_path.encode()
     script = jedi.Script(source, line, column, source_path or '')
     reply = []
     for comp in script.complete():
@@ -80,6 +87,9 @@ def complete(source, line, column, source_path):
 
 
 def get_in_function_call(source, line, column, source_path):
+    if NEED_ENCODE:
+        source = source.encode()
+        source_path = source_path and source_path.encode()
     script = jedi.Script(source, line, column, source_path or '')
     call_def = script.get_in_function_call()
     if call_def:
@@ -95,6 +105,9 @@ def get_in_function_call(source, line, column, source_path):
 
 
 def goto(source, line, column, source_path):
+    if NEED_ENCODE:
+        source = source.encode()
+        source_path = source_path and source_path.encode()
     script = jedi.Script(source, line, column, source_path or '')
     definitions = script.goto()
     return [dict(
@@ -104,6 +117,9 @@ def goto(source, line, column, source_path):
 
 
 def related_names(source, line, column, source_path):
+    if NEED_ENCODE:
+        source = source.encode()
+        source_path = source_path and source_path.encode()
     script = jedi.Script(source, line, column, source_path or '')
     definitions = script.related_names()
     return [dict(
@@ -116,6 +132,9 @@ def related_names(source, line, column, source_path):
 
 
 def get_definition(source, line, column, source_path):
+    if NEED_ENCODE:
+        source = source.encode()
+        source_path = source_path and source_path.encode()
     script = jedi.Script(source, line, column, source_path or '')
     definitions = script.get_definition()
     return [dict(

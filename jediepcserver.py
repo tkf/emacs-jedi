@@ -43,13 +43,17 @@ def candidate_symbol(comp):
     See also how `jedi.Completion.complete` is computed.
 
     """
-    funcs = (jedi.parsing.Function, jedi.evaluate.Function)
-    try:
-        is_func = comp.name.parent().isinstance(funcs)
-    except AttributeError:
-        is_func = False
-    if is_func:
+    def isit(what):
+        try:
+            return comp.name.parent().isinstance(what)
+        except AttributeError:
+            return False
+    if isit((jedi.parsing.Function, jedi.evaluate.Function)):
         return 'f'
+    if isit((jedi.parsing.Import)):
+        return 'm'
+    if isit((jedi.parsing.Class, jedi.evaluate.Class)):
+        return 'c'
     if isinstance(comp.base, jedi.parsing.Module):
         return 'm'
     if isinstance(comp.base, jedi.parsing.Param):

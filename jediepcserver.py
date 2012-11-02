@@ -103,16 +103,8 @@ def get_in_function_call(*args):
         return []  # nil
 
 
-def goto(*args):
-    definitions = jedi_script(*args).goto()
-    return [dict(
-        line_nr=d.line_nr,
-        module_path=d.module_path,
-    ) for d in definitions]
-
-
-def related_names(*args):
-    definitions = jedi_script(*args).related_names()
+def _goto(method, *args):
+    definitions = method(jedi_script(*args))
     return [dict(
         column=d.column,
         line_nr=d.line_nr,
@@ -120,6 +112,14 @@ def related_names(*args):
         module_name=d.module_name,
         description=d.description,
     ) for d in definitions]
+
+
+def goto(*args):
+    return _goto(jedi.Script.goto, *args)
+
+
+def related_names(*args):
+    return _goto(jedi.Script.related_names, *args)
 
 
 def get_definition(*args):

@@ -301,7 +301,7 @@ value to nil means to use minibuffer instead of tooltip."
     (deferred:nextc (jedi:call-deferred 'goto)
       (lambda (reply)
         (when reply
-          (destructuring-bind (&key line_nr module_path)
+          (destructuring-bind (&key line_nr module_path &allow-other-keys)
               (car reply)
             (funcall (if other-window #'find-file-other-window #'find-file)
                      module_path)

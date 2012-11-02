@@ -216,7 +216,9 @@ def add_virtualenv_path():
 
 def main(args=None):
     import argparse
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(
+        formatter_class=argparse.RawTextHelpFormatter,
+        description=__doc__)
     parser.add_argument(
         '--address', default='localhost')
     parser.add_argument(

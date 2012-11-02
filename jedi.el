@@ -385,7 +385,7 @@ value to nil means to use minibuffer instead of tooltip."
 ;;; Meta info
 
 (defun jedi:get-jedi-version-request ()
-  "Request ``Script(...).get_jedi_version`` and return a deferred object."
+  "Request version of Python modules and return a deferred object."
   (epc:call-deferred (jedi:get-epc) 'get_jedi_version nil))
 
 (defun jedi:show-jedi-version ()

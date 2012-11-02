@@ -136,6 +136,16 @@ See also: `jedi:server-args'."
           (jedi:server-args nil))
       (jedi:start-server))))
 
+(defun jedi:call-deferred (method-name)
+  "Call ``Script(...).METHOD-NAME`` and return a deferred object."
+  (let ((source      (buffer-substring-no-properties (point-min) (point-max)))
+        (line        (count-lines (point-min) (point)))
+        (column      (current-column))
+        (source-path buffer-file-name))
+    (epc:call-deferred (jedi:get-epc)
+                       method-name
+                       (list source line column source-path))))
+
 
 ;;; Completion
 
@@ -146,20 +156,11 @@ See also: `jedi:server-args'."
   ;; It is passed to `=', so do not initialize this value by `nil'.
   "The point where `jedi:complete-request' is called.")
 
-;; Make a macro to define EPC request
-(defun* jedi:complete-request
-    (&optional
-     (source      (buffer-substring-no-properties (point-min) (point-max)))
-     (line        (count-lines (point-min) (point)))
-     (column      (current-column))
-     (source-path buffer-file-name)
-     (point       (point)))
+(defun jedi:complete-request ()
   "Request ``Script(...).complete`` and return a deferred object.
 `jedi:complete-reply' is set to the reply sent from the server."
-  (setq jedi:complete-request-point point)
-  (deferred:nextc (epc:call-deferred (jedi:get-epc)
-                                     'complete
-                                     (list source line column source-path))
+  (setq jedi:complete-request-point (point))
+  (deferred:nextc (jedi:call-deferred 'complete)
     (lambda (reply)
       (setq jedi:complete-reply reply))))
 
@@ -217,18 +218,10 @@ To make this option work, you need to use `jedi:setup' instead of
 
 ;;; Call signature (get_in_function_call)
 
-(defun* jedi:get-in-function-call-request
-    (&optional
-     (source      (buffer-substring-no-properties (point-min) (point-max)))
-     (line        (count-lines (point-min) (point)))
-     (column      (current-column))
-     (source-path buffer-file-name)
-     (point       (point)))
+(defun* jedi:get-in-function-call-request ()
   "Request ``Script(...).get_in_function_call`` and return a
 deferred object."
-  (epc:call-deferred (jedi:get-epc)
-                     'get_in_function_call
-                     (list source line column source-path)))
+  (jedi:call-deferred 'get_in_function_call))
 
 (defun* jedi:get-in-function-call--construct-call-signature
     (&key params index call_name)
@@ -306,17 +299,9 @@ value to nil means to use minibuffer instead of tooltip."
 
 ;;; Goto
 
-(defun* jedi:goto-request
-    (&optional
-     (source      (buffer-substring-no-properties (point-min) (point-max)))
-     (line        (count-lines (point-min) (point)))
-     (column      (current-column))
-     (source-path buffer-file-name)
-     (point       (point)))
+(defun* jedi:goto-request ()
   "Request ``Script(...).goto`` and return a deferred object."
-  (epc:call-deferred (jedi:get-epc)
-                     'goto
-                     (list source line column source-path)))
+  (jedi:call-deferred 'goto))
 
 (defun jedi:goto-definition (&optional other-window)
   "Goto definition of the object at point."
@@ -335,17 +320,9 @@ value to nil means to use minibuffer instead of tooltip."
 
 ;;; Related names
 
-(defun* jedi:related-names-request
-    (&optional
-     (source      (buffer-substring-no-properties (point-min) (point-max)))
-     (line        (count-lines (point-min) (point)))
-     (column      (current-column))
-     (source-path buffer-file-name)
-     (point       (point)))
+(defun* jedi:related-names-request ()
   "Request ``Script(...).related_names`` and return a deferred object."
-  (epc:call-deferred (jedi:get-epc)
-                     'related_names
-                     (list source line column source-path)))
+  (jedi:call-deferred 'related_names))
 
 (defvar jedi:related-names--file-line nil)
 
@@ -388,17 +365,9 @@ value to nil means to use minibuffer instead of tooltip."
 
 ;;; Show document (get-definition)
 
-(defun* jedi:get-definition-request
-    (&optional
-     (source      (buffer-substring-no-properties (point-min) (point-max)))
-     (line        (count-lines (point-min) (point)))
-     (column      (current-column))
-     (source-path buffer-file-name)
-     (point       (point)))
+(defun* jedi:get-definition-request ()
   "Request ``Script(...).get_definition`` and return a deferred object."
-  (epc:call-deferred (jedi:get-epc)
-                     'get_definition
-                     (list source line column source-path)))
+  (jedi:call-deferred 'get_definition))
 
 (defvar jedi:doc-buffer-name "*jedi:doc*")
 

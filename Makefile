@@ -52,7 +52,7 @@ print-deps: requirements
 	@echo "------------------- Python dependencies --------------------"
 	$(ENV)/bin/python --version
 	$(ENV)/bin/python print_deps.py
-	ls -d env/lib/python*/site-packages/*egg-info
+	ls -d $(ENV)/lib/python*/site-packages/*egg-info
 	@echo "------------------------------------------------------------"
 
 travis-ci: print-deps test

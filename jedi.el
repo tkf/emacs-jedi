@@ -451,6 +451,33 @@ what jedi can do."
   (jedi:ac-setup)
   (jedi-mode 1))
 
+
+;;; Debugging
+
+
+(defvar jedi:server-command--backup nil)
+(defvar jedi:server-args--backup nil)
+
+(defun jedi:toggle-debug-server ()
+  "Setup `jedi:server-command' and `jedi:server-args' to debug
+server using ipdb or pdb."
+  (interactive)
+  (if jedi:server-command--backup
+      (progn
+        (setq jedi:server-command jedi:server-command--backup
+              jedi:server-args jedi:server-args--backup)
+        (jedi:stop-server)
+        (message "Quit debugging.  Original setting restored."))
+    (setq jedi:server-command--backup jedi:server-command
+          jedi:server-args--backup jedi:server-args
+          jedi:server-command (list "cat" (expand-file-name
+                                           "jedi-port.log" jedi:source-dir))
+          jedi:server-args nil)
+    (jedi:stop-server)
+    (kill-new "python jediepcserver.py --port-file jedi-port.log --ipdb")
+    (message "Now, start server with: --port-file jedi-port.log --ipdb.\
+ (command is copied in the kill-ring)")))
+
 
 (provide 'jedi)
 

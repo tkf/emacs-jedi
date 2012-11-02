@@ -124,3 +124,6 @@ Setup Jedi client like this.::
   (setq jedi:server-command (list "cat" (expand-file-name
                                          "jedi-port.log" jedi:source-dir))
         jedi:server-args nil)
+
+To toggle the above setting and your normal setting, use
+``M-x jedi:toggle-debug-server``.

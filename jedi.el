@@ -116,7 +116,7 @@ later when it is needed."
 
 (defun jedi:start-dedicated-server (command)
   "Start Jedi server dedicated to this buffer.
-This is useful, for exmaple, when you want to use different
+This is useful, for example, when you want to use different
 `sys.path' for some buffer.  When invoked as an interactive
 command, it asks you how to start the Jedi server.  You can edit
 the command in minibuffer to specify the way Jedi server run.

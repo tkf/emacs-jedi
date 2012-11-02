@@ -132,19 +132,31 @@ def get_definition(*args):
     ) for d in definitions]
 
 
+def get_module_version(module):
+    try:
+        from pkg_resources import get_distribution, DistributionNotFound
+        try:
+            return get_distribution(module.__name__).version
+        except DistributionNotFound:
+            pass
+    except ImportError:
+        pass
+
+    notfound = object()
+    for key in ['__version__', 'version']:
+        version = getattr(module, key, notfound)
+        if version is not notfound:
+            return version
+
+
 def get_jedi_version():
     import epc
     import sexpdata
-    try:
-        from pkg_resources import get_distribution
-        get_version = lambda x: get_distribution(x.__name__).version
-    except ImportError:
-        get_version = lambda x: getattr(x, '__version__', [])  # null
     return [dict(
         name=module.__name__,
-        file=module.__file__,
-        version=get_version(module),
-    ) for module in [jedi, epc, sexpdata]]
+        file=getattr(module, '__file__', []),
+        version=get_module_version(module) or [],
+    ) for module in [sys, jedi, epc, sexpdata]]
 
 
 def jedi_epc_server(address='localhost', port=0, port_file=sys.stdout,

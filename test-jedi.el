@@ -46,7 +46,7 @@
         (with-temp-buffer
           (erase-buffer)
           (insert "isinstance(obj,")
-          (jedi:get-in-function-call-request)))
+          (jedi:call-deferred 'get_in_function_call)))
     (should (equal params '("object" "class_or_type_or_tuple")))
     (should (equal index 1))
     (should (equal call_name "isinstance"))))
@@ -57,7 +57,7 @@
            (with-temp-buffer
              (erase-buffer)
              (insert "import json" "\n" "json.load")
-             (jedi:goto-request)))))
+             (jedi:call-deferred 'goto)))))
     (destructuring-bind (&key line_nr module_path)
         (car reply)
       (should (integerp line_nr))
@@ -69,7 +69,7 @@
            (with-temp-buffer
              (erase-buffer)
              (insert "import json" "\n" "json.load")
-             (jedi:get-definition-request)))))
+             (jedi:call-deferred 'get_definition)))))
     (destructuring-bind (&key doc desc_with_module line_nr module_path)
         (car reply)
       (should (stringp doc))

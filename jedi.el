@@ -218,11 +218,6 @@ To make this option work, you need to use `jedi:setup' instead of
 
 ;;; Call signature (get_in_function_call)
 
-(defun* jedi:get-in-function-call-request ()
-  "Request ``Script(...).get_in_function_call`` and return a
-deferred object."
-  (jedi:call-deferred 'get_in_function_call))
-
 (defun* jedi:get-in-function-call--construct-call-signature
     (&key params index call_name)
   (concat call_name "(" (mapconcat #'identity params ", ") ")"))
@@ -236,7 +231,7 @@ deferred object."
   "Manually show call signature tooltip."
   (interactive)
   (deferred:nextc
-    (jedi:get-in-function-call-request)
+    (jedi:call-deferred 'get_in_function_call)
     #'jedi:get-in-function-call--tooltip-show))
 
 (defvar jedi:get-in-function-call--d nil)
@@ -262,7 +257,7 @@ tooltip in millisecond."
                 (deferred:timeout
                   jedi:get-in-function-call-timeout
                   nil
-                  (jedi:get-in-function-call-request))))
+                  (jedi:call-deferred 'get_in_function_call))))
             (deferred:nextc it
               (lambda (reply)
                 (jedi:get-in-function-call--tooltip-show reply)
@@ -299,15 +294,11 @@ value to nil means to use minibuffer instead of tooltip."
 
 ;;; Goto
 
-(defun* jedi:goto-request ()
-  "Request ``Script(...).goto`` and return a deferred object."
-  (jedi:call-deferred 'goto))
-
 (defun jedi:goto-definition (&optional other-window)
   "Goto definition of the object at point."
   (interactive "P")
   (lexical-let ((other-window other-window))
-    (deferred:nextc (jedi:goto-request)
+    (deferred:nextc (jedi:call-deferred 'goto)
       (lambda (reply)
         (when reply
           (destructuring-bind (&key line_nr module_path)
@@ -320,10 +311,6 @@ value to nil means to use minibuffer instead of tooltip."
 
 ;;; Related names
 
-(defun* jedi:related-names-request ()
-  "Request ``Script(...).related_names`` and return a deferred object."
-  (jedi:call-deferred 'related_names))
-
 (defvar jedi:related-names--file-line nil)
 
 (defvar jedi:related-names--source
@@ -334,7 +321,7 @@ value to nil means to use minibuffer instead of tooltip."
 
 (defun jedi:related-names--helm (helm)
   (lexical-let ((helm helm))
-    (deferred:nextc (jedi:related-names-request)
+    (deferred:nextc (jedi:call-deferred 'related_names)
       (lambda (reply)
         (let ((jedi:related-names--file-line
                (mapcar
@@ -365,10 +352,6 @@ value to nil means to use minibuffer instead of tooltip."
 
 ;;; Show document (get-definition)
 
-(defun* jedi:get-definition-request ()
-  "Request ``Script(...).get_definition`` and return a deferred object."
-  (jedi:call-deferred 'get_definition))
-
 (defvar jedi:doc-buffer-name "*jedi:doc*")
 
 (defcustom jedi:doc-mode 'rst-mode
@@ -378,7 +361,7 @@ value to nil means to use minibuffer instead of tooltip."
 (defun jedi:show-doc ()
   "Goto definition of the object at point."
   (interactive)
-  (deferred:nextc (jedi:get-definition-request)
+  (deferred:nextc (jedi:call-deferred 'get_definition)
     (lambda (reply)
       (with-current-buffer (get-buffer-create jedi:doc-buffer-name)
         (erase-buffer)

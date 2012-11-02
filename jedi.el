@@ -311,31 +311,37 @@ value to nil means to use minibuffer instead of tooltip."
 
 ;;; Related names
 
-(defvar jedi:related-names--file-line nil)
-
-(defvar jedi:related-names--source
-  '((name . "Jedi Related Names")
-    (candidates . jedi:related-names--file-line)
+(defun jedi:related-names--source (name candidates)
+  `((name . ,name)
+    (candidates . ,candidates)
     (recenter)
     (type . file-line)))
 
+(defun jedi:related-names--to-file-line (reply)
+  (mapcar
+   (lambda (x)
+     (destructuring-bind
+         (&key line_nr column module_name module_path description)
+         x
+       (format "%s:%s: %s - %s" module_path line_nr
+               module_name description)))
+   reply))
+
 (defun jedi:related-names--helm (helm)
   (lexical-let ((helm helm))
-    (deferred:nextc (jedi:call-deferred 'related_names)
-      (lambda (reply)
-        (let ((jedi:related-names--file-line
-               (mapcar
-                (lambda (x)
-                  (destructuring-bind
-                      (&key line_nr column module_name module_path description)
-                      x
-                    (format "%s:%s: %s - %s" module_path line_nr
-                            module_name description)))
-                reply)))
-          (funcall
-           helm
-           :sources 'jedi:related-names--source
-           :buffer (format "*%s jedi:related-names*" helm)))))))
+    (deferred:nextc
+      (let ((to-file-line #'jedi:related-names--to-file-line))
+        (deferred:parallel
+          (deferred:nextc (jedi:call-deferred 'related_names) to-file-line)
+          (deferred:nextc (jedi:call-deferred 'goto)          to-file-line)))
+      (lambda (candidates-list)
+        (funcall
+         helm
+         :sources (list (jedi:related-names--source "Jeid Related Names"
+                                                    (car candidates-list))
+                        (jedi:related-names--source "Jedi Goto"
+                                                    (cadr candidates-list)))
+         :buffer (format "*%s jedi:related-names*" helm))))))
 
 ;;;###autoload
 (defun helm-jedi-related-names ()

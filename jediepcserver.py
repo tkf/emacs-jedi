@@ -34,6 +34,13 @@ PY3 = (sys.version_info[0] >= 3)
 NEED_ENCODE = not PY3
 
 
+def jedi_script(source, line, column, source_path):
+    if NEED_ENCODE:
+        source = source.encode()
+        source_path = source_path and source_path.encode()
+    return jedi.Script(source, line, column, source_path or '')
+
+
 def candidate_symbol(comp):
     """
     Return a character representing completion type.
@@ -70,13 +77,9 @@ def candidates_description(comp):
     return desc if desc and desc != 'None' else ''
 
 
-def complete(source, line, column, source_path):
-    if NEED_ENCODE:
-        source = source.encode()
-        source_path = source_path and source_path.encode()
-    script = jedi.Script(source, line, column, source_path or '')
+def complete(*args):
     reply = []
-    for comp in script.complete():
+    for comp in jedi_script(*args).complete():
         reply.append(dict(
             word=comp.word,
             doc=comp.doc,
@@ -86,12 +89,8 @@ def complete(source, line, column, source_path):
     return reply
 
 
-def get_in_function_call(source, line, column, source_path):
-    if NEED_ENCODE:
-        source = source.encode()
-        source_path = source_path and source_path.encode()
-    script = jedi.Script(source, line, column, source_path or '')
-    call_def = script.get_in_function_call()
+def get_in_function_call(*args):
+    call_def = jedi_script(*args).get_in_function_call()
     if call_def:
         return dict(
             # p.get_code(False) should do the job.  But jedi-vim use replace.
@@ -104,24 +103,16 @@ def get_in_function_call(source, line, column, source_path):
         return []  # nil
 
 
-def goto(source, line, column, source_path):
-    if NEED_ENCODE:
-        source = source.encode()
-        source_path = source_path and source_path.encode()
-    script = jedi.Script(source, line, column, source_path or '')
-    definitions = script.goto()
+def goto(*args):
+    definitions = jedi_script(*args).goto()
     return [dict(
         line_nr=d.line_nr,
         module_path=d.module_path,
     ) for d in definitions]
 
 
-def related_names(source, line, column, source_path):
-    if NEED_ENCODE:
-        source = source.encode()
-        source_path = source_path and source_path.encode()
-    script = jedi.Script(source, line, column, source_path or '')
-    definitions = script.related_names()
+def related_names(*args):
+    definitions = jedi_script(*args).related_names()
     return [dict(
         column=d.column,
         line_nr=d.line_nr,
@@ -131,12 +122,8 @@ def related_names(source, line, column, source_path):
     ) for d in definitions]
 
 
-def get_definition(source, line, column, source_path):
-    if NEED_ENCODE:
-        source = source.encode()
-        source_path = source_path and source_path.encode()
-    script = jedi.Script(source, line, column, source_path or '')
-    definitions = script.get_definition()
+def get_definition(*args):
+    definitions = jedi_script(*args).get_definition()
     return [dict(
         doc=d.doc,
         desc_with_module=d.desc_with_module,

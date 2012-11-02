@@ -235,7 +235,7 @@ deferred object."
   (concat call_name "(" (mapconcat #'identity params ", ") ")"))
 
 (defun jedi:get-in-function-call--tooltip-show (args)
-  (when args
+  (when (and args (not ac-completing))
     (jedi:tooltip-show
      (apply #'jedi:get-in-function-call--construct-call-signature args))))
 

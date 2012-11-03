@@ -97,6 +97,8 @@ following command::
                                     (append (cdr jedi:server-command)
                                             jedi:server-args))))
     (set-process-query-on-exit-flag
+     (epc:connection-process (epc:manager-connection jedi:epc)) nil)
+    (set-process-query-on-exit-flag
      (epc:manager-server-process jedi:epc) nil))
   jedi:epc)
 

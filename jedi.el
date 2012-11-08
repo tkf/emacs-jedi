@@ -220,6 +220,13 @@ To make this option work, you need to use `jedi:setup' instead of
 
 ;;; Call signature (get_in_function_call)
 
+(defcustom jedi:tooltip-method '(pos-tip popup)
+  "Configuration for `jedi:tooltip-show'.
+This is a list which may contain symbol(s) `pos-tip' and/or
+`popup'.  It determines tooltip method to use.  Setting this
+value to nil means to use minibuffer instead of tooltip."
+  :group 'jedi)
+
 (defface jedi:highlight-function-argument
   '((t (:inherit bold)))
   "Face used for the argument at point in a function's argument list"
@@ -273,13 +280,6 @@ tooltip in millisecond."
               (lambda (reply)
                 (jedi:get-in-function-call--tooltip-show reply)
                 (setq jedi:get-in-function-call--d nil)))))))
-
-(defcustom jedi:tooltip-method '(pos-tip popup)
-  "Configuration for `jedi:tooltip-show'.
-This is a list which may contain symbol(s) `pos-tip' and/or
-`popup'.  It determines tooltip method to use.  Setting this
-value to nil means to use minibuffer instead of tooltip."
-  :group 'jedi)
 
 (defun jedi:tooltip-show (string)
   (cond

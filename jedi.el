@@ -227,9 +227,9 @@ To make this option work, you need to use `jedi:setup' instead of
 
 (defun* jedi:get-in-function-call--construct-call-signature
     (&key params index call_name)
-  (let ((current-arg (nth (1- index) params)))
-    (if (and current-arg (null jedi:tooltip-method))
-      (setf (nth (1- index) params)
+  (let ((current-arg (nth index params)))
+    (when (and current-arg (null jedi:tooltip-method))
+      (setf (nth index params)
             (propertize current-arg 'face 'jedi:highlight-function-argument)))
     (concat call_name "(" (mapconcat #'identity params ", ") ")")))
 

@@ -220,9 +220,18 @@ To make this option work, you need to use `jedi:setup' instead of
 
 ;;; Call signature (get_in_function_call)
 
+(defface jedi:highlight-function-argument
+  '((t (:inherit bold)))
+  "Face used for the argument at point in a function's argument list"
+  :group 'jedi)
+
 (defun* jedi:get-in-function-call--construct-call-signature
     (&key params index call_name)
-  (concat call_name "(" (mapconcat #'identity params ", ") ")"))
+  (let ((current-arg (nth (1- index) params)))
+    (if (and current-arg (null jedi:tooltip-method))
+      (setf (nth (1- index) params)
+            (propertize current-arg 'face 'jedi:highlight-function-argument)))
+    (concat call_name "(" (mapconcat #'identity params ", ") ")")))
 
 (defun jedi:get-in-function-call--tooltip-show (args)
   (when (and args (not ac-completing))

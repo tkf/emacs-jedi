@@ -462,11 +462,11 @@ toolitp when inside of function call."
   "Keybind for command `jedi:goto-definition'."
   :group 'jedi)
 
-(defcustom jedi:key-show-doc (kbd "C-c C-d")
+(defcustom jedi:key-show-doc (kbd "C-c d")
   "Keybind for command `jedi:show-doc'."
   :group 'jedi)
 
-(defcustom jedi:key-related-names (kbd "C-c C-r")
+(defcustom jedi:key-related-names (kbd "C-c r")
   "Keybind for command `helm-jedi-related-names' or
 `anything-jedi-related-names'."
   :group 'jedi)

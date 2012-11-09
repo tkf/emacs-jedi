@@ -92,7 +92,7 @@ Manual install
    - ``pip install jedi epc`` if you want to determine where to
      install them.
 
-4. Add ``(require 'jedi)`` in your Emacs configuration.
+4. Add ``(autoload 'jedi:setup "jedi" nil t)`` in your Emacs configuration.
 
 
 Setup
@@ -107,9 +107,28 @@ If auto-completion is all you need, use `jedi:ac-setup` instead::
 
    (add-hook 'python-mode-hook 'jedi:ac-setup)
 
-If you want to manually invoke completion, use something like this::
+To setup recommended keybinds for Jedi.el, add this to your Emacs
+configuration.  See its docstring (``<f1> v jedi:setup-keys``) for
+more information.::
 
-   (define-key python-mode-map (kbd "<C-tab>") 'jedi:complete)
+   (setq jedi:setup-keys t)
+
+
+Debugging
+=========
+
+Start Jedi server in terminal.  When an error occurs, `ipdb` opens up.::
+
+   python jediepcserver.py --port-file jedi-port.log --ipdb
+
+Setup Jedi client like this.::
+
+  (setq jedi:server-command (list "cat" (expand-file-name
+                                         "jedi-port.log" jedi:source-dir))
+        jedi:server-args nil)
+
+To toggle the above setting and your normal setting, use
+``M-x jedi:toggle-debug-server``.
 
 
 .. ^- put some space after README.rst
@@ -127,6 +146,18 @@ Configuration
 .. el:variable:: jedi:get-in-function-call-timeout
 .. el:variable:: jedi:get-in-function-call-delay
 .. el:variable:: jedi:tooltip-method
+.. el:variable:: jedi:doc-mode
+.. el:variable:: jedi:doc-display-buffer
+
+
+Keybinds
+--------
+
+.. el:variable:: jedi:setup-keys
+.. el:variable:: jedi:key-complete
+.. el:variable:: jedi:key-goto-definition
+.. el:variable:: jedi:key-show-doc
+.. el:variable:: jedi:key-related-names
 
 
 Command
@@ -144,3 +175,18 @@ Command
 
 .. el:package:: anything
 .. el:function:: anything-jedi-related-names
+
+
+Changelog
+=========
+
+v0.1.1 (WIP)
+------------
+
+- Add :el:symbol:`jedi:setup-keys`.  You don't need to manually add
+  Jedi commands to :el:symbol:`python-mode-map` now.
+
+v0.1
+----
+
+First version.

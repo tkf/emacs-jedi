@@ -7,7 +7,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Jedi.el - Python auto-completion for Emacs &mdash; Emacs Jedi 0 documentation</title>
+    <title>Jedi.el - Python auto-completion for Emacs &mdash; Emacs Jedi 0.1.1alpha0 documentation</title>
     
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0',
+        VERSION:     '0.1.1alpha0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,7 +24,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="Emacs Jedi 0 documentation" href="#" /> 
+    <link rel="top" title="Emacs Jedi 0.1.1alpha0 documentation" href="#" /> 
   </head>
   <body>
     <div class="related">
@@ -33,7 +33,7 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
-        <li><a href="#">Emacs Jedi 0 documentation</a> &raquo;</li> 
+        <li><a href="#">Emacs Jedi 0.1.1alpha0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -113,7 +113,7 @@ yet, get them from <a class="reference external" href="https://github.com/dimitr
 install them.</li>
 </ul>
 </li>
-<li>Add <tt class="docutils literal"><span class="pre">(require</span> <span class="pre">'jedi)</span></tt> in your Emacs configuration.</li>
+<li>Add <tt class="docutils literal"><span class="pre">(autoload</span> <span class="pre">'jedi:setup</span> <span class="pre">&quot;jedi&quot;</span> <span class="pre">nil</span> <span class="pre">t)</span></tt> in your Emacs configuration.</li>
 </ol>
 </div>
 </div>
@@ -128,10 +128,27 @@ To do that, add the following in your Emacs configuration:</p>
 <div class="highlight-cl"><div class="highlight"><pre><span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;python-mode-hook</span> <span class="ss">&#39;jedi:ac-setup</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>If you want to manually invoke completion, use something like this:</p>
-<div class="highlight-cl"><div class="highlight"><pre><span class="p">(</span><span class="nv">define-key</span> <span class="nv">python-mode-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;&lt;C-tab&gt;&quot;</span><span class="p">)</span> <span class="ss">&#39;jedi:complete</span><span class="p">)</span>
+<p>To setup recommended keybinds for Jedi.el, add this to your Emacs
+configuration.  See its docstring (<tt class="docutils literal"><span class="pre">&lt;f1&gt;</span> <span class="pre">v</span> <span class="pre">jedi:setup-keys</span></tt>) for
+more information.:</p>
+<div class="highlight-cl"><div class="highlight"><pre><span class="p">(</span><span class="k">setq</span> <span class="nv">jedi:setup-keys</span> <span class="no">t</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+<div class="section" id="debugging">
+<h2>Debugging<a class="headerlink" href="#debugging" title="Permalink to this headline">¶</a></h2>
+<p>Start Jedi server in terminal.  When an error occurs, <cite>ipdb</cite> opens up.:</p>
+<div class="highlight-cl"><div class="highlight"><pre><span class="nv">python</span> <span class="nv">jediepcserver.py</span> <span class="nv">--port-file</span> <span class="nv">jedi-port.log</span> <span class="nv">--ipdb</span>
+</pre></div>
+</div>
+<p>Setup Jedi client like this.:</p>
+<div class="highlight-cl"><div class="highlight"><pre><span class="p">(</span><span class="k">setq</span> <span class="nv">jedi:server-command</span> <span class="p">(</span><span class="nb">list</span> <span class="s">&quot;cat&quot;</span> <span class="p">(</span><span class="nv">expand-file-name</span>
+                                       <span class="s">&quot;jedi-port.log&quot;</span> <span class="nv">jedi:source-dir</span><span class="p">))</span>
+      <span class="nv">jedi:server-args</span> <span class="no">nil</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To toggle the above setting and your normal setting, use
+<tt class="docutils literal"><span class="pre">M-x</span> <span class="pre">jedi:toggle-debug-server</span></tt>.</p>
 </div>
 <div class="section" id="configuration">
 <h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h2>
@@ -229,6 +246,97 @@ This is a list which may contain symbol(s) <tt class="xref el el-symbol docutils
 value to nil means to use minibuffer instead of tooltip.</p>
 </dd></dl>
 
+<dl class="variable">
+<dt id="jedi:doc-mode">
+<em class="property">variable </em><tt class="descname">jedi:doc-mode</tt><a class="headerlink" href="#jedi:doc-mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Major mode to use when showing document.</p>
+</dd></dl>
+
+<dl class="variable">
+<dt id="jedi:doc-display-buffer">
+<em class="property">variable </em><tt class="descname">jedi:doc-display-buffer</tt><a class="headerlink" href="#jedi:doc-display-buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>A function to be called with a buffer to show document.</p>
+</dd></dl>
+
+<div class="section" id="keybinds">
+<h3>Keybinds<a class="headerlink" href="#keybinds" title="Permalink to this headline">¶</a></h3>
+<dl class="variable">
+<dt id="jedi:setup-keys">
+<em class="property">variable </em><tt class="descname">jedi:setup-keys</tt><a class="headerlink" href="#jedi:setup-keys" title="Permalink to this definition">¶</a></dt>
+<dd><p>Setup recommended keybinds.</p>
+<div class="admonition-default-keybinds admonition">
+<p class="first admonition-title">Default keybinds</p>
+<dl class="last docutils">
+<dt><tt class="docutils literal"><span class="pre">&lt;C-tab&gt;</span></tt> <span class="classifier-delimiter">:</span> <span class="classifier">= <a class="reference internal" href="#jedi:key-complete" title="jedi:key-complete"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:key-complete</span></tt></a></span></dt>
+<dd>Complete code at point. (<a class="reference internal" href="#jedi:complete" title="jedi:complete"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:complete</span></tt></a>)</dd>
+<dt><tt class="docutils literal"><span class="pre">C-.</span></tt> <span class="classifier-delimiter">:</span> <span class="classifier">= <a class="reference internal" href="#jedi:key-goto-definition" title="jedi:key-goto-definition"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:key-goto-definition</span></tt></a></span></dt>
+<dd>Goto definition of the object at point. (<a class="reference internal" href="#jedi:goto-definition" title="jedi:goto-definition"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:goto-definition</span></tt></a>)</dd>
+<dt><tt class="docutils literal"><span class="pre">C-c</span> <span class="pre">d</span></tt> <span class="classifier-delimiter">:</span> <span class="classifier">= <a class="reference internal" href="#jedi:key-show-doc" title="jedi:key-show-doc"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:key-show-doc</span></tt></a></span></dt>
+<dd>Goto definition of the object at point. (<a class="reference internal" href="#jedi:show-doc" title="jedi:show-doc"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:show-doc</span></tt></a>)</dd>
+<dt><tt class="docutils literal"><span class="pre">C-c</span> <span class="pre">r</span></tt> <span class="classifier-delimiter">:</span> <span class="classifier">= <a class="reference internal" href="#jedi:key-related-names" title="jedi:key-related-names"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:key-related-names</span></tt></a></span></dt>
+<dd>Find related names of the object at point.
+(<a class="reference internal" href="#helm-jedi-related-names" title="helm-jedi-related-names"><tt class="xref el el-symbol docutils literal"><span class="pre">helm-jedi-related-names</span></tt></a> / <a class="reference internal" href="#anything-jedi-related-names" title="anything-jedi-related-names"><tt class="xref el el-symbol docutils literal"><span class="pre">anything-jedi-related-names</span></tt></a>)</dd>
+</dl>
+</div>
+<p>When <a class="reference internal" href="#jedi:setup-keys" title="jedi:setup-keys"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:setup-keys</span></tt></a> is non-<tt class="xref el el-symbol docutils literal"><span class="pre">nil</span></tt>, recommended keybinds are set
+in <tt class="xref el el-symbol docutils literal"><span class="pre">jedi-mode-map</span></tt> when <strong>loading</strong> jedi.el.  Therefore, you must
+set this value before jedi.el is loaded.  As recommended usage of
+jedi.el is to call <a class="reference internal" href="#jedi:setup" title="jedi:setup"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:setup</span></tt></a> via <tt class="xref el el-symbol docutils literal"><span class="pre">python-mode-hook</span></tt> where
+<a class="reference internal" href="#jedi:setup" title="jedi:setup"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:setup</span></tt></a> is autloaded, setting <a class="reference internal" href="#jedi:setup-keys" title="jedi:setup-keys"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:setup-keys</span></tt></a> to <tt class="xref el el-symbol docutils literal"><span class="pre">t</span></tt> in
+you emacs setup (e.g., <tt class="docutils literal"><span class="pre">.emacs.d/init.el</span></tt>) works fine.:</p>
+<div class="highlight-cl"><div class="highlight"><pre><span class="p">(</span><span class="k">setq</span> <span class="nv">jedi:setup-keys</span> <span class="no">t</span><span class="p">)</span>
+<span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;python-mode-hook</span> <span class="ss">&#39;jedi:setup</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If you want to require jedi.el explicitly when loading Emacs,
+make sure to set <a class="reference internal" href="#jedi:setup-keys" title="jedi:setup-keys"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:setup-keys</span></tt></a> before loading jedi.el:</p>
+<div class="highlight-cl"><div class="highlight"><pre><span class="p">(</span><span class="k">setq</span> <span class="nv">jedi:setup-keys</span> <span class="no">t</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;jedi</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Byte compiler warns about unbound variable if you set
+<a class="reference internal" href="#jedi:setup-keys" title="jedi:setup-keys"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:setup-keys</span></tt></a> before loading jedi.el.  The proper way to
+suppress this warning is the following:</p>
+<div class="highlight-cl"><div class="highlight"><pre><span class="p">(</span><span class="nv">eval-when-compile</span> <span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;jedi</span> <span class="no">nil</span> <span class="no">t</span><span class="p">))</span>
+<span class="p">(</span><span class="k">setq</span> <span class="nv">jedi:setup-keys</span> <span class="no">t</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You can change these keybinds by changing <a class="reference internal" href="#jedi:key-complete" title="jedi:key-complete"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:key-complete</span></tt></a>,
+<a class="reference internal" href="#jedi:key-goto-definition" title="jedi:key-goto-definition"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:key-goto-definition</span></tt></a>, <a class="reference internal" href="#jedi:key-show-doc" title="jedi:key-show-doc"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:key-show-doc</span></tt></a>, and
+<a class="reference internal" href="#jedi:key-related-names" title="jedi:key-related-names"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:key-related-names</span></tt></a>.  For example, default keybind for
+ropemacs&#8217;s <tt class="xref el el-symbol docutils literal"><span class="pre">rope-show-doc</span></tt> is same as <a class="reference internal" href="#jedi:show-doc" title="jedi:show-doc"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:show-doc</span></tt></a>.  You can
+avoid collision by something like this:</p>
+<div class="highlight-cl"><div class="highlight"><pre><span class="p">(</span><span class="k">setq</span> <span class="nv">jedi:key-show-doc</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c D&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="variable">
+<dt id="jedi:key-complete">
+<em class="property">variable </em><tt class="descname">jedi:key-complete</tt><a class="headerlink" href="#jedi:key-complete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Keybind for command <a class="reference internal" href="#jedi:complete" title="jedi:complete"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:complete</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="variable">
+<dt id="jedi:key-goto-definition">
+<em class="property">variable </em><tt class="descname">jedi:key-goto-definition</tt><a class="headerlink" href="#jedi:key-goto-definition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Keybind for command <a class="reference internal" href="#jedi:goto-definition" title="jedi:goto-definition"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:goto-definition</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="variable">
+<dt id="jedi:key-show-doc">
+<em class="property">variable </em><tt class="descname">jedi:key-show-doc</tt><a class="headerlink" href="#jedi:key-show-doc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Keybind for command <a class="reference internal" href="#jedi:show-doc" title="jedi:show-doc"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:show-doc</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="variable">
+<dt id="jedi:key-related-names">
+<em class="property">variable </em><tt class="descname">jedi:key-related-names</tt><a class="headerlink" href="#jedi:key-related-names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Keybind for command <a class="reference internal" href="#helm-jedi-related-names" title="helm-jedi-related-names"><tt class="xref el el-symbol docutils literal"><span class="pre">helm-jedi-related-names</span></tt></a> or
+<a class="reference internal" href="#anything-jedi-related-names" title="anything-jedi-related-names"><tt class="xref el el-symbol docutils literal"><span class="pre">anything-jedi-related-names</span></tt></a>.</p>
+</dd></dl>
+
+</div>
 </div>
 <div class="section" id="command">
 <h2>Command<a class="headerlink" href="#command" title="Permalink to this headline">¶</a></h2>
@@ -245,7 +353,7 @@ later when it is needed.</p>
 <dt id="jedi:start-dedicated-server">
 <em class="property">function </em><big>(</big><tt class="descname">jedi:start-dedicated-server </tt><em>command</em><big>)</big><a class="headerlink" href="#jedi:start-dedicated-server" title="Permalink to this definition">¶</a></dt>
 <dd><p>Start Jedi server dedicated to this buffer.
-This is useful, for exmaple, when you want to use different
+This is useful, for example, when you want to use different
 <tt class="xref el el-symbol docutils literal"><span class="pre">sys.path</span></tt> for some buffer.  When invoked as an interactive
 command, it asks you how to start the Jedi server.  You can edit
 the command in minibuffer to specify the way Jedi server run.
@@ -289,6 +397,20 @@ See also: <a class="reference internal" href="#jedi:server-args" title="jedi:ser
 </dd></dl>
 
 </div>
+<div class="section" id="changelog">
+<h2>Changelog<a class="headerlink" href="#changelog" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="v0-1-1-wip">
+<h3>v0.1.1 (WIP)<a class="headerlink" href="#v0-1-1-wip" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Add <a class="reference internal" href="#jedi:setup-keys" title="jedi:setup-keys"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:setup-keys</span></tt></a>.  You don&#8217;t need to manually add
+Jedi commands to <tt class="xref el el-symbol docutils literal"><span class="pre">python-mode-map</span></tt> now.</li>
+</ul>
+</div>
+<div class="section" id="v0-1">
+<h3>v0.1<a class="headerlink" href="#v0-1" title="Permalink to this headline">¶</a></h3>
+<p>First version.</p>
+</div>
+</div>
 </div>
 
 
@@ -302,7 +424,7 @@ See also: <a class="reference internal" href="#jedi:server-args" title="jedi:ser
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
-        <li><a href="#">Emacs Jedi 0 documentation</a> &raquo;</li> 
+        <li><a href="#">Emacs Jedi 0.1.1alpha0 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

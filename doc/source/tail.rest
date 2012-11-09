@@ -19,6 +19,16 @@ Configuration
 .. el:variable:: jedi:doc-display-buffer
 
 
+Keybinds
+--------
+
+.. el:variable:: jedi:setup-keys
+.. el:variable:: jedi:key-complete
+.. el:variable:: jedi:key-goto-definition
+.. el:variable:: jedi:key-show-doc
+.. el:variable:: jedi:key-related-names
+
+
 Command
 =======
 
@@ -34,3 +44,18 @@ Command
 
 .. el:package:: anything
 .. el:function:: anything-jedi-related-names
+
+
+Changelog
+=========
+
+v0.1.1 (WIP)
+------------
+
+- Add :el:symbol:`jedi:setup-keys`.  You don't need to manually add
+  Jedi commands to :el:symbol:`python-mode-map` now.
+
+v0.1
+----
+
+First version.

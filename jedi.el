@@ -448,6 +448,72 @@ toolitp when inside of function call."
     (remove-hook 'post-command-hook 'jedi:handle-post-command t)))
 
 
+;;; Keybinds
+
+(defcustom jedi:setup-keys nil
+  "Setup recommended keybinds.
+
+When `jedi:setup-keys' is non-`nil', recommended keybinds are set
+in `jedi-mode-map' when **loading** jedi.el.  Therefore, you must
+set this value before jedi.el is loaded.  As recommended usage of
+jedi.el is to call `jedi:setup' via `python-mode-hook' where
+`jedi:setup' is autloaded, setting `jedi:setup-keys' to `t' in
+you emacs setup (e.g., ``.emacs.d/init.el``) works fine.::
+
+    (setq jedi:setup-keys t)
+    (add-hook 'python-mode-hook 'jedi:setup)
+
+If you want to require jedi.el explicitly when loading Emacs,
+make sure to set `jedi:setup-keys' before loading jedi.el::
+
+    (setq jedi:setup-keys t)
+    (require 'jedi)
+
+Byte compiler warns about unbound variable if you set
+`jedi:setup-keys' before loading jedi.el.  The proper way to
+suppress this warning is the following::
+
+    (eval-when-compile (require 'jedi nil t))
+    (setq jedi:setup-keys t)
+
+You can change these keybinds by changing `jedi:key-complete',
+`jedi:key-goto-definition', `jedi:key-show-doc', and
+`jedi:key-related-names'.  For example, default keybind for
+ropemacs's `rope-show-doc' is same as `jedi:show-doc'.  You can
+avoid collision by something like this::
+
+    (setq jedi:key-show-doc (kbd \"C-c D\"))"
+  :group 'jedi)
+
+(defcustom jedi:key-complete (kbd "<C-tab>")
+  "Keybind for command `jedi:complete'."
+  :group 'jedi)
+
+(defcustom jedi:key-goto-definition (kbd "C-.")
+  "Keybind for command `jedi:goto-definition'."
+  :group 'jedi)
+
+(defcustom jedi:key-show-doc (kbd "C-c d")
+  "Keybind for command `jedi:show-doc'."
+  :group 'jedi)
+
+(defcustom jedi:key-related-names (kbd "C-c r")
+  "Keybind for command `helm-jedi-related-names' or
+`anything-jedi-related-names'."
+  :group 'jedi)
+
+(when jedi:setup-keys
+  (let ((map jedi-mode-map))
+    (define-key map jedi:key-complete        'jedi:complete)
+    (define-key map jedi:key-goto-definition 'jedi:goto-definition)
+    (define-key map jedi:key-show-doc        'jedi:show-doc)
+    (let ((command (cond
+                    ((featurep 'helm) 'helm-jedi-related-names)
+                    ((featurep 'anything) 'anything-jedi-related-names))))
+      (when command
+        (define-key map jedi:key-related-names command)))))
+
+
 ;;; Setup
 
 ;;;###autoload

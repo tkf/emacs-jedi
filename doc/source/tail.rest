@@ -19,6 +19,16 @@ Configuration
 .. el:variable:: jedi:doc-display-buffer
 
 
+Keybinds
+--------
+
+.. el:variable:: jedi:setup-keys
+.. el:variable:: jedi:key-complete
+.. el:variable:: jedi:key-goto-definition
+.. el:variable:: jedi:key-show-doc
+.. el:variable:: jedi:key-related-names
+
+
 Command
 =======
 

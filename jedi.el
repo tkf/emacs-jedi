@@ -311,7 +311,8 @@ tooltip in millisecond."
   (lexical-let ((other-window other-window))
     (deferred:nextc (jedi:call-deferred 'goto)
       (lambda (reply)
-        (when reply
+        (if (not reply)
+            (message "Definition not found.")
           (destructuring-bind (&key line_nr module_path &allow-other-keys)
               (car reply)
             (funcall (if other-window #'find-file-other-window #'find-file)
@@ -395,7 +396,8 @@ tooltip in millisecond."
                      (insert "Docstring for " desc_with_module "\n\n" doc)
                      (setq has-doc t)))
               finally do
-              (when has-doc
+              (if (not has-doc)
+                  (message "Document not found.")
                 (progn
                   (goto-char (point-min))
                   (when (fboundp jedi:doc-mode)

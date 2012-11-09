@@ -451,7 +451,38 @@ toolitp when inside of function call."
 ;;; Keybinds
 
 (defcustom jedi:setup-keys nil
-  "Setup recommended keybinds."
+  "Setup recommended keybinds.
+
+When `jedi:setup-keys' is non-`nil', recommended keybinds are set
+in `jedi-mode-map' when **loading** jedi.el.  Therefore, you must
+set this value before jedi.el is loaded.  As recommended usage of
+jedi.el is to call `jedi:setup' via `python-mode-hook' where
+`jedi:setup' is autloaded, setting `jedi:setup-keys' to `t' in
+you emacs setup (e.g., ``.emacs.d/init.el``) works fine.::
+
+    (setq jedi:setup-keys t)
+    (add-hook 'python-mode-hook 'jedi:setup)
+
+If you want to require jedi.el explicitly when loading Emacs,
+make sure to set `jedi:setup-keys' before loading jedi.el::
+
+    (setq jedi:setup-keys t)
+    (require 'jedi)
+
+Byte compiler warns about unbound variable if you set
+`jedi:setup-keys' before loading jedi.el.  The proper way to
+suppress this warning is the following::
+
+    (eval-when-compile (require 'jedi nil t))
+    (setq jedi:setup-keys t)
+
+You can change these keybinds by changing `jedi:key-complete',
+`jedi:key-goto-definition', `jedi:key-show-doc', and
+`jedi:key-related-names'.  For example, default keybind for
+ropemacs's `rope-show-doc' is same as `jedi:show-doc'.  You can
+avoid collision by something like this::
+
+    (setq jedi:key-show-doc (kbd \"C-c D\"))"
   :group 'jedi)
 
 (defcustom jedi:key-complete (kbd "<C-tab>")

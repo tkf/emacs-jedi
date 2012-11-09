@@ -92,7 +92,7 @@ Manual install
    - ``pip install jedi epc`` if you want to determine where to
      install them.
 
-4. Add ``(require 'jedi)`` in your Emacs configuration.
+4. Add ``(autoload 'jedi:setup "jedi" nil t)`` in your Emacs configuration.
 
 
 Setup

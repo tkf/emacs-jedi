@@ -453,6 +453,21 @@ toolitp when inside of function call."
 (defcustom jedi:setup-keys nil
   "Setup recommended keybinds.
 
+.. admonition:: Default keybinds
+
+   ``<C-tab>`` : = `jedi:key-complete'
+       Complete code at point. (`jedi:complete')
+
+   ``C-.`` : = `jedi:key-goto-definition'
+       Goto definition of the object at point. (`jedi:goto-definition')
+
+   ``C-c d`` : = `jedi:key-show-doc'
+       Goto definition of the object at point. (`jedi:show-doc')
+
+   ``C-c r`` : = `jedi:key-related-names'
+       Find related names of the object at point.
+       (`helm-jedi-related-names' / `anything-jedi-related-names')
+
 When `jedi:setup-keys' is non-`nil', recommended keybinds are set
 in `jedi-mode-map' when **loading** jedi.el.  Therefore, you must
 set this value before jedi.el is loaded.  As recommended usage of

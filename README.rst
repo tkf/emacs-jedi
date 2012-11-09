@@ -107,9 +107,11 @@ If auto-completion is all you need, use `jedi:ac-setup` instead::
 
    (add-hook 'python-mode-hook 'jedi:ac-setup)
 
-If you want to manually invoke completion, use something like this::
+To setup recommended keybinds for Jedi.el, add this to your Emacs
+configuration.  See its docstring (``<f1> v jedi:setup-keys``) for
+more information.::
 
-   (define-key python-mode-map (kbd "<C-tab>") 'jedi:complete)
+   (setq jedi:setup-keys t)
 
 
 Debugging

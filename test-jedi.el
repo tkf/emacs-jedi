@@ -31,6 +31,10 @@
 (require 'jedi)
 
 
+(ert-deftest jedi:version ()
+  "Check if `jedi:version' can be parsed by `version-to-list'."
+  (version-to-list jedi:version))
+
 (ert-deftest jedi:complete-request ()
   (deferred:sync!
     (with-temp-buffer

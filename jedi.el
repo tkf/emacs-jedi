@@ -314,14 +314,17 @@ tooltip in millisecond."
   (lexical-let ((other-window other-window))
     (deferred:nextc (jedi:call-deferred 'goto)
       (lambda (reply)
-        (if (not reply)
-            (message "Definition not found.")
-          (destructuring-bind (&key line_nr module_path &allow-other-keys)
-              (car reply)
-            (funcall (if other-window #'find-file-other-window #'find-file)
-                     module_path)
-            (goto-char (point-min))
-            (forward-line (1- line_nr))))))))
+        (jedi:goto-definition--callback reply other-window)))))
+
+(defun jedi:goto-definition--callback (reply other-window)
+  (if (not reply)
+      (message "Definition not found.")
+    (destructuring-bind (&key line_nr module_path &allow-other-keys)
+        (car reply)
+      (funcall (if other-window #'find-file-other-window #'find-file)
+               module_path)
+      (goto-char (point-min))
+      (forward-line (1- line_nr)))))
 
 
 ;;; Related names

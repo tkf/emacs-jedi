@@ -37,8 +37,8 @@ NEED_ENCODE = not PY3
 
 def jedi_script(source, line, column, source_path):
     if NEED_ENCODE:
-        source = source.encode()
-        source_path = source_path and source_path.encode()
+        source = source.encode('utf-8')
+        source_path = source_path and source_path.encode('utf-8')
     return jedi.Script(source, line, column, source_path or '')
 
 

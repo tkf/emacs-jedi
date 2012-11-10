@@ -105,6 +105,16 @@ def get_in_function_call(*args):
 
 
 def _goto(method, *args):
+    """
+    Helper function for `goto` and `related_names`.
+
+    :arg  method: `jedi.Script.goto` or `jedi.Script.related_names`
+    :arg    args: Arguments to `jedi_script`
+
+    """
+    # `definitions` is a list. Each element is an instances of
+    # `jedi.api_classes.BaseOutput` subclass, i.e.,
+    # `jedi.api_classes.RelatedName` or `jedi.api_classes.Definition`.
     definitions = method(jedi_script(*args))
     return [dict(
         column=d.column,

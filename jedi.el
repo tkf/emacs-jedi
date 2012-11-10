@@ -319,12 +319,19 @@ tooltip in millisecond."
 (defun jedi:goto-definition--callback (reply other-window)
   (if (not reply)
       (message "Definition not found.")
-    (destructuring-bind (&key line_nr module_path &allow-other-keys)
+    (destructuring-bind (&key line_nr module_path module_name
+                              &allow-other-keys)
         (car reply)
-      (funcall (if other-window #'find-file-other-window #'find-file)
-               module_path)
-      (goto-char (point-min))
-      (forward-line (1- line_nr)))))
+      (cond
+       ((equal module_name "__builtin__")
+        (message "Cannot see the definition of __builtin__."))
+       ((not (and module_path (file-exists-p module_path)))
+        (message "File '%s' does not exist." module_path))
+       (t
+        (funcall (if other-window #'find-file-other-window #'find-file)
+                 module_path)
+        (goto-char (point-min))
+        (forward-line (1- line_nr)))))))
 
 
 ;;; Related names

@@ -109,7 +109,7 @@ def _goto(method, *args):
     return [dict(
         column=d.column,
         line_nr=d.line_nr,
-        module_path=d.module_path,
+        module_path=d.module_path if d.module_path != '__builtin__' else [],
         module_name=d.module_name,
         description=d.description,
     ) for d in definitions]

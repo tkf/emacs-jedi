@@ -275,10 +275,11 @@ tooltip in millisecond."
             (deferred:wait-idle jedi:get-in-function-call-delay)
             (deferred:nextc it
               (lambda ()
-                (deferred:timeout
-                  jedi:get-in-function-call-timeout
-                  nil
-                  (jedi:call-deferred 'get_in_function_call))))
+                (when jedi-mode         ; cursor may be moved
+                  (deferred:timeout
+                    jedi:get-in-function-call-timeout
+                    nil
+                    (jedi:call-deferred 'get_in_function_call)))))
             (deferred:nextc it
               (lambda (reply)
                 (jedi:get-in-function-call--tooltip-show reply)

@@ -200,6 +200,39 @@ avoid collision by something like this::
   "Bounded to deferred object while requesting get-in-function-call.")
 
 
+;;; Jedi mode
+
+(defvar jedi-mode-map (make-sparse-keymap))
+
+(defun jedi:handle-post-command ()
+  (jedi:get-in-function-call-when-idle))
+
+(define-minor-mode jedi-mode
+  "Jedi mode.
+When `jedi-mode' is on, call signature is automatically shown as
+toolitp when inside of function call."
+  :keymap jedi-mode-map
+  :group 'jedi
+  (let ((map jedi-mode-map))
+    (if jedi:complete-on-dot
+        (define-key map "." 'jedi:dot-complete)
+      (define-key map "." nil)))
+  (if jedi-mode
+      (add-hook 'post-command-hook 'jedi:handle-post-command nil t)
+    (remove-hook 'post-command-hook 'jedi:handle-post-command t)))
+
+(when jedi:setup-keys
+  (let ((map jedi-mode-map))
+    (define-key map jedi:key-complete        'jedi:complete)
+    (define-key map jedi:key-goto-definition 'jedi:goto-definition)
+    (define-key map jedi:key-show-doc        'jedi:show-doc)
+    (let ((command (cond
+                    ((featurep 'helm) 'helm-jedi-related-names)
+                    ((featurep 'anything) 'anything-jedi-related-names))))
+      (when command
+        (define-key map jedi:key-related-names command)))))
+
+
 ;;; Server management
 
 (defun jedi:start-server ()
@@ -515,42 +548,6 @@ See also: `jedi:server-args'."
           (erase-buffer)
           (pp reply)
           (display-buffer standard-output))))))
-
-
-;;; Jedi mode
-
-(defvar jedi-mode-map (make-sparse-keymap))
-
-(defun jedi:handle-post-command ()
-  (jedi:get-in-function-call-when-idle))
-
-(define-minor-mode jedi-mode
-  "Jedi mode.
-When `jedi-mode' is on, call signature is automatically shown as
-toolitp when inside of function call."
-  :keymap jedi-mode-map
-  :group 'jedi
-  (let ((map jedi-mode-map))
-    (if jedi:complete-on-dot
-        (define-key map "." 'jedi:dot-complete)
-      (define-key map "." nil)))
-  (if jedi-mode
-      (add-hook 'post-command-hook 'jedi:handle-post-command nil t)
-    (remove-hook 'post-command-hook 'jedi:handle-post-command t)))
-
-
-;;; Keybinds
-
-(when jedi:setup-keys
-  (let ((map jedi-mode-map))
-    (define-key map jedi:key-complete        'jedi:complete)
-    (define-key map jedi:key-goto-definition 'jedi:goto-definition)
-    (define-key map jedi:key-show-doc        'jedi:show-doc)
-    (let ((command (cond
-                    ((featurep 'helm) 'helm-jedi-related-names)
-                    ((featurep 'anything) 'anything-jedi-related-names))))
-      (when command
-        (define-key map jedi:key-related-names command)))))
 
 
 ;;; Setup

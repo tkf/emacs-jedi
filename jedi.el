@@ -50,6 +50,9 @@
   (expand-file-name "jediepcserver.py" jedi:source-dir)
   "Full path to Jedi server script file ``jediepcserver.py``.")
 
+
+;;; Configuration variables
+
 (defcustom jedi:server-command
   (list (let ((py (expand-file-name "env/bin/python" jedi:source-dir)))
           (if (file-exists-p py) py "python"))
@@ -91,6 +94,107 @@ following command::
 
     python jediepcserver.py --help"
   :group 'jedi)
+
+(defcustom jedi:complete-on-dot nil
+  "Non-`nil' means automatically start completion after inserting a dot.
+To make this option work, you need to use `jedi:setup' instead of
+`jedi:ac-setup' to start Jedi."
+  :group 'jedi)
+
+(defcustom jedi:tooltip-method '(pos-tip popup)
+  "Configuration for `jedi:tooltip-show'.
+This is a list which may contain symbol(s) `pos-tip' and/or
+`popup'.  It determines tooltip method to use.  Setting this
+value to nil means to use minibuffer instead of tooltip."
+  :group 'jedi)
+
+(defcustom jedi:get-in-function-call-timeout 3000
+  "Cancel request to server for call signature after this period
+specified in in millisecond."
+  :group 'jedi)
+
+(defcustom  jedi:get-in-function-call-delay 1000
+  "How long Jedi should wait before showing call signature
+tooltip in millisecond."
+  :group 'jedi)
+
+(defcustom jedi:doc-mode 'rst-mode
+  "Major mode to use when showing document."
+  :group 'jedi)
+
+(defcustom jedi:doc-display-buffer 'display-buffer
+  "A function to be called with a buffer to show document."
+  :group 'jedi)
+
+(defcustom jedi:setup-keys nil
+  "Setup recommended keybinds.
+
+.. admonition:: Default keybinds
+
+   ``<C-tab>`` : = `jedi:key-complete'
+       Complete code at point. (`jedi:complete')
+
+   ``C-.`` : = `jedi:key-goto-definition'
+       Goto definition of the object at point. (`jedi:goto-definition')
+
+   ``C-c d`` : = `jedi:key-show-doc'
+       Goto definition of the object at point. (`jedi:show-doc')
+
+   ``C-c r`` : = `jedi:key-related-names'
+       Find related names of the object at point.
+       (`helm-jedi-related-names' / `anything-jedi-related-names')
+
+When `jedi:setup-keys' is non-`nil', recommended keybinds are set
+in `jedi-mode-map' when **loading** jedi.el.  Therefore, you must
+set this value before jedi.el is loaded.  As recommended usage of
+jedi.el is to call `jedi:setup' via `python-mode-hook' where
+`jedi:setup' is autloaded, setting `jedi:setup-keys' to `t' in
+you emacs setup (e.g., ``.emacs.d/init.el``) works fine.::
+
+    (setq jedi:setup-keys t)
+    (add-hook 'python-mode-hook 'jedi:setup)
+
+If you want to require jedi.el explicitly when loading Emacs,
+make sure to set `jedi:setup-keys' before loading jedi.el::
+
+    (setq jedi:setup-keys t)
+    (require 'jedi)
+
+Byte compiler warns about unbound variable if you set
+`jedi:setup-keys' before loading jedi.el.  The proper way to
+suppress this warning is the following::
+
+    (eval-when-compile (require 'jedi nil t))
+    (setq jedi:setup-keys t)
+
+You can change these keybinds by changing `jedi:key-complete',
+`jedi:key-goto-definition', `jedi:key-show-doc', and
+`jedi:key-related-names'.  For example, default keybind for
+ropemacs's `rope-show-doc' is same as `jedi:show-doc'.  You can
+avoid collision by something like this::
+
+    (setq jedi:key-show-doc (kbd \"C-c D\"))"
+  :group 'jedi)
+
+(defcustom jedi:key-complete (kbd "<C-tab>")
+  "Keybind for command `jedi:complete'."
+  :group 'jedi)
+
+(defcustom jedi:key-goto-definition (kbd "C-.")
+  "Keybind for command `jedi:goto-definition'."
+  :group 'jedi)
+
+(defcustom jedi:key-show-doc (kbd "C-c d")
+  "Keybind for command `jedi:show-doc'."
+  :group 'jedi)
+
+(defcustom jedi:key-related-names (kbd "C-c r")
+  "Keybind for command `helm-jedi-related-names' or
+`anything-jedi-related-names'."
+  :group 'jedi)
+
+
+;;; Server management
 
 (defun jedi:start-server ()
   (if jedi:epc
@@ -178,12 +282,6 @@ See also: `jedi:server-args'."
   (deferred:nextc (jedi:complete-request)
     (lambda () (auto-complete '(ac-source-jedi-direct)))))
 
-(defcustom jedi:complete-on-dot nil
-  "Non-`nil' means automatically start completion after inserting a dot.
-To make this option work, you need to use `jedi:setup' instead of
-`jedi:ac-setup' to start Jedi."
-  :group 'jedi)
-
 (defun jedi:dot-complete ()
   "Insert dot and complete code at point."
   (interactive)
@@ -225,13 +323,6 @@ To make this option work, you need to use `jedi:setup' instead of
 
 ;;; Call signature (get_in_function_call)
 
-(defcustom jedi:tooltip-method '(pos-tip popup)
-  "Configuration for `jedi:tooltip-show'.
-This is a list which may contain symbol(s) `pos-tip' and/or
-`popup'.  It determines tooltip method to use.  Setting this
-value to nil means to use minibuffer instead of tooltip."
-  :group 'jedi)
-
 (defface jedi:highlight-function-argument
   '((t (:inherit bold)))
   "Face used for the argument at point in a function's argument list"
@@ -258,16 +349,6 @@ value to nil means to use minibuffer instead of tooltip."
     #'jedi:get-in-function-call--tooltip-show))
 
 (defvar jedi:get-in-function-call--d nil)
-
-(defcustom jedi:get-in-function-call-timeout 3000
-  "Cancel request to server for call signature after this period
-specified in in millisecond."
-  :group 'jedi)
-
-(defcustom  jedi:get-in-function-call-delay 1000
-  "How long Jedi should wait before showing call signature
-tooltip in millisecond."
-  :group 'jedi)
 
 (defun jedi:get-in-function-call-when-idle ()
   "Show tooltip when Emacs is ilde."
@@ -389,14 +470,6 @@ tooltip in millisecond."
 
 (defvar jedi:doc-buffer-name "*jedi:doc*")
 
-(defcustom jedi:doc-mode 'rst-mode
-  "Major mode to use when showing document."
-  :group 'jedi)
-
-(defcustom jedi:doc-display-buffer 'display-buffer
-  "A function to be called with a buffer to show document."
-  :group 'jedi)
-
 (defun jedi:show-doc ()
   "Goto definition of the object at point."
   (interactive)
@@ -463,73 +536,6 @@ toolitp when inside of function call."
 
 
 ;;; Keybinds
-
-(defcustom jedi:setup-keys nil
-  "Setup recommended keybinds.
-
-.. admonition:: Default keybinds
-
-   ``<C-tab>`` : = `jedi:key-complete'
-       Complete code at point. (`jedi:complete')
-
-   ``C-.`` : = `jedi:key-goto-definition'
-       Goto definition of the object at point. (`jedi:goto-definition')
-
-   ``C-c d`` : = `jedi:key-show-doc'
-       Goto definition of the object at point. (`jedi:show-doc')
-
-   ``C-c r`` : = `jedi:key-related-names'
-       Find related names of the object at point.
-       (`helm-jedi-related-names' / `anything-jedi-related-names')
-
-When `jedi:setup-keys' is non-`nil', recommended keybinds are set
-in `jedi-mode-map' when **loading** jedi.el.  Therefore, you must
-set this value before jedi.el is loaded.  As recommended usage of
-jedi.el is to call `jedi:setup' via `python-mode-hook' where
-`jedi:setup' is autloaded, setting `jedi:setup-keys' to `t' in
-you emacs setup (e.g., ``.emacs.d/init.el``) works fine.::
-
-    (setq jedi:setup-keys t)
-    (add-hook 'python-mode-hook 'jedi:setup)
-
-If you want to require jedi.el explicitly when loading Emacs,
-make sure to set `jedi:setup-keys' before loading jedi.el::
-
-    (setq jedi:setup-keys t)
-    (require 'jedi)
-
-Byte compiler warns about unbound variable if you set
-`jedi:setup-keys' before loading jedi.el.  The proper way to
-suppress this warning is the following::
-
-    (eval-when-compile (require 'jedi nil t))
-    (setq jedi:setup-keys t)
-
-You can change these keybinds by changing `jedi:key-complete',
-`jedi:key-goto-definition', `jedi:key-show-doc', and
-`jedi:key-related-names'.  For example, default keybind for
-ropemacs's `rope-show-doc' is same as `jedi:show-doc'.  You can
-avoid collision by something like this::
-
-    (setq jedi:key-show-doc (kbd \"C-c D\"))"
-  :group 'jedi)
-
-(defcustom jedi:key-complete (kbd "<C-tab>")
-  "Keybind for command `jedi:complete'."
-  :group 'jedi)
-
-(defcustom jedi:key-goto-definition (kbd "C-.")
-  "Keybind for command `jedi:goto-definition'."
-  :group 'jedi)
-
-(defcustom jedi:key-show-doc (kbd "C-c d")
-  "Keybind for command `jedi:show-doc'."
-  :group 'jedi)
-
-(defcustom jedi:key-related-names (kbd "C-c r")
-  "Keybind for command `helm-jedi-related-names' or
-`anything-jedi-related-names'."
-  :group 'jedi)
 
 (when jedi:setup-keys
   (let ((map jedi-mode-map))

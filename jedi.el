@@ -271,19 +271,20 @@ tooltip in millisecond."
   "Show tooltip when Emacs is ilde."
   (unless jedi:get-in-function-call--d
     (setq jedi:get-in-function-call--d
-          (deferred:$
-            (deferred:wait-idle jedi:get-in-function-call-delay)
-            (deferred:nextc it
-              (lambda ()
-                (when jedi-mode         ; cursor may be moved
-                  (deferred:timeout
-                    jedi:get-in-function-call-timeout
-                    nil
-                    (jedi:call-deferred 'get_in_function_call)))))
-            (deferred:nextc it
-              (lambda (reply)
-                (jedi:get-in-function-call--tooltip-show reply)
-                (setq jedi:get-in-function-call--d nil)))))))
+          (deferred:try
+            (deferred:$
+              (deferred:wait-idle jedi:get-in-function-call-delay)
+              (deferred:nextc it
+                (lambda ()
+                  (when jedi-mode         ; cursor may be moved
+                    (deferred:timeout
+                      jedi:get-in-function-call-timeout
+                      nil
+                      (jedi:call-deferred 'get_in_function_call)))))
+              (deferred:nextc it #'jedi:get-in-function-call--tooltip-show))
+            :finally
+            (lambda ()
+              (setq jedi:get-in-function-call--d nil))))))
 
 (defun jedi:tooltip-show (string)
   (cond

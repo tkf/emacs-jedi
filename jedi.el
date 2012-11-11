@@ -194,6 +194,12 @@ avoid collision by something like this::
   :group 'jedi)
 
 
+;;; Internal variables
+
+(defvar jedi:get-in-function-call--d nil
+  "Bounded to deferred object while requesting get-in-function-call.")
+
+
 ;;; Server management
 
 (defun jedi:start-server ()
@@ -347,8 +353,6 @@ See also: `jedi:server-args'."
   (deferred:nextc
     (jedi:call-deferred 'get_in_function_call)
     #'jedi:get-in-function-call--tooltip-show))
-
-(defvar jedi:get-in-function-call--d nil)
 
 (defun jedi:get-in-function-call-when-idle ()
   "Show tooltip when Emacs is ilde."

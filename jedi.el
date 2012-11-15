@@ -441,7 +441,7 @@ See also: `jedi:server-args'."
 (defun jedi:goto-definition--callback (reply other-window)
   (if (not reply)
       (message "Definition not found.")
-    (destructuring-bind (&key line_nr module_path module_name
+    (destructuring-bind (&key line_nr column module_path module_name
                               &allow-other-keys)
         (car reply)
       (cond
@@ -453,7 +453,8 @@ See also: `jedi:server-args'."
         (funcall (if other-window #'find-file-other-window #'find-file)
                  module_path)
         (goto-char (point-min))
-        (forward-line (1- line_nr)))))))
+        (forward-line (1- line_nr))
+        (forward-char column))))))
 
 
 ;;; Related names

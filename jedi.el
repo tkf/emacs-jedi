@@ -534,7 +534,8 @@ See also: `jedi:server-args'."
         (loop with has-doc = nil
               for def in reply
               do (destructuring-bind
-                     (&key doc desc_with_module line_nr module_path)
+                     (&key doc desc_with_module line_nr module_path
+                           &allow-other-keys)
                      def
                    (unless (or (null doc) (equal doc ""))
                      (insert "Docstring for " desc_with_module "\n\n" doc)

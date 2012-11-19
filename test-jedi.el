@@ -62,7 +62,8 @@
              (erase-buffer)
              (insert "import json" "\n" "json.load")
              (jedi:call-deferred 'goto)))))
-    (destructuring-bind (&key line_nr module_path &allow-other-keys)
+    (destructuring-bind (&key line_nr module_path
+                              column module_name description)
         (car reply)
       (should (integerp line_nr))
       (should (stringp module_path)))))

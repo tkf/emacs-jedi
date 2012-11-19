@@ -1,15 +1,8 @@
 ENV = env
-ifndef PYTHON
-	PYTHON = python
-endif
 
-ifndef CARTON
-	CARTON = carton
-endif
-
-ifndef EMACS
-	EMACS = emacs
-endif
+PYTHON ?= python
+CARTON ?= carton
+EMACS ?= emacs
 
 .PHONY : test test-1 tryout clean-elpa requirements env clean-env clean \
 	print-deps travis-ci

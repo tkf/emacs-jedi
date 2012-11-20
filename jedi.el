@@ -456,6 +456,22 @@ See also: `jedi:server-args'."
         (forward-line (1- line_nr))
         (forward-char column))))))
 
+(defun jedi:get-full-name-deferred ()
+  (deferred:$
+    (jedi:call-deferred 'get_definition)
+    (deferred:nextc it
+      (lambda (reply)
+        (loop for def in reply
+              do (destructuring-bind (&key full_name &allow-other-keys)
+                     def
+                   (when full_name
+                     (return full_name))))))))
+
+(defun* jedi:get-full-name-sync (&key (timeout 500))
+  (epc:sync
+   (jedi:get-epc)
+   (deferred:timeout timeout nil (jedi:get-full-name-deferred))))
+
 
 ;;; Related names
 
@@ -518,7 +534,8 @@ See also: `jedi:server-args'."
         (loop with has-doc = nil
               for def in reply
               do (destructuring-bind
-                     (&key doc desc_with_module line_nr module_path)
+                     (&key doc desc_with_module line_nr module_path
+                           &allow-other-keys)
                      def
                    (unless (or (null doc) (equal doc ""))
                      (insert "Docstring for " desc_with_module "\n\n" doc)

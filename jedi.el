@@ -349,7 +349,7 @@ See also: `jedi:server-args'."
 ;; (makunbound 'ac-source-jedi-direct)
 (ac-define-source jedi-direct
   '((candidates . jedi:ac-direct-matches)
-    (prefix jedi:ac-direct-prefix)
+    (prefix . jedi:ac-direct-prefix)
     (init . jedi:complete-request)
     (requires . -1)))
 

@@ -41,7 +41,7 @@ clean-env:
 
 clean: clean-env clean-elpa
 
-print-deps: requirements
+print-deps: elpa requirements
 	@echo "------------------- Python dependencies --------------------"
 	EMACS=$(EMACS) ${CARTON} exec ${EMACS} -Q -batch -l jedi.el \
 		-f jedi:print-jedi-version

@@ -45,6 +45,8 @@ Command
 .. el:package:: anything
 .. el:function:: anything-jedi-related-names
 
+.. el:package:: jedi
+.. el:function:: jedi:toggle-debug-server
 
 Changelog
 =========

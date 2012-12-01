@@ -596,7 +596,28 @@ what jedi can do."
 
 (defun jedi:toggle-debug-server ()
   "Setup `jedi:server-command' and `jedi:server-args' to debug
-server using ipdb or pdb."
+server using pdb or ipdb.
+
+When this command is called, it essentially execute the following
+code::
+
+  (setq jedi:server-command (list \"cat\" \"jedi-port.log\" )
+        jedi:server-args nil)
+
+It means to pass the port number recorded in the file
+jedi-port.log to EPC client.
+
+To start Jedi server in terminal and record port to the file,
+use the following command::
+
+   python jediepcserver.py --port-file jedi-port.log --pdb
+
+This command will be copied in the kill-ring (clipboard) when
+this command is called.  You can use `--ipdb` instead of `--pdb`
+to use ipdb instead of pdb.
+
+Calling this command again restores the original setting of
+`jedi:server-command' and `jedi:server-args'."
   (interactive)
   (if jedi:server-command--backup
       (progn

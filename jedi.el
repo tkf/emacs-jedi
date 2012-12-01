@@ -567,6 +567,9 @@ See also: `jedi:server-args'."
           (pp reply)
           (display-buffer standard-output))))))
 
+(defun jedi:print-jedi-version ()
+  (pp (epc:sync (jedi:get-epc) (jedi:get-jedi-version-request))))
+
 
 ;;; Setup
 

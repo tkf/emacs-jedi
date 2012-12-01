@@ -14,8 +14,10 @@ before_install:
   # Install developmental version for 3.x
   # See: https://github.com/davidhalter/jedi/issues/50
   - if [[ $TRAVIS_PYTHON_VERSION == '3.'* ]]; then
-      echo "Installing developmental version of Jedi";
-      pip install -q -e git://github.com/davidhalter/jedi.git@dev#egg=jedi;
+      echo "Install developmental version of Jedi";
+      sed -i
+          "s%jedi%-e git://github.com/davidhalter/jedi.git@dev#egg=jedi%g"
+          requirements.txt;
     fi
   - pip install -q virtualenv nose
   - pip install -q --requirement requirements.txt

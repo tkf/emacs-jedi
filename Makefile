@@ -42,7 +42,8 @@ clean-env:
 clean: clean-env clean-elpa
 
 print-deps: elpa requirements
-	@echo "------------------- Python dependencies --------------------"
+	@echo "----------------------- Dependencies -----------------------"
+	$(EMACS) --version
 	EMACS=$(EMACS) ${CARTON} exec ${EMACS} -Q -batch -l jedi.el \
 		-f jedi:print-jedi-version
 	ls -d $(ENV)/lib/python*/site-packages/*egg-info

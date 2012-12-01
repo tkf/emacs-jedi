@@ -113,3 +113,19 @@ loading `jedi.el`.  See its docstring (``<f1> v jedi:setup-keys``) for
 more information.::
 
    (setq jedi:setup-keys t)
+
+
+Extension
+=========
+
+IPython integration
+-------------------
+
+Sometimes it is useful to find completion using Python interpreter.
+To do that in a seamless manner, you can use IPython and its Emacs
+binding EIN (Emacs IPython Notebook).  See ein:jedi-setup_ in the EIN
+manual.  Using this setup, you can run auto-completion command in
+Jedi.el and EIN simultaneously.
+
+.. _ein:jedi-setup:
+   http://tkf.github.com/emacs-ipython-notebook/#ein:jedi-setup

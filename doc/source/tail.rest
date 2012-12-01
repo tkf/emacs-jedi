@@ -51,8 +51,8 @@ Command
 Changelog
 =========
 
-v0.1.1 (WIP)
-------------
+v0.1.1
+------
 
 - Add experimental "full-name" support [#fullname]_.
 - PR-11_ fixes Makefile for BSD make (thanks, `@goro1080`_!).

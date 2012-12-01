@@ -41,8 +41,8 @@ not block your Emacs while your are editing.
 Requirements
 ============
 
-Emacs lisp modules:
--------------------
+Emacs
+-----
 - EPC_
 - deferred.el_ (> v0.3)
 - auto-complete_
@@ -53,11 +53,13 @@ is wide, try the newest version of popup.el_.
 .. _deferred.el: https://github.com/kiwanami/emacs-deferred
 .. _popup.el: https://github.com/auto-complete/popup-el
 
-Python modules:
----------------
+Python
+------
 - Jedi_
 - python-epc_
 - argparse (for Python 2.6)
+
+Jedi.el is tested against Python 2.6, 2.7 and 3.2.
 
 Optional dependencies for automatic installation:
 -------------------------------------------------

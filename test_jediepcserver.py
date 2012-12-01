@@ -7,7 +7,7 @@ from jediepcserver import add_virtualenv_path
 @contextmanager
 def osenv(*args, **kwds):
     def putenvs(dct):
-        for (k, v) in dct.iteritems():
+        for (k, v) in dct.items():
             if v is None:
                 del os.environ[k]
             else:

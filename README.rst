@@ -24,12 +24,12 @@ It aims at helping your Python coding in a non-destructive way.
 It also helps you to find information about Python objects, such as
 docstring, function arguments and code location.
 
-Jedi.el uses jedi_ library to compute completion and EPC_ (an RPC
-stack for Emacs Lisp) and its `Python binding`_ to communicate with
-Python process.  It also uses excellent Emacs auto-complete_ module to
-start completion automatically.  As Jedi.el always calls Python
-function asynchronously (thanks to EPC_), it will not block your Emacs
-while your are editing.
+Jedi.el uses jedi_ (an awesome Python auto-completion library) and
+EPC_ (an RPC stack for Emacs Lisp) and its `Python binding`_ to
+communicate with Python process.  It also uses excellent Emacs
+auto-complete_ module to start completion automatically.  As Jedi.el
+always calls Python function asynchronously (thanks to EPC_), it will
+not block your Emacs while your are editing.
 
 .. _jedi: https://github.com/davidhalter/jedi
 .. _EPC: https://github.com/kiwanami/emacs-epc
@@ -47,8 +47,8 @@ Emacs lisp modules:
 - deferred.el_ (> v0.3)
 - auto-complete_
 
-If your completion popup is broken when the completion candidates
-width are large, try the newest version of popup.el_.
+If your completion popup is broken when width of completion candidates
+is wide, try the newest version of popup.el_.
 
 .. _deferred.el: https://github.com/kiwanami/emacs-deferred
 .. _popup.el: https://github.com/auto-complete/popup-el

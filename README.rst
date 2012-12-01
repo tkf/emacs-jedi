@@ -108,7 +108,8 @@ If auto-completion is all you need, use `jedi:ac-setup` instead::
    (add-hook 'python-mode-hook 'jedi:ac-setup)
 
 To setup recommended keybinds for Jedi.el, add this to your Emacs
-configuration.  See its docstring (``<f1> v jedi:setup-keys``) for
+configuration.  Note that you must set `jedi:setup-keys` *before*
+loading `jedi.el`.  See its docstring (``<f1> v jedi:setup-keys``) for
 more information.::
 
    (setq jedi:setup-keys t)

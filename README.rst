@@ -112,20 +112,3 @@ configuration.  See its docstring (``<f1> v jedi:setup-keys``) for
 more information.::
 
    (setq jedi:setup-keys t)
-
-
-Debugging
-=========
-
-Start Jedi server in terminal.  When an error occurs, `ipdb` opens up.::
-
-   python jediepcserver.py --port-file jedi-port.log --ipdb
-
-Setup Jedi client like this.::
-
-  (setq jedi:server-command (list "cat" (expand-file-name
-                                         "jedi-port.log" jedi:source-dir))
-        jedi:server-args nil)
-
-To toggle the above setting and your normal setting, use
-``M-x jedi:toggle-debug-server``.

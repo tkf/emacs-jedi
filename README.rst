@@ -24,12 +24,12 @@ It aims at helping your Python coding in a non-destructive way.
 It also helps you to find information about Python objects, such as
 docstring, function arguments and code location.
 
-Jedi.el uses jedi_ library to compute completion and EPC_ (an RPC
-stack for Emacs Lisp) and its `Python binding`_ to communicate with
-Python process.  It also uses excellent Emacs auto-complete_ module to
-start completion automatically.  As Jedi.el always calls Python
-function asynchronously (thanks to EPC_), it will not block your Emacs
-while your are editing.
+Jedi.el uses jedi_ (an awesome Python auto-completion library) and
+EPC_ (an RPC stack for Emacs Lisp) and its `Python binding`_ to
+communicate with Python process.  It also uses excellent Emacs
+auto-complete_ module to start completion automatically.  As Jedi.el
+always calls Python function asynchronously (thanks to EPC_), it will
+not block your Emacs while your are editing.
 
 .. _jedi: https://github.com/davidhalter/jedi
 .. _EPC: https://github.com/kiwanami/emacs-epc
@@ -47,8 +47,8 @@ Emacs lisp modules:
 - deferred.el_ (> v0.3)
 - auto-complete_
 
-If your completion popup is broken when the completion candidates
-width are large, try the newest version of popup.el_.
+If your completion popup is broken when width of completion candidates
+is wide, try the newest version of popup.el_.
 
 .. _deferred.el: https://github.com/kiwanami/emacs-deferred
 .. _popup.el: https://github.com/auto-complete/popup-el
@@ -108,24 +108,24 @@ If auto-completion is all you need, use `jedi:ac-setup` instead::
    (add-hook 'python-mode-hook 'jedi:ac-setup)
 
 To setup recommended keybinds for Jedi.el, add this to your Emacs
-configuration.  See its docstring (``<f1> v jedi:setup-keys``) for
+configuration.  Note that you must set `jedi:setup-keys` *before*
+loading `jedi.el`.  See its docstring (``<f1> v jedi:setup-keys``) for
 more information.::
 
    (setq jedi:setup-keys t)
 
 
-Debugging
+Extension
 =========
 
-Start Jedi server in terminal.  When an error occurs, `ipdb` opens up.::
+IPython integration
+-------------------
 
-   python jediepcserver.py --port-file jedi-port.log --ipdb
+Sometimes it is useful to find completion using Python interpreter.
+To do that in a seamless manner, you can use IPython and its Emacs
+binding EIN (Emacs IPython Notebook).  See ein:jedi-setup_ in the EIN
+manual.  Using this setup, you can run auto-completion command in
+Jedi.el and EIN simultaneously.
 
-Setup Jedi client like this.::
-
-  (setq jedi:server-command (list "cat" (expand-file-name
-                                         "jedi-port.log" jedi:source-dir))
-        jedi:server-args nil)
-
-To toggle the above setting and your normal setting, use
-``M-x jedi:toggle-debug-server``.
+.. _ein:jedi-setup:
+   http://tkf.github.com/emacs-ipython-notebook/#ein:jedi-setup

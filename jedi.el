@@ -135,10 +135,10 @@ tooltip in millisecond."
        Complete code at point. (`jedi:complete')
 
    ``C-.`` : = `jedi:key-goto-definition'
-       Goto definition of the object at point. (`jedi:goto-definition')
+       Goto the definition of the object at point. (`jedi:goto-definition')
 
    ``C-c d`` : = `jedi:key-show-doc'
-       Goto definition of the object at point. (`jedi:show-doc')
+       Goto the definition of the object at point. (`jedi:show-doc')
 
    ``C-c r`` : = `jedi:key-related-names'
        Find related names of the object at point.
@@ -431,7 +431,7 @@ See also: `jedi:server-args'."
 ;;; Goto
 
 (defun jedi:goto-definition (&optional other-window)
-  "Goto definition of the object at point."
+  "Goto the definition of the object at point."
   (interactive "P")
   (lexical-let ((other-window other-window))
     (deferred:nextc (jedi:call-deferred 'goto)
@@ -525,7 +525,7 @@ See also: `jedi:server-args'."
 (defvar jedi:doc-buffer-name "*jedi:doc*")
 
 (defun jedi:show-doc ()
-  "Goto definition of the object at point."
+  "Show the documentation of the object at point."
   (interactive)
   (deferred:nextc (jedi:call-deferred 'get_definition)
     (lambda (reply)
@@ -596,7 +596,28 @@ what jedi can do."
 
 (defun jedi:toggle-debug-server ()
   "Setup `jedi:server-command' and `jedi:server-args' to debug
-server using ipdb or pdb."
+server using pdb or ipdb.
+
+When this command is called, it essentially execute the following
+code::
+
+  (setq jedi:server-command (list \"cat\" \"jedi-port.log\" )
+        jedi:server-args nil)
+
+It means to pass the port number recorded in the file
+jedi-port.log to EPC client.
+
+To start Jedi server in terminal and record port to the file,
+use the following command::
+
+   python jediepcserver.py --port-file jedi-port.log --pdb
+
+This command will be copied in the kill-ring (clipboard) when
+this command is called.  You can use `--ipdb` instead of `--pdb`
+to use ipdb instead of pdb.
+
+Calling this command again restores the original setting of
+`jedi:server-command' and `jedi:server-args'."
   (interactive)
   (if jedi:server-command--backup
       (progn

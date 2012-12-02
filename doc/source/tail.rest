@@ -54,6 +54,10 @@ Changelog
 v0.1.2 (WIP)
 ------------
 
+- Strip off newlines from candidate summary.  This prevents
+  popup to be disrupted when showing candidates summary
+  containing newlines (e.g., ``json.__all__``).
+
 v0.1.1
 ------
 

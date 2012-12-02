@@ -25,6 +25,7 @@ If not, see <http://www.gnu.org/licenses/>.
 
 import os
 import sys
+import re
 import itertools
 import logging
 
@@ -74,8 +75,17 @@ def candidate_symbol(comp):
 
 
 def candidates_description(comp):
+    """
+    Return `comp.description` in an appropriate format.
+
+    * Avoid return a string 'None'.
+    * Strip off all newlines. This is required for using
+      `comp.description` as candidate summary.
+
+    """
     desc = comp.description
-    return desc if desc and desc != 'None' else ''
+    return _WHITESPACES_RE.sub(' ', desc) if desc and desc != 'None' else ''
+_WHITESPACES_RE = re.compile(r'\s+')
 
 
 def complete(*args):

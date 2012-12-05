@@ -54,6 +54,8 @@ Changelog
 v0.1.2 (WIP)
 ------------
 
+- Do not expand common part when completing on inserting dot using
+  :el:symbol:`jedi:dot-complete`.
 - Strip off newlines from candidate summary.  This prevents
   popup to be disrupted when showing candidates summary
   containing newlines (e.g., ``json.__all__``).

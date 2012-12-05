@@ -315,17 +315,20 @@ See also: `jedi:server-args'."
       (setq jedi:complete-reply reply))))
 
 ;;;###autoload
-(defun jedi:complete ()
+(defun* jedi:complete (&key (expand ac-expand-on-auto-complete))
   "Complete code at point."
   (interactive)
-  (deferred:nextc (jedi:complete-request)
-    (lambda () (auto-complete '(ac-source-jedi-direct)))))
+  (lexical-let ((expand expand))
+    (deferred:nextc (jedi:complete-request)
+      (lambda ()
+        (let ((ac-expand-on-auto-complete expand))
+          (auto-complete '(ac-source-jedi-direct)))))))
 
 (defun jedi:dot-complete ()
   "Insert dot and complete code at point."
   (interactive)
   (insert ".")
-  (jedi:complete))
+  (jedi:complete :expand nil))
 
 
 ;;; AC source

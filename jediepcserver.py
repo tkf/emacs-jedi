@@ -50,32 +50,11 @@ def candidate_symbol(comp):
     :type comp: jedi.api.Completion
     :arg  comp: A completion object returned by `jedi.Script.complete`.
 
-    .. TODO:: This function extremely depends on internal details.
-       I need to fix this at some point.
-
-    See also how `jedi.Completion.complete` is computed.
-
     """
-    def isit(what):
-        try:
-            try:
-                # For Jedi 0.5b4 (see issue #13)
-                return comp.name.parent.isinstance(what)
-            except AttributeError:
-                return comp.name.parent().isinstance(what)
-        except AttributeError:
-            return False
-    if isit((jedi.parsing.Function, jedi.evaluate.Function)):
-        return 'f'
-    if isit((jedi.parsing.Import)):
-        return 'm'
-    if isit((jedi.parsing.Class, jedi.evaluate.Class)):
-        return 'c'
-    if isinstance(comp.base, jedi.parsing.Module):
-        return 'm'
-    if isinstance(comp.base, jedi.parsing.Param):
-        return '='
-    return '?'
+    try:
+        return comp.type[0].lower()
+    except (AttributeError, TypeError):
+        return '?'
 
 
 def candidates_description(comp):

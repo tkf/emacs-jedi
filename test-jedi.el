@@ -31,12 +31,15 @@
 (require 'jedi)
 
 
+(defun jedi-testing:sync (d)
+  (epc:sync (jedi:get-epc) d))
+
 (ert-deftest jedi:version ()
   "Check if `jedi:version' can be parsed by `version-to-list'."
   (version-to-list jedi:version))
 
 (ert-deftest jedi:complete-request ()
-  (deferred:sync!
+  (jedi-testing:sync
     (with-temp-buffer
       (erase-buffer)
       (insert "import json" "\n" "json.l")
@@ -46,7 +49,7 @@
 
 (ert-deftest jedi:get-in-function-call-request ()
   (destructuring-bind (&key params index call_name)
-      (deferred:sync!
+      (jedi-testing:sync
         (with-temp-buffer
           (erase-buffer)
           (insert "isinstance(obj,")
@@ -57,7 +60,7 @@
 
 (ert-deftest jedi:goto-request ()
   (let ((reply
-         (deferred:sync!
+         (jedi-testing:sync
            (with-temp-buffer
              (erase-buffer)
              (insert "import json" "\n" "json.load")
@@ -70,7 +73,7 @@
 
 (ert-deftest jedi:get-definition-request ()
   (let ((reply
-         (deferred:sync!
+         (jedi-testing:sync
            (with-temp-buffer
              (erase-buffer)
              (insert "import json" "\n" "json.load")

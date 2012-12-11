@@ -58,7 +58,11 @@ def candidate_symbol(comp):
     """
     def isit(what):
         try:
-            return comp.name.parent().isinstance(what)
+            try:
+                # For Jedi 0.5b4 (see issue #13)
+                return comp.name.parent.isinstance(what)
+            except AttributeError:
+                return comp.name.parent().isinstance(what)
         except AttributeError:
             return False
     if isit((jedi.parsing.Function, jedi.evaluate.Function)):

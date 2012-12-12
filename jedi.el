@@ -643,6 +643,14 @@ Force recreation when a prefix argument (``C-u``) is given."
       (lambda ()
         (message "Installing Python modules...Done")))))
 
+(defun jedi:virtualenv-setup--sync ()
+  "Run `jedi:virtualenv-setup' synchronously."
+  (deferred:sync!
+    (deferred:timeout
+      (* 10 60 1000)                     ;  10 min
+      (error "Failed to setup virtualenv for Jedi EPC in 10 minute.")
+      (jedi:virtualenv-setup))))
+
 
 ;;; Debugging
 

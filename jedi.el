@@ -47,7 +47,8 @@
 (defvar jedi:epc nil)
 
 (defvar jedi:server-script
-  (expand-file-name "jediepcserver.py" jedi:source-dir)
+  (convert-standard-filename
+   (expand-file-name "jediepcserver.py" jedi:source-dir))
   "Full path to Jedi server script file ``jediepcserver.py``.")
 
 

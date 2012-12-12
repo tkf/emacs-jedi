@@ -641,7 +641,11 @@ Force recreation when a prefix argument (``C-u``) is given."
       (convert-standard-filename jedi:virtualenv-requirements-txt))
     (deferred:nextc it
       (lambda ()
-        (message "Installing Python modules...Done")))))
+        (message "Installing Python modules...Done")))
+    (deferred:error it
+      (lambda (err)
+        (message "Failed to install Python modules for Jedi EPC server.
+Got: %s" err)))))
 
 (defun jedi:virtualenv-setup--sync ()
   "Run `jedi:virtualenv-setup' synchronously."

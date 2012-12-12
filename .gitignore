@@ -1,4 +1,5 @@
 env
+env-test
 elpa
 doc/build
 doc/source/index.rst

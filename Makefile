@@ -29,6 +29,14 @@ elpa:
 clean-elpa:
 	rm -rf elpa
 
+test-virtualenv-setup: elpa
+	rm -rf env-test
+	EMACS=${EMACS} ${CARTON} exec ${EMACS} -Q -batch -l jedi.el \
+		--eval "(setq jedi:virtualenv-path \"env-test\")" \
+		-f jedi:virtualenv-setup--sync
+	env-test/bin/python -c 'import jedi'
+	env-test/bin/python -c 'import epc'
+
 requirements: env
 	$(ENV)/bin/pip install --requirement requirements.txt
 

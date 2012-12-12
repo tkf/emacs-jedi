@@ -50,8 +50,24 @@
   (expand-file-name "jediepcserver.py" jedi:source-dir)
   "Full path to Jedi server script file ``jediepcserver.py``.")
 
+(defvar jedi:virtualenv-requirements-txt
+  (expand-file-name "requirements.txt" jedi:source-dir)
+  "requirements.txt to setup python modules")
+
 
 ;;; Configuration variables
+
+(defcustom jedi:virtualenv-program (executable-find "virtualenv")
+  "virtualenv executable."
+  :group 'jedi)
+
+(defcustom jedi:virtualenv-python "python"
+  "Python executable to be used for making virtualenv for Jedi EPC server."
+  :group 'jedi)
+
+(defcustom jedi:virtualenv-path (expand-file-name "env" jedi:source-dir)
+  "Path to virtualenv used by Jedi EPC server."
+  :group 'jedi)
 
 (defcustom jedi:server-command
   (list (let ((py (expand-file-name "env/bin/python" jedi:source-dir)))
@@ -592,6 +608,40 @@ what jedi can do."
   (interactive)
   (jedi:ac-setup)
   (jedi-mode 1))
+
+
+;;; virtualenv setup
+
+(defun jedi:virtualenv-bin (cmd)
+  (expand-file-name cmd (expand-file-name "bin" jedi:virtualenv-path)))
+
+(defun jedi:virtualenv-setup (&optional recreate)
+  "Setup or update virtualenv for Jedi EPC server.
+Force recreation when a prefix argument (``C-u``) is given."
+  (interactive "P")
+  (if (or recreate (not (file-exists-p (jedi:virtualenv-bin "python"))))
+      (deferred:$
+        (deferred:process
+          jedi:virtualenv-program
+          "--python" (convert-standard-filename jedi:virtualenv-python)
+          (convert-standard-filename jedi:virtualenv-path))
+        (deferred:nextc it
+          (lambda ()
+            (message "virtualenv for Jedi is created.")
+            (jedi:virtualenv-setup-modules))))
+    (jedi:virtualenv-setup-modules)))
+
+(defun jedi:virtualenv-setup-modules ()
+  "Install Python modules specified in requirements.txt."
+  (message "Installing Python modules...")
+  (deferred:$
+    (deferred:process
+      (jedi:virtualenv-bin "pip")
+      "--requirements"
+      (convert-standard-filename jedi:virtualenv-requirements-txt))
+    (deferred:nextc it
+      (lambda ()
+        (message "Installing Python modules...Done")))))
 
 
 ;;; Debugging

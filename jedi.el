@@ -637,7 +637,7 @@ Force recreation when a prefix argument (``C-u``) is given."
   (deferred:$
     (deferred:process
       (jedi:virtualenv-bin "pip")
-      "--requirements"
+      "install" "--requirement"
       (convert-standard-filename jedi:virtualenv-requirements-txt))
     (deferred:nextc it
       (lambda ()

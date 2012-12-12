@@ -69,8 +69,11 @@
   "Path to virtualenv used by Jedi EPC server."
   :group 'jedi)
 
+(defun jedi:virtualenv-bin (cmd)
+  (expand-file-name cmd (expand-file-name "bin" jedi:virtualenv-path)))
+
 (defcustom jedi:server-command
-  (list (let ((py (expand-file-name "env/bin/python" jedi:source-dir)))
+  (list (let ((py (jedi:virtualenv-bin "python")))
           (if (file-exists-p py) py "python"))
         jedi:server-script)
   "Command used to run Jedi server.
@@ -612,9 +615,6 @@ what jedi can do."
 
 ;;; virtualenv setup
 
-(defun jedi:virtualenv-bin (cmd)
-  (expand-file-name cmd (expand-file-name "bin" jedi:virtualenv-path)))
-
 (defun jedi:virtualenv-setup (&optional recreate)
   "Setup or update virtualenv for Jedi EPC server.
 Force recreation when a prefix argument (``C-u``) is given."
@@ -641,6 +641,8 @@ Force recreation when a prefix argument (``C-u``) is given."
       (convert-standard-filename jedi:virtualenv-requirements-txt))
     (deferred:nextc it
       (lambda ()
+        (setq jedi:server-command
+              (list (jedi:virtualenv-bin "python") jedi:server-script))
         (message "Installing Python modules...Done")))
     (deferred:error it
       (lambda (err)

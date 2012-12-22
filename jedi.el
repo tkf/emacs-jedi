@@ -334,6 +334,14 @@ See also: `jedi:server-args'."
 
 ;;; AC source
 
+(defcustom jedi:max-summary-length 30
+  "Maximum summary length in completions."
+  :group 'jedi)
+
+(defcustom jedi:show-function-signature-in-summary nil
+  "Show the function signature in the summary instead of the usual description"
+  :group 'jedi)
+
 (defun jedi:ac-direct-matches ()
   (mapcar
    (lambda (x)
@@ -342,7 +350,12 @@ See also: `jedi:server-args'."
        (popup-make-item word
                         :symbol symbol
                         :document (unless (equal doc "") doc)
-                        :summary description)))
+                        :summary (cond ((and jedi:show-function-signature-in-summary
+                                             (string= symbol "f"))
+                                        (elt (split-string doc "\n") 0))
+                                       ((> (length description) jedi:max-summary-length)
+                                        (concat (substring description 0 (- jedi:max-summary-length 5)) "[...]"))
+                                       (t description)))))
    jedi:complete-reply))
 
 (defun jedi:ac-direct-prefix ()

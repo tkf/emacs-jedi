@@ -12,7 +12,7 @@ EL4T_CARTON_EMACS = ${EL4T_CARTON} exec ${EL4T_SCRIPT}
 	print-deps travis-ci
 
 test: elpa requirements
-	make EMACS=${EMACS} CARTON=${CARTON} test-1
+	${MAKE} test-1
 
 test-1:
 	${EL4T_CARTON_EMACS} -Q -batch \

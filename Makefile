@@ -30,7 +30,8 @@ tryout: compile requirements
 	${EL4T_CARTON_EMACS} -Q -L . -l tryout-jedi.el
 
 elpa:
-	${EL4T_CARTON} install
+	mkdir elpa
+	${EL4T_CARTON} install 2> elpa/install.log
 
 clean-elpa:
 	rm -rf elpa

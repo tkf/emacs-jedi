@@ -4,6 +4,10 @@ PYTHON ?= python
 CARTON ?= carton
 EMACS ?= emacs
 
+EL4T_SCRIPT = tools/el4t/emacs.sh
+EL4T_CARTON = EL4T_EMACS=${EMACS} EMACS=${EL4T_SCRIPT} ${CARTON}
+EL4T_CARTON_EMACS = ${EL4T_CARTON} exec ${EL4T_SCRIPT}
+
 .PHONY : test test-1 tryout clean-elpa requirements env clean-env clean \
 	print-deps travis-ci
 
@@ -11,20 +15,20 @@ test: elpa requirements
 	make EMACS=${EMACS} CARTON=${CARTON} test-1
 
 test-1:
-	EMACS=${EMACS} ${CARTON} exec ${EMACS} -Q -batch \
+	${EL4T_CARTON_EMACS} -Q -batch \
 		-L . -l test-jedi.el -f ert-run-tests-batch-and-exit
 	nosetests test_jediepcserver.py
 
 compile: elpa
 	rm -rf *.elc
-	EMACS=$(EMACS) ${CARTON} exec ${EMACS} -Q -batch \
+	${EL4T_CARTON_EMACS} -Q -batch \
 		-L . -f batch-byte-compile *.el
 
 tryout: compile requirements
-	EMACS=$(EMACS) ${CARTON} exec ${EMACS} -Q -L . -l tryout-jedi.el
+	${EL4T_CARTON_EMACS} -Q -L . -l tryout-jedi.el
 
 elpa:
-	${CARTON} install
+	${EL4T_CARTON} install
 
 clean-elpa:
 	rm -rf elpa
@@ -44,8 +48,7 @@ clean: clean-env clean-elpa
 print-deps: elpa requirements
 	@echo "----------------------- Dependencies -----------------------"
 	$(EMACS) --version
-	EMACS=$(EMACS) ${CARTON} exec ${EMACS} -Q -batch -l jedi.el \
-		-f jedi:print-jedi-version
+	${EL4T_CARTON_EMACS} -Q -batch -l jedi.el -f jedi:print-jedi-version
 	ls -d $(ENV)/lib/python*/site-packages/*egg-info
 	@echo "------------------------------------------------------------"
 

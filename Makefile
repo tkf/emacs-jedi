@@ -19,10 +19,12 @@ test-1:
 		-L . -l test-jedi.el -f ert-run-tests-batch-and-exit
 	nosetests test_jediepcserver.py
 
-compile: elpa
-	rm -rf *.elc
+compile: elpa clean-elc
 	${EL4T_CARTON_EMACS} -Q -batch \
 		-L . -f batch-byte-compile *.el
+
+clean-elc:
+	rm -rf *.elc
 
 tryout: compile requirements
 	${EL4T_CARTON_EMACS} -Q -L . -l tryout-jedi.el

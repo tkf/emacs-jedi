@@ -5,7 +5,7 @@ python:
   - "3.2"
 env:
   matrix:
-    # - EMACS=emacs
+    - EMACS=emacs
     - EMACS=emacs24
     - EMACS=emacs-snapshot
   global:

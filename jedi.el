@@ -505,7 +505,7 @@ See also: `jedi:server-args'."
       (lambda (candidates-list)
         (funcall
          helm
-         :sources (list (jedi:related-names--source "Jeid Related Names"
+         :sources (list (jedi:related-names--source "Jedi Related Names"
                                                     (car candidates-list))
                         (jedi:related-names--source "Jedi Goto"
                                                     (cadr candidates-list)))

@@ -93,8 +93,8 @@ Manual install
 3. Install Jedi_ and python-epc_ by
 
    - ``make requirements`` or
-   - ``pip install jedi epc`` if you want to determine where to
-     install them.
+   - ``pip install -r requirements.txt`` if you want to determine
+     where to install Python modules.
 
 4. Add ``(autoload 'jedi:setup "jedi" nil t)`` in your Emacs configuration.
 

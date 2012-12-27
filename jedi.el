@@ -608,6 +608,7 @@ server using pdb or ipdb.
 When this command is called, it essentially execute the following
 code::
 
+  (jedi:stop-server)
   (setq jedi:server-command (list \"cat\" \"jedi-port.log\" )
         jedi:server-args nil)
 
@@ -624,7 +625,8 @@ this command is called.  You can use `--ipdb` instead of `--pdb`
 to use ipdb instead of pdb.
 
 Calling this command again restores the original setting of
-`jedi:server-command' and `jedi:server-args'."
+`jedi:server-command' and `jedi:server-args' then stops the
+running server."
   (interactive)
   (if jedi:server-command--backup
       (progn

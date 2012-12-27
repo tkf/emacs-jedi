@@ -53,6 +53,8 @@ is wide, try the newest version of popup.el_.
 .. _deferred.el: https://github.com/kiwanami/emacs-deferred
 .. _popup.el: https://github.com/auto-complete/popup-el
 
+Jedi.el is currently tested against Emacs 24.3-devel, 24.2 and 23.1.
+
 Python
 ------
 - Jedi_

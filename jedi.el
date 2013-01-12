@@ -536,12 +536,16 @@ See also: `jedi:server-args'."
       (with-current-buffer (get-buffer-create jedi:doc-buffer-name)
         (erase-buffer)
         (loop with has-doc = nil
+              with first = t
               for def in reply
               do (destructuring-bind
                      (&key doc desc_with_module line_nr module_path
                            &allow-other-keys)
                      def
                    (unless (or (null doc) (equal doc ""))
+                     (if first
+                         (setq first nil)
+                       (insert "\n\n---\n\n"))
                      (insert "Docstring for " desc_with_module "\n\n" doc)
                      (setq has-doc t)))
               finally do

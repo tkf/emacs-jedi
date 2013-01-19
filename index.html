@@ -47,9 +47,9 @@
 <p class="first sidebar-title">Links:</p>
 <ul class="last simple">
 <li><a class="reference external" href="http://tkf.github.com/emacs-jedi/">Documentation</a> (at GitHub Pages)<ul>
-<li><a class="reference external" href="http://tkf.github.com/emacs-jedi#configuration">Configuration</a></li>
-<li><a class="reference external" href="http://tkf.github.com/emacs-jedi#command">Command</a></li>
-<li><a class="reference external" href="http://tkf.github.com/emacs-jedi#troubleshooting">Troubleshooting</a></li>
+<li><a class="reference internal" href="#configuration">Configuration</a></li>
+<li><a class="reference internal" href="#command">Command</a></li>
+<li><a class="reference internal" href="#troubleshooting">Troubleshooting</a></li>
 </ul>
 </li>
 <li><a class="reference external" href="https://github.com/tkf/emacs-jedi">Repository</a> (at GitHub)</li>
@@ -156,8 +156,8 @@ manual.  Using this setup, you can run auto-completion command in
 Jedi.el and EIN simultaneously.</p>
 </div>
 </div>
-<div class="section" id="id2">
-<h2>Configuration<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="jedi:setup">
 <em class="property">function </em><tt class="descname">jedi:setup</tt><a class="headerlink" href="#jedi:setup" title="Permalink to this definition">¶</a></dt>
@@ -344,8 +344,8 @@ avoid collision by something like this:</p>
 
 </div>
 </div>
-<div class="section" id="id3">
-<h2>Command<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="command">
+<h2>Command<a class="headerlink" href="#command" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="jedi:stop-server">
 <em class="property">function </em><tt class="descname">jedi:stop-server</tt><a class="headerlink" href="#jedi:stop-server" title="Permalink to this definition">¶</a></dt>
@@ -431,8 +431,8 @@ running server.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="id4">
-<h2>Troubleshooting<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline">¶</a></h2>
 <p>Before posting question or bug report in the <a class="reference external" href="https://github.com/tkf/emacs-jedi/issues">issue tracker</a>, please
 investigate the problem by yourself.  Here is some checklist.</p>
 <ol class="arabic">
@@ -480,7 +480,7 @@ containing newlines (e.g., <tt class="docutils literal"><span class="pre">json._
 <div class="section" id="v0-1-1">
 <h3>v0.1.1<a class="headerlink" href="#v0-1-1" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li>Add experimental &#8220;full-name&#8221; support <a class="footnote-reference" href="#fullname" id="id5">[1]</a>.</li>
+<li>Add experimental &#8220;full-name&#8221; support <a class="footnote-reference" href="#fullname" id="id2">[1]</a>.</li>
 <li><a class="reference external" href="https://github.com/tkf/emacs-jedi/pull/11">PR-11</a> fixes Makefile for BSD make (thanks, <a class="reference external" href="https://github.com/goro1080">&#64;goro1080</a>!).</li>
 <li>Fix <a class="reference external" href="https://github.com/tkf/emacs-jedi/issues/9">issue-9</a>: line number sent to the server was shifted when the cursor
 is at the beginning of line.</li>
@@ -492,7 +492,7 @@ Jedi commands to <tt class="xref el el-symbol docutils literal"><span class="pre
 <table class="docutils footnote" frame="void" id="fullname" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id5">[1]</a></td><td><cite>jedi:get-full-name-*</cite> functions require developmental
+<tr><td class="label"><a class="fn-backref" href="#id2">[1]</a></td><td><cite>jedi:get-full-name-*</cite> functions require developmental
 version of <a class="reference external" href="https://github.com/davidhalter/jedi">Jedi</a>.
 See also: <a class="reference external" href="https://github.com/davidhalter/jedi/issues/61">Request: Definition.fullname · Issue #61 ·
 davidhalter/jedi</a></td></tr>

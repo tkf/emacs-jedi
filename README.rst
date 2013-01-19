@@ -2,18 +2,12 @@
  Jedi.el - Python auto-completion for Emacs
 ============================================
 
-Links:
+.. sidebar:: Links:
 
-* `Documentation <http://tkf.github.com/emacs-jedi/>`_ (at GitHub Pages)
-* `Repository <https://github.com/tkf/emacs-jedi>`_ (at GitHub)
-* `Issue tracker <https://github.com/tkf/emacs-jedi/issues>`_ (at GitHub)
-* `Travis CI <https://travis-ci.org/#!/tkf/emacs-jedi>`_ |build-status|
-
-.. |build-status|
-   image:: https://secure.travis-ci.org/tkf/emacs-jedi.png
-           ?branch=master
-   :target: http://travis-ci.org/tkf/emacs-jedi
-   :alt: Build Status
+   * `Documentation <http://tkf.github.com/emacs-jedi/>`_ (at GitHub Pages)
+   * `Repository <https://github.com/tkf/emacs-jedi>`_ (at GitHub)
+   * `Issue tracker <https://github.com/tkf/emacs-jedi/issues>`_ (at GitHub)
+   * `Travis CI <https://travis-ci.org/#!/tkf/emacs-jedi>`_ |build-status|
 
 
 What is it?
@@ -133,3 +127,10 @@ Jedi.el and EIN simultaneously.
 
 .. _ein:jedi-setup:
    http://tkf.github.com/emacs-ipython-notebook/#ein:jedi-setup
+
+
+.. Build status badge
+.. |build-status|
+   image:: https://secure.travis-ci.org/tkf/emacs-jedi.png?branch=master
+   :target: http://travis-ci.org/tkf/emacs-jedi
+   :alt: Build Status

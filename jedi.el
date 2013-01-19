@@ -211,7 +211,9 @@ avoid collision by something like this::
 (define-minor-mode jedi-mode
   "Jedi mode.
 When `jedi-mode' is on, call signature is automatically shown as
-toolitp when inside of function call."
+toolitp when inside of function call.
+
+\\{jedi-mode-map}"
   :keymap jedi-mode-map
   :group 'jedi
   (let ((map jedi-mode-map))

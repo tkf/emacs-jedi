@@ -4,9 +4,9 @@
 
 Links:
 
-* `Documentation (at GitHub Pages) <http://tkf.github.com/emacs-jedi/>`_
-* `Repository (at GitHub) <https://github.com/tkf/emacs-jedi>`_
-* `Issue tracker (at GitHub) <https://github.com/tkf/emacs-jedi/issues>`_
+* `Documentation <http://tkf.github.com/emacs-jedi/>`_ (at GitHub Pages)
+* `Repository <https://github.com/tkf/emacs-jedi>`_ (at GitHub)
+* `Issue tracker <https://github.com/tkf/emacs-jedi/issues>`_ (at GitHub)
 * `Travis CI <https://travis-ci.org/#!/tkf/emacs-jedi>`_ |build-status|
 
 .. |build-status|

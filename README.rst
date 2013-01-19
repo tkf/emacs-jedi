@@ -5,6 +5,11 @@
 .. sidebar:: Links:
 
    * `Documentation <http://tkf.github.com/emacs-jedi/>`_ (at GitHub Pages)
+
+     * `Configuration <http://tkf.github.com/emacs-jedi#configuration>`_
+     * `Command <http://tkf.github.com/emacs-jedi#command>`_
+     * `Troubleshooting <http://tkf.github.com/emacs-jedi#troubleshooting>`_
+
    * `Repository <https://github.com/tkf/emacs-jedi>`_ (at GitHub)
    * `Issue tracker <https://github.com/tkf/emacs-jedi/issues>`_ (at GitHub)
    * `Travis CI <https://travis-ci.org/#!/tkf/emacs-jedi>`_ |build-status|

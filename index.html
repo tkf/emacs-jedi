@@ -7,7 +7,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Jedi.el - Python auto-completion for Emacs &mdash; Emacs Jedi 0.1.1 documentation</title>
+    <title>Jedi.el - Python auto-completion for Emacs &mdash; Emacs Jedi 0.1.2alpha0 documentation</title>
     
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.1.1',
+        VERSION:     '0.1.2alpha0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,7 +24,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="Emacs Jedi 0.1.1 documentation" href="#" /> 
+    <link rel="top" title="Emacs Jedi 0.1.2alpha0 documentation" href="#" /> 
   </head>
   <body>
     <div class="related">
@@ -33,7 +33,7 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
-        <li><a href="#">Emacs Jedi 0.1.1 documentation</a> &raquo;</li> 
+        <li><a href="#">Emacs Jedi 0.1.2alpha0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -43,13 +43,20 @@
             
   <div class="section" id="jedi-el-python-auto-completion-for-emacs">
 <h1>Jedi.el - Python auto-completion for Emacs<a class="headerlink" href="#jedi-el-python-auto-completion-for-emacs" title="Permalink to this headline">¶</a></h1>
-<p>Links:</p>
-<ul class="simple">
-<li><a class="reference external" href="http://tkf.github.com/emacs-jedi/">Documentation (at GitHub Pages)</a></li>
-<li><a class="reference external" href="https://github.com/tkf/emacs-jedi">Repository (at GitHub)</a></li>
-<li><a class="reference external" href="https://github.com/tkf/emacs-jedi/issues">Issue tracker (at GitHub)</a></li>
+<div class="sidebar">
+<p class="first sidebar-title">Links:</p>
+<ul class="last simple">
+<li><a class="reference external" href="http://tkf.github.com/emacs-jedi/">Documentation</a> (at GitHub Pages)<ul>
+<li><a class="reference external" href="http://tkf.github.com/emacs-jedi#configuration">Configuration</a></li>
+<li><a class="reference external" href="http://tkf.github.com/emacs-jedi#command">Command</a></li>
+<li><a class="reference external" href="http://tkf.github.com/emacs-jedi#troubleshooting">Troubleshooting</a></li>
+</ul>
+</li>
+<li><a class="reference external" href="https://github.com/tkf/emacs-jedi">Repository</a> (at GitHub)</li>
+<li><a class="reference external" href="https://github.com/tkf/emacs-jedi/issues">Issue tracker</a> (at GitHub)</li>
 <li><a class="reference external" href="https://travis-ci.org/#!/tkf/emacs-jedi">Travis CI</a> <a class="reference external" href="http://travis-ci.org/tkf/emacs-jedi"><img alt="Build Status" src="https://secure.travis-ci.org/tkf/emacs-jedi.png?branch=master" /></a></li>
 </ul>
+</div>
 <div class="section" id="what-is-it">
 <h2>What is it?<a class="headerlink" href="#what-is-it" title="Permalink to this headline">¶</a></h2>
 <p>Jedi.el is a Python auto-completion package for Emacs.
@@ -74,6 +81,7 @@ not block your Emacs while your are editing.</p>
 </ul>
 <p>If your completion popup is broken when width of completion candidates
 is wide, try the newest version of <a class="reference external" href="https://github.com/auto-complete/popup-el">popup.el</a>.</p>
+<p>Jedi.el is currently tested against Emacs 24.3-devel, 24.2 and 23.1.</p>
 </div>
 <div class="section" id="python">
 <h3>Python<a class="headerlink" href="#python" title="Permalink to this headline">¶</a></h3>
@@ -110,8 +118,8 @@ yet, get them from <a class="reference external" href="https://github.com/dimitr
 <cite>load-path</cite>.</li>
 <li>Install <a class="reference external" href="https://github.com/davidhalter/jedi">Jedi</a> and <a class="reference external" href="https://github.com/tkf/python-epc">python-epc</a> by<ul>
 <li><tt class="docutils literal"><span class="pre">make</span> <span class="pre">requirements</span></tt> or</li>
-<li><tt class="docutils literal"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">jedi</span> <span class="pre">epc</span></tt> if you want to determine where to
-install them.</li>
+<li><tt class="docutils literal"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-r</span> <span class="pre">requirements.txt</span></tt> if you want to determine
+where to install Python modules.</li>
 </ul>
 </li>
 <li>Add <tt class="docutils literal"><span class="pre">(autoload</span> <span class="pre">'jedi:setup</span> <span class="pre">&quot;jedi&quot;</span> <span class="pre">nil</span> <span class="pre">t)</span></tt> in your Emacs configuration.</li>
@@ -148,8 +156,8 @@ manual.  Using this setup, you can run auto-completion command in
 Jedi.el and EIN simultaneously.</p>
 </div>
 </div>
-<div class="section" id="configuration">
-<h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id2">
+<h2>Configuration<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="jedi:setup">
 <em class="property">function </em><tt class="descname">jedi:setup</tt><a class="headerlink" href="#jedi:setup" title="Permalink to this definition">¶</a></dt>
@@ -336,8 +344,8 @@ avoid collision by something like this:</p>
 
 </div>
 </div>
-<div class="section" id="command">
-<h2>Command<a class="headerlink" href="#command" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id3">
+<h2>Command<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="jedi:stop-server">
 <em class="property">function </em><tt class="descname">jedi:stop-server</tt><a class="headerlink" href="#jedi:stop-server" title="Permalink to this definition">¶</a></dt>
@@ -360,8 +368,9 @@ See also: <a class="reference internal" href="#jedi:server-args" title="jedi:ser
 
 <dl class="function">
 <dt id="jedi:complete">
-<em class="property">function </em><tt class="descname">jedi:complete</tt><a class="headerlink" href="#jedi:complete" title="Permalink to this definition">¶</a></dt>
+<em class="property">function </em><big>(</big><tt class="descname">jedi:complete </tt><em>&amp;rest</em> <em>--cl-rest--</em><big>)</big><a class="headerlink" href="#jedi:complete" title="Permalink to this definition">¶</a></dt>
 <dd><p>Complete code at point.</p>
+<p>(fn &amp;key (EXPAND ac-expand-on-auto-complete))</p>
 </dd></dl>
 
 <dl class="function">
@@ -401,7 +410,8 @@ See also: <a class="reference internal" href="#jedi:server-args" title="jedi:ser
 server using pdb or ipdb.</p>
 <p>When this command is called, it essentially execute the following
 code:</p>
-<div class="highlight-cl"><div class="highlight"><pre><span class="p">(</span><span class="k">setq</span> <span class="nv">jedi:server-command</span> <span class="p">(</span><span class="nb">list</span> <span class="s">&quot;cat&quot;</span> <span class="s">&quot;jedi-port.log&quot;</span> <span class="p">)</span>
+<div class="highlight-cl"><div class="highlight"><pre><span class="p">(</span><span class="nv">jedi:stop-server</span><span class="p">)</span>
+<span class="p">(</span><span class="k">setq</span> <span class="nv">jedi:server-command</span> <span class="p">(</span><span class="nb">list</span> <span class="s">&quot;cat&quot;</span> <span class="s">&quot;jedi-port.log&quot;</span> <span class="p">)</span>
       <span class="nv">jedi:server-args</span> <span class="no">nil</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -416,16 +426,61 @@ use the following command:</p>
 this command is called.  You can use <cite>&#8211;ipdb</cite> instead of <cite>&#8211;pdb</cite>
 to use ipdb instead of pdb.</p>
 <p>Calling this command again restores the original setting of
-<a class="reference internal" href="#jedi:server-command" title="jedi:server-command"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:server-command</span></tt></a> and <a class="reference internal" href="#jedi:server-args" title="jedi:server-args"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:server-args</span></tt></a>.</p>
+<a class="reference internal" href="#jedi:server-command" title="jedi:server-command"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:server-command</span></tt></a> and <a class="reference internal" href="#jedi:server-args" title="jedi:server-args"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:server-args</span></tt></a> then stops the
+running server.</p>
 </dd></dl>
 
 </div>
+<div class="section" id="id4">
+<h2>Troubleshooting<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<p>Before posting question or bug report in the <a class="reference external" href="https://github.com/tkf/emacs-jedi/issues">issue tracker</a>, please
+investigate the problem by yourself.  Here is some checklist.</p>
+<ol class="arabic">
+<li><p class="first">To make sure that jedi.el is running correctly, you can
+do <tt class="docutils literal"><span class="pre">M-x</span> <span class="pre">jedi:show-jedi-version</span></tt>.  It will show the versions
+of the Python libraries you are using.</p>
+</li>
+<li><p class="first">To check that <a class="reference internal" href="#jedi:setup" title="jedi:setup"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:setup</span></tt></a> is called properly via
+<tt class="xref el el-symbol docutils literal"><span class="pre">python-mode-hook</span></tt>, run <tt class="docutils literal"><span class="pre">M-:</span> <span class="pre">jedi-mode</span> <span class="pre">RET</span></tt> in
+some Python file.  It should return <cite>t</cite>.</p>
+</li>
+<li><p class="first">It is possible that Jedi&#8217;s keybind conflicts with keybinds
+of other libraries.  You can check the definition of keybind
+by <tt class="docutils literal"><span class="pre">&lt;f1&gt;</span> <span class="pre">k</span> <span class="pre">C-c</span> <span class="pre">d</span></tt> (or <tt class="docutils literal"><span class="pre">C-h</span></tt> instead of <tt class="docutils literal"><span class="pre">&lt;f1&gt;</span></tt>), for example.
+This one should show the help for <a class="reference internal" href="#jedi:show-doc" title="jedi:show-doc"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:show-doc</span></tt></a>.</p>
+<p>If you find other command using the keybind, you can
+change it by using <a class="reference internal" href="#jedi:key-show-doc" title="jedi:key-show-doc"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:key-show-doc</span></tt></a>, etc.
+See: <a class="reference internal" href="#jedi:setup-keys" title="jedi:setup-keys"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:setup-keys</span></tt></a>.</p>
+</li>
+<li><p class="first">Make sure that <tt class="docutils literal"><span class="pre">(require</span> <span class="pre">'jedi)</span></tt> is <em>not</em> called anywhere
+before the line <tt class="docutils literal"><span class="pre">(setq</span> <span class="pre">jedi:setup-keys</span> <span class="pre">t)</span></tt>.
+See: <a class="reference internal" href="#jedi:setup-keys" title="jedi:setup-keys"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:setup-keys</span></tt></a>.</p>
+<p>To check that keybind setup works, do <tt class="docutils literal"><span class="pre">M-:</span> <span class="pre">jedi-mode-map</span> <span class="pre">RET</span></tt>.
+It should return something like the following (formatted):</p>
+<div class="highlight-cl"><div class="highlight"><pre><span class="p">(</span><span class="nv">keymap</span> <span class="p">(</span><span class="mi">3</span> <span class="nv">keymap</span> <span class="p">(</span><span class="mi">100</span> <span class="o">.</span> <span class="nv">jedi:show-doc</span><span class="p">))</span>
+        <span class="p">(</span><span class="mi">67108910</span> <span class="o">.</span> <span class="nv">jedi:goto-definition</span><span class="p">)</span>
+        <span class="p">(</span><span class="nv">C-tab</span> <span class="o">.</span> <span class="nv">jedi:complete</span><span class="p">))</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
 <div class="section" id="changelog">
 <h2>Changelog<a class="headerlink" href="#changelog" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="v0-1-2-wip">
+<h3>v0.1.2 (WIP)<a class="headerlink" href="#v0-1-2-wip" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Do not expand common part when completing on inserting dot using
+<tt class="xref el el-symbol docutils literal"><span class="pre">jedi:dot-complete</span></tt>.</li>
+<li>Strip off newlines from candidate summary.  This prevents
+popup to be disrupted when showing candidates summary
+containing newlines (e.g., <tt class="docutils literal"><span class="pre">json.__all__</span></tt>).</li>
+</ul>
+</div>
 <div class="section" id="v0-1-1">
 <h3>v0.1.1<a class="headerlink" href="#v0-1-1" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li>Add experimental &#8220;full-name&#8221; support <a class="footnote-reference" href="#fullname" id="id2">[1]</a>.</li>
+<li>Add experimental &#8220;full-name&#8221; support <a class="footnote-reference" href="#fullname" id="id5">[1]</a>.</li>
 <li><a class="reference external" href="https://github.com/tkf/emacs-jedi/pull/11">PR-11</a> fixes Makefile for BSD make (thanks, <a class="reference external" href="https://github.com/goro1080">&#64;goro1080</a>!).</li>
 <li>Fix <a class="reference external" href="https://github.com/tkf/emacs-jedi/issues/9">issue-9</a>: line number sent to the server was shifted when the cursor
 is at the beginning of line.</li>
@@ -437,7 +492,7 @@ Jedi commands to <tt class="xref el el-symbol docutils literal"><span class="pre
 <table class="docutils footnote" frame="void" id="fullname" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id2">[1]</a></td><td><cite>jedi:get-full-name-*</cite> functions require developmental
+<tr><td class="label"><a class="fn-backref" href="#id5">[1]</a></td><td><cite>jedi:get-full-name-*</cite> functions require developmental
 version of <a class="reference external" href="https://github.com/davidhalter/jedi">Jedi</a>.
 See also: <a class="reference external" href="https://github.com/davidhalter/jedi/issues/61">Request: Definition.fullname · Issue #61 ·
 davidhalter/jedi</a></td></tr>
@@ -467,7 +522,7 @@ davidhalter/jedi</a></td></tr>
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
-        <li><a href="#">Emacs Jedi 0.1.1 documentation</a> &raquo;</li> 
+        <li><a href="#">Emacs Jedi 0.1.2alpha0 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

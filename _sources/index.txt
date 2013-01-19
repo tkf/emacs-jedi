@@ -2,18 +2,17 @@
  Jedi.el - Python auto-completion for Emacs
 ============================================
 
-Links:
+.. sidebar:: Links:
 
-* `Documentation (at GitHub Pages) <http://tkf.github.com/emacs-jedi/>`_
-* `Repository (at GitHub) <https://github.com/tkf/emacs-jedi>`_
-* `Issue tracker (at GitHub) <https://github.com/tkf/emacs-jedi/issues>`_
-* `Travis CI <https://travis-ci.org/#!/tkf/emacs-jedi>`_ |build-status|
+   * `Documentation <http://tkf.github.com/emacs-jedi/>`_ (at GitHub Pages)
 
-.. |build-status|
-   image:: https://secure.travis-ci.org/tkf/emacs-jedi.png
-           ?branch=master
-   :target: http://travis-ci.org/tkf/emacs-jedi
-   :alt: Build Status
+     * `Configuration <http://tkf.github.com/emacs-jedi#configuration>`_
+     * `Command <http://tkf.github.com/emacs-jedi#command>`_
+     * `Troubleshooting <http://tkf.github.com/emacs-jedi#troubleshooting>`_
+
+   * `Repository <https://github.com/tkf/emacs-jedi>`_ (at GitHub)
+   * `Issue tracker <https://github.com/tkf/emacs-jedi/issues>`_ (at GitHub)
+   * `Travis CI <https://travis-ci.org/#!/tkf/emacs-jedi>`_ |build-status|
 
 
 What is it?
@@ -53,6 +52,8 @@ is wide, try the newest version of popup.el_.
 .. _deferred.el: https://github.com/kiwanami/emacs-deferred
 .. _popup.el: https://github.com/auto-complete/popup-el
 
+Jedi.el is currently tested against Emacs 24.3-devel, 24.2 and 23.1.
+
 Python
 ------
 - Jedi_
@@ -91,8 +92,8 @@ Manual install
 3. Install Jedi_ and python-epc_ by
 
    - ``make requirements`` or
-   - ``pip install jedi epc`` if you want to determine where to
-     install them.
+   - ``pip install -r requirements.txt`` if you want to determine
+     where to install Python modules.
 
 4. Add ``(autoload 'jedi:setup "jedi" nil t)`` in your Emacs configuration.
 
@@ -131,6 +132,13 @@ Jedi.el and EIN simultaneously.
 
 .. _ein:jedi-setup:
    http://tkf.github.com/emacs-ipython-notebook/#ein:jedi-setup
+
+
+.. Build status badge
+.. |build-status|
+   image:: https://secure.travis-ci.org/tkf/emacs-jedi.png?branch=master
+   :target: http://travis-ci.org/tkf/emacs-jedi
+   :alt: Build Status
 
 
 .. ^- put some space after README.rst
@@ -181,8 +189,55 @@ Command
 .. el:package:: jedi
 .. el:function:: jedi:toggle-debug-server
 
+
+Troubleshooting
+===============
+
+Before posting question or bug report in the `issue tracker`_, please
+investigate the problem by yourself.  Here is some checklist.
+
+1. To make sure that jedi.el is running correctly, you can
+   do ``M-x jedi:show-jedi-version``.  It will show the versions
+   of the Python libraries you are using.
+
+2. To check that :el:symbol:`jedi:setup` is called properly via
+   :el:symbol:`python-mode-hook`, run ``M-: jedi-mode RET`` in
+   some Python file.  It should return `t`.
+
+3. It is possible that Jedi's keybind conflicts with keybinds
+   of other libraries.  You can check the definition of keybind
+   by ``<f1> k C-c d`` (or ``C-h`` instead of ``<f1>``), for example.
+   This one should show the help for :el:symbol:`jedi:show-doc`.
+
+   If you find other command using the keybind, you can
+   change it by using :el:symbol:`jedi:key-show-doc`, etc.
+   See: :el:symbol:`jedi:setup-keys`.
+
+4. Make sure that ``(require 'jedi)`` is *not* called anywhere
+   before the line ``(setq jedi:setup-keys t)``.
+   See: :el:symbol:`jedi:setup-keys`.
+
+   To check that keybind setup works, do ``M-: jedi-mode-map RET``.
+   It should return something like the following (formatted):
+
+   .. sourcecode:: cl
+
+      (keymap (3 keymap (100 . jedi:show-doc))
+              (67108910 . jedi:goto-definition)
+              (C-tab . jedi:complete))
+
+
 Changelog
 =========
+
+v0.1.2 (WIP)
+------------
+
+- Do not expand common part when completing on inserting dot using
+  :el:symbol:`jedi:dot-complete`.
+- Strip off newlines from candidate summary.  This prevents
+  popup to be disrupted when showing candidates summary
+  containing newlines (e.g., ``json.__all__``).
 
 v0.1.1
 ------

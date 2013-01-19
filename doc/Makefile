@@ -47,7 +47,7 @@ clean:
 
 source: source/index.rst
 source/index.rst: ../README.rst source/tail.rest
-	cat $^ > $@
+	sed -r 's% <http://tkf.github.com/emacs-jedi#[[:alnum:]]+>%%' $^ > $@
 
 html: source
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html

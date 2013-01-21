@@ -83,6 +83,16 @@ yet, get them from `this pull request`_.
 .. _el-get: https://github.com/dimitri/el-get
 .. _this pull request: https://github.com/dimitri/el-get/pull/927
 
+
+package.el (MELPA)
+------------------
+
+You can install Jedi.el using package.el interface from MELPA_.  As
+package.el does not support installing non-elisp packages, you need to
+install Python part manually (see the next section).
+
+.. _MELPA: http://melpa.milkbox.net
+
 Manual install
 --------------
 

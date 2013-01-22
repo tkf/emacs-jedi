@@ -11,6 +11,7 @@ Configuration
 .. el:function:: jedi:ac-setup
 .. el:variable:: jedi:complete-on-dot
 .. el:variable:: jedi:server-command
+   :value: '("python" "JEDI:SOURCE-DIR/jediepcserver.py")
 .. el:variable:: jedi:server-args
 .. el:variable:: jedi:get-in-function-call-timeout
 .. el:variable:: jedi:get-in-function-call-delay
@@ -24,9 +25,13 @@ Keybinds
 
 .. el:variable:: jedi:setup-keys
 .. el:variable:: jedi:key-complete
+   :value: (kbd "<C-tab>")
 .. el:variable:: jedi:key-goto-definition
+   :value: (kbd "C-.")
 .. el:variable:: jedi:key-show-doc
+   :value: (kbd "C-c d")
 .. el:variable:: jedi:key-related-names
+   :value: (kbd "C-c r")
 
 
 Command

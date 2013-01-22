@@ -284,7 +284,7 @@ See also: `jedi:server-args'."
                         " ")))))
   (if (and (local-variable-p 'jedi:epc) jedi:epc)
       (message "Dedicated Jedi server is already running!")
-    (make-local-variable 'jedi:epc)
+    (set (make-local-variable 'jedi:epc) nil)
     (let ((jedi:server-command command)
           (jedi:server-args nil))
       (jedi:start-server))))

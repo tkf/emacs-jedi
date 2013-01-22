@@ -9,7 +9,7 @@ EL4T_CARTON = EL4T_EMACS=${EMACS} EMACS=${EL4T_SCRIPT} ${CARTON}
 EL4T_CARTON_EMACS = ${EL4T_CARTON} exec ${EL4T_SCRIPT}
 
 .PHONY : test test-1 tryout clean-elpa requirements env clean-env clean \
-	print-deps travis-ci
+	print-deps travis-ci doc
 
 test: elpa requirements
 	${MAKE} test-1
@@ -29,11 +29,14 @@ clean-elc:
 tryout: compile requirements
 	${EL4T_CARTON_EMACS} -Q -L . -l tryout-jedi.el
 
+doc: elpa
+	make -C doc html
+
 ${EL4T_SCRIPT}:
 	git submodule update --init
 
 elpa: ${EL4T_SCRIPT}
-	mkdir elpa
+	mkdir -p elpa
 	${EL4T_CARTON} install 2> elpa/install.log
 
 clean-elpa:

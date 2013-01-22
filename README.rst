@@ -103,11 +103,21 @@ Manual install
    `load-path`.
 3. Install Jedi_ and python-epc_ by
 
-   - ``make requirements`` or
+   - ``make requirements`` (no need for root privileges [#]_) or
    - ``pip install -r requirements.txt`` if you want to determine
-     where to install Python modules.
+     where to install Python modules.  You need root privileges (i.e.,
+     ``sudo``) to install it in system directory.
 
 4. Add ``(autoload 'jedi:setup "jedi" nil t)`` in your Emacs configuration.
+
+.. [#] You need virtualenv_ for ``make requirements``.  It installs
+   all requirements for Jedi EPC server in an isolated Python
+   environment in ``env/`` directory under the directory where jedi.el
+   locates.  Note that you don't need to worry about if you want to
+   use Jedi.el to complete modules in another virtualenv you made.
+   Jedi EPC server recognize the virtualenv it is in (i.e., the
+   environment variable ``VIRTUAL_ENV`` in your Emacs) and then add
+   modules in that environment to its ``sys.path``.
 
 
 Setup

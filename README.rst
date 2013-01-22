@@ -64,8 +64,10 @@ Jedi.el is tested against Python 2.6, 2.7 and 3.2.
 
 Optional dependencies for automatic installation:
 -------------------------------------------------
-- virtualenv
+- virtualenv_
 - make
+
+.. _virtualenv: http://www.virtualenv.org
 
 
 Install
@@ -76,7 +78,7 @@ el-get
 
 The easiest way to install Jedi.el is to use el-get_:
 just do ``M-x el-get-install jedi``.
-You need to have `virtualenv` to automatically install Python module
+You need to have virtualenv_ to automatically install Python module
 dependencies.  If your el-get does not have the recipes for Jedi.el
 yet, get them from `this pull request`_.
 

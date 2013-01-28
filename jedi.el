@@ -336,6 +336,17 @@ See also: `jedi:server-args'."
 
 ;;; AC source
 
+(defcustom jedi:max-summary-length nil
+  "Maximum description length in completions menu."
+  :group 'jedi
+  :type '(choice (const :tag "Unlimited" nil)
+                 (integer :tag "Value" 30)))
+
+(defcustom jedi:cut-summary-postfix ""
+  "Postfix string to be concatenated to shortened completions."
+  :group 'jedi
+  :type 'string)
+
 (defun jedi:ac-direct-matches ()
   (mapcar
    (lambda (x)
@@ -344,7 +355,11 @@ See also: `jedi:server-args'."
        (popup-make-item word
                         :symbol symbol
                         :document (unless (equal doc "") doc)
-                        :summary description)))
+                        :summary (if (and jedi:max-summary-length
+                                          (> (length description) jedi:max-summary-length))
+                                     (concat (substring 0 jedi:max-summary-length description)
+                                             jedi:cut-summary-postfix)))))
+
    jedi:complete-reply))
 
 (defun jedi:ac-direct-prefix ()

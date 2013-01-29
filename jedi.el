@@ -348,7 +348,7 @@ See also: `jedi:server-args'."
     (set (make-local-variable 'jedi:server-args) nil)
     (jedi:start-server)
     ;; Stop server when this buffer is killed:
-    (add-hook 'kill-buffer-hook 'jedi:stop-dedicated-server-safe nil t)))
+    (add-hook 'kill-buffer-hook 'jedi:server-pool--gc-when-idle nil t)))
 
 (defun jedi:stop-dedicated-server ()
   "Like `jedi:stop-server', but this one makes sure *not* to kill
@@ -357,10 +357,6 @@ global server instance."
   (if (local-variable-p 'jedi:epc)
       (jedi:stop-server)
     (message "Global Jedi server is running in %s" (buffer-name))))
-
-(defun jedi:stop-dedicated-server-safe ()
-  "Call `jedi:stop-dedicated-server' and ignore all errors from it."
-  (ignore-errors (jedi:stop-dedicated-server)))
 
 (defun jedi:call-deferred (method-name)
   "Call ``Script(...).METHOD-NAME`` and return a deferred object."

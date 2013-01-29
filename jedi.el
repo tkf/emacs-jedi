@@ -285,9 +285,25 @@ See also: `jedi:server-args'."
   (if (and (local-variable-p 'jedi:epc) jedi:epc)
       (message "Dedicated Jedi server is already running!")
     (set (make-local-variable 'jedi:epc) nil)
-    (let ((jedi:server-command command)
-          (jedi:server-args nil))
-      (jedi:start-server))))
+    ;; Set `jedi:server-command' too, so that this command is used
+    ;; when restarting EPC server of this buffer.
+    (set (make-local-variable 'jedi:server-command) command)
+    (set (make-local-variable 'jedi:server-args) nil)
+    (jedi:start-server)
+    ;; Stop server when this buffer is killed:
+    (add-hook 'kill-buffer-hook 'jedi:stop-dedicated-server-safe nil t)))
+
+(defun jedi:stop-dedicated-server ()
+  "Like `jedi:stop-server', but this one makes sure *not* to kill
+global server instance."
+  (interactive)
+  (if (local-variable-p 'jedi:epc)
+      (jedi:stop-server)
+    (message "Global Jedi server is running in %s" (buffer-name))))
+
+(defun jedi:stop-dedicated-server-safe ()
+  "Call `jedi:stop-dedicated-server' and ignore all errors from it."
+  (ignore-errors (jedi:stop-dedicated-server)))
 
 (defun jedi:call-deferred (method-name)
   "Call ``Script(...).METHOD-NAME`` and return a deferred object."

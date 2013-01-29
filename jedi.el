@@ -322,7 +322,9 @@ later when it is needed."
   (setq jedi:get-in-function-call--d nil))
 
 (defun jedi:get-epc ()
-  (or jedi:epc (jedi:start-server)))
+  (if (jedi:epc--live-p jedi:epc)
+      jedi:epc
+    (jedi:start-server)))
 
 ;;;###autoload
 (defun jedi:start-dedicated-server (command)

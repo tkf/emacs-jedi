@@ -324,6 +324,7 @@ later when it is needed."
 (defun jedi:get-epc ()
   (or jedi:epc (jedi:start-server)))
 
+;;;###autoload
 (defun jedi:start-dedicated-server (command)
   "Start Jedi server dedicated to this buffer.
 This is useful, for example, when you want to use different

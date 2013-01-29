@@ -284,6 +284,8 @@ key, or start new one if there is none."
         collect mngr into mngr-list
         finally return mngr-list))
 
+(defvar jedi:server-pool--gc-timer nil)
+
 (defun jedi:server-pool--gc ()
   "Stop unused servers."
   (let ((servers-in-use (jedi:-get-servers-in-use)))
@@ -292,9 +294,10 @@ key, or start new one if there is none."
        (unless (memq mngr servers-in-use)
          (remhash key jedi:server-pool--table)
          (epc:stop-epc mngr)))
-     jedi:server-pool--table)))
-
-(defvar jedi:server-pool--gc-timer nil)
+     jedi:server-pool--table))
+  ;; Clear timer so that GC is started next time
+  ;; `jedi:server-pool--gc-when-idle' is called.
+  (setq jedi:server-pool--gc-timer nil))
 
 (defun jedi:server-pool--gc-when-idle ()
   "Run `jedi:server-pool--gc' when idle."

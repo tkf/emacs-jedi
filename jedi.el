@@ -90,6 +90,15 @@ server, do something like this::
           '(\"--sys-path\" \"MY/SPECIAL/PATH\"
             \"--sys-path\" \"MY/OTHER/SPECIAL/PATH\"))
 
+If you want to include some virtualenv, do something like this.
+Note that actual `VIRTUAL_ENV' is treated automatically.  Also,
+you need to start Jedi EPC server with the same python version
+that you use for the virtualenv.::
+
+    (setq jedi:server-args
+          '(\"--venv-path\" \"SOME/VIRTUAL_ENV_1\"
+            \"--venv-path\" \"SOME/VIRTUAL_ENV_2\"))
+
 To see what other arguments Jedi server can take, execute the
 following command::
 
@@ -347,6 +356,8 @@ virtualenv of the project you are in [#]_::
                                  '(\"env\" \".tox/py27\"))))
            (env (loop for p in candidates
                       when (file-exists-p p) return p)))
+      ;; Here, env points to a virtualenv path (e.g., PROJECT_ROOT/env)
+      ;; or it is nil.
       (when env
         (jedi:start-dedicated-server
          (append jedi:server-command

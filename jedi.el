@@ -236,15 +236,72 @@ toolitp when inside of function call.
         (define-key map jedi:key-related-names command)))))
 
 
+;;; EPC utils
+
+(defun jedi:epc--live-p (mngr)
+  "Return non-nil when MNGR is an EPC manager object with a live
+connection."
+  (let ((proc (ignore-errors
+                (epc:connection-process (epc:manager-connection mngr)))))
+    (and (processp proc)
+         ;; Same as `process-live-p' in Emacs >= 24:
+         (memq (process-status proc) '(run open listen connect stop)))))
+
+
+;;; Server pool
+
+(defvar jedi:server-pool--table (make-hash-table :test 'equal)
+  "A hash table that holds a pool of EPC server instances.")
+
+(defun jedi:server-pool--start (command)
+  "Get an EPC server instance from server pool by COMMAND as a
+key, or start new one if there is none."
+  (let ((cached (gethash command jedi:server-pool--table)))
+    (if (and cached (jedi:epc--live-p cached))
+        cached
+      (prog1
+          (puthash command
+                   (epc:start-epc (car command)
+                                  (cdr command))
+                   jedi:server-pool--table)
+        (jedi:server-pool--gc-when-idle)))))
+
+(defun jedi:-get-servers-in-use ()
+  "Return a list of non-nil `jedi:epc' in all buffers."
+  (loop with mngr-list
+        for buffer in (buffer-list)
+        for mngr = (with-current-buffer buffer jedi:epc)
+        when (and mngr (not (memq mngr mngr-list)))
+        collect mngr into mngr-list
+        finally return mngr-list))
+
+(defun jedi:server-pool--gc ()
+  "Stop unused servers."
+  (let ((servers-in-use (jedi:-get-servers-in-use)))
+    (maphash
+     (lambda (key mngr)
+       (unless (memq mngr servers-in-use)
+         (remhash key jedi:server-pool--table)
+         (epc:stop-epc mngr)))
+     jedi:server-pool--table)))
+
+(defvar jedi:server-pool--gc-timer nil)
+
+(defun jedi:server-pool--gc-when-idle ()
+  "Run `jedi:server-pool--gc' when idle."
+  (unless jedi:server-pool--gc-timer
+    (setq jedi:server-pool--gc-timer
+          (run-with-idle-timer 10 nil 'jedi:server-pool--gc))))
+
+
 ;;; Server management
 
 (defun jedi:start-server ()
   (if jedi:epc
       (message "Jedi server is already started!")
     (let ((default-directory jedi:source-dir))
-      (setq jedi:epc (epc:start-epc (car jedi:server-command)
-                                    (append (cdr jedi:server-command)
-                                            jedi:server-args))))
+      (setq jedi:epc (jedi:server-pool--start
+                      (append jedi:server-command jedi:server-args))))
     (set-process-query-on-exit-flag
      (epc:connection-process (epc:manager-connection jedi:epc)) nil)
     (set-process-query-on-exit-flag

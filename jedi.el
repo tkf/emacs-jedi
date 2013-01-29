@@ -330,6 +330,24 @@ This is useful, for example, when you want to use different
 `sys.path' for some buffer.  When invoked as an interactive
 command, it asks you how to start the Jedi server.  You can edit
 the command in minibuffer to specify the way Jedi server run.
+
+If you want to automatically setup Jedi server per project, you
+can use the following setup to start Jedi server using
+project-specific python executable (e.g., the one in
+virtualenv)::
+
+  (defun my-jedi-start-dedicated-server ()
+    (jedi:start-dedicated-server
+     (append (list (FIND-EXECUTABLE-IN-PROJECT-BIN \"python\")
+                   jedi:server-script)
+             jedi:server-args)))
+
+  (add-hook 'python-mode-hook 'my-jedi-start-dedicated-server)
+
+Note that Jedi server run by the same command is pooled.  So,
+there is only one Jedi server for the same project, as long as
+the argument given to `jedi:start-dedicated-server' is the same.
+
 See also: `jedi:server-args'."
   (interactive
    (list (split-string-and-unquote

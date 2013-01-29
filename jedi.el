@@ -355,10 +355,9 @@ virtualenv of the project you are in [#]_::
     (jedi:setup)
     (let* ((root (ignore-errors (eproject-maybe-turn-on)
                                 (eproject-root)))
-           (candidates (when root
-                         (mapcar (lambda (x) (expand-file-name x root))
-                                 '(\"env\" \".tox/py27\"))))
-           (env (loop for p in candidates
+           (env (loop unless root return nil
+                      for e in '(\"env\" \".tox/py27\")
+                      for p = (expand-file-name e root)
                       when (file-exists-p p) return p)))
       ;; Here, env points to a virtualenv path (e.g., PROJECT_ROOT/env)
       ;; or it is nil.

@@ -332,17 +332,39 @@ command, it asks you how to start the Jedi server.  You can edit
 the command in minibuffer to specify the way Jedi server run.
 
 If you want to automatically setup Jedi server per project, you
-can use the following setup to start Jedi server using
-project-specific python executable (e.g., the one in
-virtualenv)::
+can call this function from `python-mode-hook'.  For exmaple, you
+can use the following setup to start Jedi server loading
+virtualenv of the project you are in [#]_::
+
+  (defun my-jedi-start-dedicated-server ()
+    (let* ((root (ignore-errors (eproject-maybe-turn-on)
+                                (eproject-root)))
+           (candidates (when root
+                         (mapcar (lambda (x) (expand-file-name x root))
+                                 '(\"env\" \".tox/py27\"))))
+           (env (loop for p in candidates
+                      when (file-exists-p p) return p)))
+      (when env
+        (jedi:start-dedicated-server
+         (append jedi:server-command
+                 jedi:server-args
+                 (list \"--venv-path\" env))))))
+
+  (add-hook 'python-mode-hook 'my-jedi-start-dedicated-server)
+
+.. [#] You need `eproject <https://github.com/jrockway/eproject>`_
+   to use this function as-is.
+
+Here is another example to start Jedi server using
+project-specific python executable (e.g., the one in virtualenv).
+Note that jedi and epc should be loadable from this
+project-specific python executable::
 
   (defun my-jedi-start-dedicated-server ()
     (jedi:start-dedicated-server
      (append (list (FIND-EXECUTABLE-IN-PROJECT-BIN \"python\")
                    jedi:server-script)
              jedi:server-args)))
-
-  (add-hook 'python-mode-hook 'my-jedi-start-dedicated-server)
 
 Note that Jedi server run by the same command is pooled.  So,
 there is only one Jedi server for the same project, as long as

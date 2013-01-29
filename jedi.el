@@ -352,6 +352,7 @@ can use the following setup to start Jedi server loading
 virtualenv of the project you are in [#]_::
 
   (defun my-jedi-start-dedicated-server ()
+    (jedi:setup)
     (let* ((root (ignore-errors (eproject-maybe-turn-on)
                                 (eproject-root)))
            (candidates (when root
@@ -369,6 +370,11 @@ virtualenv of the project you are in [#]_::
 
   (add-hook 'python-mode-hook 'my-jedi-start-dedicated-server)
 
+Note that you should call `jedi:setup' before doing anything
+Jedi-specific setup.  You don't need to add `jedi:setup' to
+`python-mode-hook' separately when you add your own custom
+hook function like above.
+
 .. [#] You need `eproject <https://github.com/jrockway/eproject>`_
    to use this function as-is.
 
@@ -378,6 +384,7 @@ Note that jedi and epc should be loadable from this
 project-specific python executable::
 
   (defun my-jedi-start-dedicated-server ()
+    (jedi:setup)
     (jedi:start-dedicated-server
      (append (list (FIND-EXECUTABLE-IN-PROJECT-BIN \"python\")
                    jedi:server-script)

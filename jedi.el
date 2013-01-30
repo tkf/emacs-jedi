@@ -273,12 +273,16 @@ key, or start new one if there is none."
   (let ((cached (gethash command jedi:server-pool--table)))
     (if (and cached (jedi:epc--live-p cached))
         cached
-      (prog1
-          (puthash command
-                   (epc:start-epc (car command)
-                                  (cdr command))
-                   jedi:server-pool--table)
-        (jedi:server-pool--gc-when-idle)))))
+      (let* ((default-directory jedi:source-dir)
+             (mngr (epc:start-epc (car command)
+                                  (cdr command))))
+        (set-process-query-on-exit-flag (epc:connection-process
+                                         (epc:manager-connection mngr))
+                                        nil)
+        (set-process-query-on-exit-flag (epc:manager-server-process mngr) nil)
+        (puthash command mngr jedi:server-pool--table)
+        (jedi:server-pool--gc-when-idle)
+        mngr))))
 
 (defun jedi:-get-servers-in-use ()
   "Return a list of non-nil `jedi:epc' in all buffers."
@@ -316,13 +320,8 @@ key, or start new one if there is none."
 (defun jedi:start-server ()
   (if jedi:epc
       (message "Jedi server is already started!")
-    (let ((default-directory jedi:source-dir))
-      (setq jedi:epc (jedi:server-pool--start
-                      (append jedi:server-command jedi:server-args))))
-    (set-process-query-on-exit-flag
-     (epc:connection-process (epc:manager-connection jedi:epc)) nil)
-    (set-process-query-on-exit-flag
-     (epc:manager-server-process jedi:epc) nil))
+    (setq jedi:epc (jedi:server-pool--start
+                    (append jedi:server-command jedi:server-args))))
   jedi:epc)
 
 (defun jedi:stop-server ()

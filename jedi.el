@@ -45,6 +45,7 @@
                           default-directory))
 
 (defvar jedi:epc nil)
+(make-variable-buffer-local 'jedi:epc)
 
 (defvar jedi:server-script
   (convert-standard-filename
@@ -230,8 +231,12 @@ toolitp when inside of function call.
         (define-key map "." 'jedi:dot-complete)
       (define-key map "." nil)))
   (if jedi-mode
-      (add-hook 'post-command-hook 'jedi:handle-post-command nil t)
-    (remove-hook 'post-command-hook 'jedi:handle-post-command t)))
+      (progn
+        (add-hook 'post-command-hook 'jedi:handle-post-command nil t)
+        (add-hook 'kill-buffer-hook 'jedi:server-pool--gc-when-idle nil t))
+    (remove-hook 'post-command-hook 'jedi:handle-post-command t)
+    (remove-hook 'kill-buffer-hook 'jedi:server-pool--gc-when-idle t)
+    (jedi:server-pool--gc-when-idle)))
 
 (when jedi:setup-keys
   (let ((map jedi-mode-map))
@@ -402,24 +407,15 @@ See also: `jedi:server-args'."
                         (append jedi:server-command
                                 jedi:server-args)
                         " ")))))
-  (if (and (local-variable-p 'jedi:epc) jedi:epc)
+  (if (and (local-variable-p 'jedi:server-command) jedi:epc)
       (message "Dedicated Jedi server is already running!")
-    (set (make-local-variable 'jedi:epc) nil)
+    (setq jedi:epc nil)
     ;; Set `jedi:server-command' too, so that this command is used
     ;; when restarting EPC server of this buffer.
     (set (make-local-variable 'jedi:server-command) command)
     (set (make-local-variable 'jedi:server-args) nil)
     (jedi:start-server)
-    ;; Stop server when this buffer is killed:
-    (add-hook 'kill-buffer-hook 'jedi:server-pool--gc-when-idle nil t)))
-
-(defun jedi:stop-dedicated-server ()
-  "Like `jedi:stop-server', but this one makes sure *not* to kill
-global server instance."
-  (interactive)
-  (if (local-variable-p 'jedi:epc)
-      (jedi:stop-server)
-    (message "Global Jedi server is running in %s" (buffer-name))))
+    ))
 
 (defun jedi:call-deferred (method-name)
   "Call ``Script(...).METHOD-NAME`` and return a deferred object."

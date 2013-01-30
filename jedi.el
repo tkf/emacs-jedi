@@ -45,6 +45,7 @@
                           default-directory))
 
 (defvar jedi:epc nil)
+(make-variable-buffer-local 'jedi:epc)
 
 (defvar jedi:server-script
   (convert-standard-filename
@@ -102,7 +103,32 @@ that you use for the virtualenv.::
 To see what other arguments Jedi server can take, execute the
 following command::
 
-    python jediepcserver.py --help"
+    python jediepcserver.py --help
+
+
+**Advanced usage**
+
+Sometimes you want to configure how Jedi server is started per
+buffer.  To do that, you should make this variable buffer local
+in `python-mode-hook' and set it to some buffer specific variable,
+like this::
+
+  (defun my-jedi-server-setup ()
+    (let ((cmds (GET-SOME-PROJECT-SPECIFIC-COMMAND))
+          (args (GET-SOME-PROJECT-SPECIFIC-ARGS)))
+      (when cmds (set (make-local-variable 'jedi:server-command cmds)))
+      (when args (set (make-local-variable 'jedi:server-args args)))))
+
+  (add-hook 'python-mode-hook 'my-jedi-server-setup)
+
+Note that Jedi server run by the same command is pooled.  So,
+there is only one Jedi server for the same set of command.  If
+you want to check how many EPC servers are running, use the EPC
+GUI: M-x `epc:controller'.  You will see a table of EPC connections
+for Jedi.el and other EPC applications.
+
+If you want to start a new ad-hoc server for the current buffer,
+use the command `jedi:start-dedicated-server'."
   :group 'jedi)
 
 (defcustom jedi:complete-on-dot nil
@@ -230,8 +256,12 @@ toolitp when inside of function call.
         (define-key map "." 'jedi:dot-complete)
       (define-key map "." nil)))
   (if jedi-mode
-      (add-hook 'post-command-hook 'jedi:handle-post-command nil t)
-    (remove-hook 'post-command-hook 'jedi:handle-post-command t)))
+      (progn
+        (add-hook 'post-command-hook 'jedi:handle-post-command nil t)
+        (add-hook 'kill-buffer-hook 'jedi:server-pool--gc-when-idle nil t))
+    (remove-hook 'post-command-hook 'jedi:handle-post-command t)
+    (remove-hook 'kill-buffer-hook 'jedi:server-pool--gc-when-idle t)
+    (jedi:server-pool--gc-when-idle)))
 
 (when jedi:setup-keys
   (let ((map jedi-mode-map))
@@ -268,12 +298,16 @@ key, or start new one if there is none."
   (let ((cached (gethash command jedi:server-pool--table)))
     (if (and cached (jedi:epc--live-p cached))
         cached
-      (prog1
-          (puthash command
-                   (epc:start-epc (car command)
-                                  (cdr command))
-                   jedi:server-pool--table)
-        (jedi:server-pool--gc-when-idle)))))
+      (let* ((default-directory jedi:source-dir)
+             (mngr (epc:start-epc (car command)
+                                  (cdr command))))
+        (set-process-query-on-exit-flag (epc:connection-process
+                                         (epc:manager-connection mngr))
+                                        nil)
+        (set-process-query-on-exit-flag (epc:manager-server-process mngr) nil)
+        (puthash command mngr jedi:server-pool--table)
+        (jedi:server-pool--gc-when-idle)
+        mngr))))
 
 (defun jedi:-get-servers-in-use ()
   "Return a list of non-nil `jedi:epc' in all buffers."
@@ -311,13 +345,8 @@ key, or start new one if there is none."
 (defun jedi:start-server ()
   (if jedi:epc
       (message "Jedi server is already started!")
-    (let ((default-directory jedi:source-dir))
-      (setq jedi:epc (jedi:server-pool--start
-                      (append jedi:server-command jedi:server-args))))
-    (set-process-query-on-exit-flag
-     (epc:connection-process (epc:manager-connection jedi:epc)) nil)
-    (set-process-query-on-exit-flag
-     (epc:manager-server-process jedi:epc) nil))
+    (setq jedi:epc (jedi:server-pool--start
+                    (append jedi:server-command jedi:server-args))))
   jedi:epc)
 
 (defun jedi:stop-server ()
@@ -346,53 +375,9 @@ This is useful, for example, when you want to use different
 command, it asks you how to start the Jedi server.  You can edit
 the command in minibuffer to specify the way Jedi server run.
 
-If you want to automatically setup Jedi server per project, you
-can call this function from `python-mode-hook'.  For exmaple, you
-can use the following setup to start Jedi server loading
-virtualenv of the project you are in [#]_::
-
-  (defun my-jedi-start-dedicated-server ()
-    (jedi:setup)
-    (let* ((root (ignore-errors (eproject-maybe-turn-on)
-                                (eproject-root)))
-           (env (loop unless root return nil
-                      for e in '(\"env\" \".tox/py27\")
-                      for p = (expand-file-name e root)
-                      when (file-exists-p p) return p)))
-      ;; Here, env points to a virtualenv path (e.g., PROJECT_ROOT/env)
-      ;; or it is nil.
-      (when env
-        (jedi:start-dedicated-server
-         (append jedi:server-command
-                 jedi:server-args
-                 (list \"--venv-path\" env))))))
-
-  (add-hook 'python-mode-hook 'my-jedi-start-dedicated-server)
-
-Note that you should call `jedi:setup' before doing anything
-Jedi-specific setup.  You don't need to add `jedi:setup' to
-`python-mode-hook' separately when you add your own custom
-hook function like above.
-
-.. [#] You need `eproject <https://github.com/jrockway/eproject>`_
-   to use this function as-is.
-
-Here is another example to start Jedi server using
-project-specific python executable (e.g., the one in virtualenv).
-Note that jedi and epc should be loadable from this
-project-specific python executable::
-
-  (defun my-jedi-start-dedicated-server ()
-    (jedi:setup)
-    (jedi:start-dedicated-server
-     (append (list (FIND-EXECUTABLE-IN-PROJECT-BIN \"python\")
-                   jedi:server-script)
-             jedi:server-args)))
-
-Note that Jedi server run by the same command is pooled.  So,
-there is only one Jedi server for the same project, as long as
-the argument given to `jedi:start-dedicated-server' is the same.
-
+If you want to setup how Jedi server is started programmatically
+per-buffer/per-project basis, make `jedi:server-command' and
+`jedi:server-args' buffer local and set it in `python-mode-hook'.
 See also: `jedi:server-args'."
   (interactive
    (list (split-string-and-unquote
@@ -402,24 +387,15 @@ See also: `jedi:server-args'."
                         (append jedi:server-command
                                 jedi:server-args)
                         " ")))))
-  (if (and (local-variable-p 'jedi:epc) jedi:epc)
-      (message "Dedicated Jedi server is already running!")
-    (set (make-local-variable 'jedi:epc) nil)
-    ;; Set `jedi:server-command' too, so that this command is used
-    ;; when restarting EPC server of this buffer.
-    (set (make-local-variable 'jedi:server-command) command)
-    (set (make-local-variable 'jedi:server-args) nil)
-    (jedi:start-server)
-    ;; Stop server when this buffer is killed:
-    (add-hook 'kill-buffer-hook 'jedi:server-pool--gc-when-idle nil t)))
-
-(defun jedi:stop-dedicated-server ()
-  "Like `jedi:stop-server', but this one makes sure *not* to kill
-global server instance."
-  (interactive)
-  (if (local-variable-p 'jedi:epc)
-      (jedi:stop-server)
-    (message "Global Jedi server is running in %s" (buffer-name))))
+  ;; Reset `jedi:epc' so that a new server is created when COMMAND is
+  ;; new.  If it is already in the server pool, the server instance
+  ;; already in the pool is picked up by `jedi:start-server'.
+  (setq jedi:epc nil)
+  ;; Set `jedi:server-command', so that this command is used
+  ;; when restarting EPC server of this buffer.
+  (set (make-local-variable 'jedi:server-command) command)
+  (set (make-local-variable 'jedi:server-args) nil)
+  (jedi:start-server))
 
 (defun jedi:call-deferred (method-name)
   "Call ``Script(...).METHOD-NAME`` and return a deferred object."

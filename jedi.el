@@ -407,15 +407,15 @@ See also: `jedi:server-args'."
                         (append jedi:server-command
                                 jedi:server-args)
                         " ")))))
-  (if (and (local-variable-p 'jedi:server-command) jedi:epc)
-      (message "Dedicated Jedi server is already running!")
-    (setq jedi:epc nil)
-    ;; Set `jedi:server-command' too, so that this command is used
-    ;; when restarting EPC server of this buffer.
-    (set (make-local-variable 'jedi:server-command) command)
-    (set (make-local-variable 'jedi:server-args) nil)
-    (jedi:start-server)
-    ))
+  ;; Reset `jedi:epc' so that a new server is created when COMMAND is
+  ;; new.  If it is already in the server pool, the server instance
+  ;; already in the pool is picked up by `jedi:start-server'.
+  (setq jedi:epc nil)
+  ;; Set `jedi:server-command', so that this command is used
+  ;; when restarting EPC server of this buffer.
+  (set (make-local-variable 'jedi:server-command) command)
+  (set (make-local-variable 'jedi:server-args) nil)
+  (jedi:start-server))
 
 (defun jedi:call-deferred (method-name)
   "Call ``Script(...).METHOD-NAME`` and return a deferred object."

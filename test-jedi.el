@@ -111,7 +111,7 @@
            ()
            ((:record-cls 'mocker-stub-record))))
        (macrolet ((check-restart (&rest args)
-                         `(jedi-testing:check-start-server ,@args)))
+                                 `(jedi-testing:check-start-server ,@args)))
          (unwind-protect
              (progn ,@body)
            (mapc #'kill-buffer (list ,@buffers)))))))
@@ -172,8 +172,9 @@ rebooted; not still living ones."
     (check-restart buf3 '("python" "jediepcserver.py") 'dummy-server-1)
     (mapc (lambda (b) (with-current-buffer b (setq jedi:epc nil)))
           (list buf1 buf2 buf3))
-    (check-restart buf1 '("python" "jediepcserver.py") 'dummy-server-3) ; rebooted!
-    (check-restart buf2 '("python3" "jediepcserver.py") 'dummy-server-2) ; not this.
+    ;; Now, ``(jedi:epc--live-p dummy-server-1)`` will return nil:
+    (check-restart buf1 '("python" "jediepcserver.py") 'dummy-server-3)
+    (check-restart buf2 '("python3" "jediepcserver.py") 'dummy-server-2)
     (check-restart buf3 '("python" "jediepcserver.py") 'dummy-server-3)))
 
 (provide 'test-jedi)

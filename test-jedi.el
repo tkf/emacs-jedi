@@ -110,7 +110,7 @@
           (jedi:server-pool--gc-when-idle
            ()
            ((:record-cls 'mocker-stub-record))))
-       (macrolet ((check (&rest args)
+       (macrolet ((check-restart (&rest args)
                          `(jedi-testing:check-start-server ,@args)))
          (unwind-protect
              (progn ,@body)
@@ -135,8 +135,8 @@ return the same server instance."
       ((:input '(dummy-server) :output t))
       ;; Buffers to use:
       (buf1 buf2)
-    (check buf1 '("python" "jediepcserver.py") 'dummy-server)
-    (check buf2 '("python" "jediepcserver.py") 'dummy-server)))
+    (check-restart buf1 '("python" "jediepcserver.py") 'dummy-server)
+    (check-restart buf2 '("python" "jediepcserver.py") 'dummy-server)))
 
 (ert-deftest jedi:pool-per-buffer-server ()
   "Successive call of `jedi:start-server' with different setups should
@@ -149,8 +149,8 @@ return the different server instances."
       ()
       ;; Buffers to use:
       (buf1 buf2)
-    (check buf1 '("python" "jediepcserver.py") 'dummy-server-1)
-    (check buf2 '("python3" "jediepcserver.py") 'dummy-server-2)))
+    (check-restart buf1 '("python" "jediepcserver.py") 'dummy-server-1)
+    (check-restart buf2 '("python3" "jediepcserver.py") 'dummy-server-2)))
 
 (ert-deftest jedi:pool-restart-per-buffer-server ()
   "When one of the server died, only the died server must be
@@ -167,14 +167,14 @@ rebooted; not still living ones."
        (:input '(dummy-server-3) :output t))
       ;; Buffers to use:
       (buf1 buf2 buf3)
-    (check buf1 '("python" "jediepcserver.py") 'dummy-server-1)
-    (check buf2 '("python3" "jediepcserver.py") 'dummy-server-2)
-    (check buf3 '("python" "jediepcserver.py") 'dummy-server-1)
+    (check-restart buf1 '("python" "jediepcserver.py") 'dummy-server-1)
+    (check-restart buf2 '("python3" "jediepcserver.py") 'dummy-server-2)
+    (check-restart buf3 '("python" "jediepcserver.py") 'dummy-server-1)
     (mapc (lambda (b) (with-current-buffer b (setq jedi:epc nil)))
           (list buf1 buf2 buf3))
-    (check buf1 '("python" "jediepcserver.py") 'dummy-server-3) ; rebooted!
-    (check buf2 '("python3" "jediepcserver.py") 'dummy-server-2) ; not this.
-    (check buf3 '("python" "jediepcserver.py") 'dummy-server-3)))
+    (check-restart buf1 '("python" "jediepcserver.py") 'dummy-server-3) ; rebooted!
+    (check-restart buf2 '("python3" "jediepcserver.py") 'dummy-server-2) ; not this.
+    (check-restart buf3 '("python" "jediepcserver.py") 'dummy-server-3)))
 
 (provide 'test-jedi)
 

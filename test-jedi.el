@@ -239,4 +239,9 @@ rebooted; not still living ones."
 
 (provide 'test-jedi)
 
+;; Local Variables:
+;; coding: utf-8
+;; indent-tabs-mode: nil
+;; End:
+
 ;;; test-jedi.el ends here

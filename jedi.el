@@ -123,8 +123,9 @@ tooltip in millisecond."
   "Major mode to use when showing document."
   :group 'jedi)
 
-(defcustom jedi:doc-minor-modes '(view-mode)
-  "Minor modes to use when showing document."
+(defcustom jedi:doc-hook nil
+  "The hook that's run after showing a document."
+  :type 'hook
   :group 'jedi)
 
 (defcustom jedi:doc-display-buffer 'display-buffer
@@ -562,9 +563,7 @@ See also: `jedi:server-args'."
                   (goto-char (point-min))
                   (when (fboundp jedi:doc-mode)
                     (funcall jedi:doc-mode))
-                  (mapc (lambda (mode)
-                          (when (fboundp mode) (funcall mode)))
-                        jedi:doc-minor-modes)
+                  (run-hooks 'jedi:doc-hook)
                   (funcall jedi:doc-display-buffer (current-buffer)))))))))
 
 

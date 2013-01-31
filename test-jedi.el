@@ -111,7 +111,12 @@
            ()
            ((:record-cls 'mocker-stub-record))))
        (macrolet ((check-restart (&rest args)
-                                 `(jedi-testing:check-start-server ,@args)))
+                                 `(jedi-testing:check-start-server ,@args))
+                  (set-server
+                   (command &optional args)
+                   `(progn
+                      (set (make-local-variable 'jedi:server-command) ,command)
+                      (set (make-local-variable 'jedi:server-args) ,args))))
          (unwind-protect
              (progn ,@body)
            (mapc #'kill-buffer (list ,@buffers)))))))
@@ -176,6 +181,25 @@ rebooted; not still living ones."
     (check-restart buf1 '("python" "jediepcserver.py") 'dummy-server-3)
     (check-restart buf2 '("python3" "jediepcserver.py") 'dummy-server-2)
     (check-restart buf3 '("python" "jediepcserver.py") 'dummy-server-3)))
+
+(ert-deftest jedi:pool-buffer-local-server-setting ()
+  "Locally set `jedi:server-command' and `jedi:server-args' must be used."
+  (jedi-testing:with-mocked-server
+      ;; Mock `epc:start-epc':
+      ((:input '("server" ("-abc")) :output 'dummy-1)
+       (:input '("server" ("-xyz")) :output 'dummy-2))
+      ;; Mock `jedi:epc--live-p':
+      ((:input '(dummy-1) :output t))
+      ;; Buffers to use:
+      (buf1 buf2 buf3)
+    ;; Set buffer local `jedi:server-command':
+    (with-current-buffer buf1 (set-server '("server" "-abc")))
+    (with-current-buffer buf2 (set-server '("server" "-xyz")))
+    (with-current-buffer buf3 (set-server '("server" "-abc")))
+    ;; Check that the buffer local `jedi:server-command' is used:
+    (should (eq (with-current-buffer buf1 (jedi:start-server)) 'dummy-1))
+    (should (eq (with-current-buffer buf2 (jedi:start-server)) 'dummy-2))
+    (should (eq (with-current-buffer buf3 (jedi:start-server)) 'dummy-1))))
 
 (provide 'test-jedi)
 

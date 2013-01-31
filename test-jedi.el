@@ -101,12 +101,23 @@
                                            &rest body)
   (declare (indent 3))
   `(let ((jedi:server-pool--table (make-hash-table :test 'equal))
+         (jedi:server-pool--gc-timer nil)
          ,@(mapcar
             (lambda (b) `(,b (generate-new-buffer "*jedi test*")))
             buffers))
      (mocker-let
          ((jedi:epc--start-epc (x y) ,start-epc-records)
           (jedi:epc--live-p (x) ,epc--live-p-records)
+          ;; Probably this mocking is too "strong".  What I need to
+          ;; mock is only `buffer-list' in `jedi:-get-servers-in-use'.
+          (buffer-list
+           ()
+           ((:input nil
+                    :output-generator
+                    (lambda ()
+                      (loop for b in (list ,@buffers)
+                            when (buffer-live-p b) collect b))
+                    :min-occur 0)))
           (jedi:server-pool--gc-when-idle
            ()
            ((:record-cls 'mocker-stub-record))))
@@ -200,6 +211,31 @@ rebooted; not still living ones."
     (should (eq (with-current-buffer buf1 (jedi:start-server)) 'dummy-1))
     (should (eq (with-current-buffer buf2 (jedi:start-server)) 'dummy-2))
     (should (eq (with-current-buffer buf3 (jedi:start-server)) 'dummy-1))))
+
+(ert-deftest jedi:pool-gc-when-no-jedi-buffers ()
+  "GC should stop servers when there is no Jedi buffers."
+  (jedi-testing:with-mocked-server
+      ;; Mock `epc:start-epc':
+      ((:input '("server" ("-abc")) :output 'dummy-1)
+       (:input '("server" ("-xyz")) :output 'dummy-2))
+      ;; Mock `jedi:epc--live-p':
+      ()
+      ;; Buffers to use:
+      (buf1 buf2)
+    ;; Check that in this mocked environment there is no server yet:
+    (should (= (length (jedi:-get-servers-in-use)) 0))
+    ;; Start servers:
+    (check-restart buf1 '("server" "-abc") 'dummy-1)
+    (check-restart buf2 '("server" "-xyz") 'dummy-2)
+    ;; GC should not stop servers in use:
+    (jedi:server-pool--gc)
+    (should (= (length (jedi:-get-servers-in-use)) 2))
+    ;; GC should stop unused servers:
+    (mapc #'kill-buffer (list buf1 buf2))
+    (mocker-let ((epc:stop-epc (x) ((:input '(dummy-1))
+                                    (:input '(dummy-2)))))
+      (jedi:server-pool--gc))
+    (should (= (length (jedi:-get-servers-in-use)) 0))))
 
 (provide 'test-jedi)
 

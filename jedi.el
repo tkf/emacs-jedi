@@ -97,8 +97,8 @@ you need to start Jedi EPC server with the same python version
 that you use for the virtualenv.::
 
     (setq jedi:server-args
-          '(\"--venv-path\" \"SOME/VIRTUAL_ENV_1\"
-            \"--venv-path\" \"SOME/VIRTUAL_ENV_2\"))
+          '(\"--virtual-env\" \"SOME/VIRTUAL_ENV_1\"
+            \"--virtual-env\" \"SOME/VIRTUAL_ENV_2\"))
 
 To see what other arguments Jedi server can take, execute the
 following command::

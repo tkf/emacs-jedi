@@ -244,7 +244,7 @@ def main(args=None):
         '--sys-path', '-p', default=[], action='append',
         help='paths to be inserted at the top of `sys.path`.')
     parser.add_argument(
-        '--venv-path', '-v', default=[], action='append',
+        '--virtual-env', '-v', default=[], action='append',
         help='paths to be used as if VIRTUAL_ENV is set to it.')
     parser.add_argument(
         '--log', help='save server log to this file.')

@@ -15,6 +15,7 @@ test: elpa requirements
 	${MAKE} test-1
 
 test-1:
+	rm -f elpa/mocker-*/*elc  # workaround a bug in mocker.el
 	${EL4T_CARTON_EMACS} -Q -batch \
 		-L . -l test-jedi.el -f ert-run-tests-batch-and-exit
 	nosetests test_jediepcserver.py

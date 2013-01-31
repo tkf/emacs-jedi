@@ -123,7 +123,7 @@ tooltip in millisecond."
   "Major mode to use when showing document."
   :group 'jedi)
 
-(defcustom jedi:doc-hook nil
+(defcustom jedi:doc-hook '(view-mode)
   "The hook that's run after showing a document."
   :type 'hook
   :group 'jedi)

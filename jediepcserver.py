@@ -165,10 +165,10 @@ def get_jedi_version():
 
 
 def jedi_epc_server(address='localhost', port=0, port_file=sys.stdout,
-                    sys_path=[], venv_path=[],
+                    sys_path=[], virtual_env=[],
                     debugger=None, log=None, log_level=None):
     add_virtualenv_path()
-    for p in venv_path:
+    for p in virtual_env:
         add_virtualenv_path(p)
     sys_path = map(os.path.expandvars, map(os.path.expanduser, sys_path))
     sys.path = [''] + list(filter(None, itertools.chain(sys_path, sys.path)))

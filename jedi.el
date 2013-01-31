@@ -286,6 +286,16 @@ connection."
          ;; Same as `process-live-p' in Emacs >= 24:
          (memq (process-status proc) '(run open listen connect stop)))))
 
+(defun jedi:epc--start-epc (server-prog server-args)
+  "Same as `epc:start-epc', but set query-on-exit flag for
+associated processes to nil."
+  (let ((mngr (epc:start-epc server-prog server-args)))
+    (set-process-query-on-exit-flag (epc:connection-process
+                                     (epc:manager-connection mngr))
+                                    nil)
+    (set-process-query-on-exit-flag (epc:manager-server-process mngr) nil)
+    mngr))
+
 
 ;;; Server pool
 
@@ -299,12 +309,7 @@ key, or start new one if there is none."
     (if (and cached (jedi:epc--live-p cached))
         cached
       (let* ((default-directory jedi:source-dir)
-             (mngr (epc:start-epc (car command)
-                                  (cdr command))))
-        (set-process-query-on-exit-flag (epc:connection-process
-                                         (epc:manager-connection mngr))
-                                        nil)
-        (set-process-query-on-exit-flag (epc:manager-server-process mngr) nil)
+             (mngr (jedi:epc--start-epc (car command) (cdr command))))
         (puthash command mngr jedi:server-pool--table)
         (jedi:server-pool--gc-when-idle)
         mngr))))

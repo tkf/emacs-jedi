@@ -28,6 +28,9 @@
 
 (eval-when-compile (require 'cl))
 (require 'ert)
+
+(require 'mocker)
+
 (require 'jedi)
 
 
@@ -37,6 +40,9 @@
 (ert-deftest jedi:version ()
   "Check if `jedi:version' can be parsed by `version-to-list'."
   (version-to-list jedi:version))
+
+
+;;; EPC
 
 (ert-deftest jedi:complete-request ()
   (jedi-testing:sync
@@ -85,6 +91,90 @@
       (should (stringp desc_with_module))
       (should (integerp line_nr))
       (should (stringp module_path)))))
+
+
+;;; Server pool
+
+(defmacro jedi-testing:with-mocked-server (start-epc-records
+                                           epc--live-p-records
+                                           buffers
+                                           &rest body)
+  (declare (indent 3))
+  `(let ((jedi:server-pool--table (make-hash-table :test 'equal))
+         ,@(mapcar
+            (lambda (b) `(,b (generate-new-buffer "*jedi test*")))
+            buffers))
+     (mocker-let
+         ((jedi:epc--start-epc (x y) ,start-epc-records)
+          (jedi:epc--live-p (x) ,epc--live-p-records)
+          (jedi:server-pool--gc-when-idle
+           ()
+           ((:record-cls 'mocker-stub-record))))
+       (macrolet ((check (&rest args)
+                         `(jedi-testing:check-start-server ,@args)))
+         (unwind-protect
+             (progn ,@body)
+           (mapc #'kill-buffer (list ,@buffers)))))))
+
+(defun jedi-testing:check-start-server (buffer command server)
+  (with-current-buffer buffer
+    (should-not jedi:epc)
+    (should (eq (let ((jedi:server-command command)
+                      (jedi:server-args nil))
+                  (jedi:start-server))
+                server))
+    (should (eq jedi:epc server))))
+
+(ert-deftest jedi:pool-single-server ()
+  "Successive call of `jedi:start-server' with the same setup should
+return the same server instance."
+  (jedi-testing:with-mocked-server
+      ;; Mock `epc:start-epc':
+      ((:input '("python" ("jediepcserver.py")) :output 'dummy-server))
+      ;; Mock `jedi:epc--live-p':
+      ((:input '(dummy-server) :output t))
+      ;; Buffers to use:
+      (buf1 buf2)
+    (check buf1 '("python" "jediepcserver.py") 'dummy-server)
+    (check buf2 '("python" "jediepcserver.py") 'dummy-server)))
+
+(ert-deftest jedi:pool-per-buffer-server ()
+  "Successive call of `jedi:start-server' with different setups should
+return the different server instances."
+  (jedi-testing:with-mocked-server
+      ;; Mock `epc:start-epc':
+      ((:input '("python" ("jediepcserver.py")) :output 'dummy-server-1)
+       (:input '("python3" ("jediepcserver.py")) :output 'dummy-server-2))
+      ;; Mock `jedi:epc--live-p':
+      ()
+      ;; Buffers to use:
+      (buf1 buf2)
+    (check buf1 '("python" "jediepcserver.py") 'dummy-server-1)
+    (check buf2 '("python3" "jediepcserver.py") 'dummy-server-2)))
+
+(ert-deftest jedi:pool-restart-per-buffer-server ()
+  "When one of the server died, only the died server must be
+rebooted; not still living ones."
+  (jedi-testing:with-mocked-server
+      ;; Mock `epc:start-epc':
+      ((:input '("python" ("jediepcserver.py")) :output 'dummy-server-1)
+       (:input '("python3" ("jediepcserver.py")) :output 'dummy-server-2)
+       (:input '("python" ("jediepcserver.py")) :output 'dummy-server-3))
+      ;; Mock `jedi:epc--live-p':
+      ((:input '(dummy-server-1) :output t :max-occur 1)
+       (:input '(dummy-server-1) :output nil) ; server is stopped
+       (:input '(dummy-server-2) :output t)
+       (:input '(dummy-server-3) :output t))
+      ;; Buffers to use:
+      (buf1 buf2 buf3)
+    (check buf1 '("python" "jediepcserver.py") 'dummy-server-1)
+    (check buf2 '("python3" "jediepcserver.py") 'dummy-server-2)
+    (check buf3 '("python" "jediepcserver.py") 'dummy-server-1)
+    (mapc (lambda (b) (with-current-buffer b (setq jedi:epc nil)))
+          (list buf1 buf2 buf3))
+    (check buf1 '("python" "jediepcserver.py") 'dummy-server-3) ; rebooted!
+    (check buf2 '("python3" "jediepcserver.py") 'dummy-server-2) ; not this.
+    (check buf3 '("python" "jediepcserver.py") 'dummy-server-3)))
 
 (provide 'test-jedi)
 

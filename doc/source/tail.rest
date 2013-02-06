@@ -98,8 +98,8 @@ v0.1.2 (WIP)
 ------------
 
 - Jedi.el now pools server instances.
-  So, you can use :el:symbol:`jedi:start-dedicated-server` to setup
-  project-specific Jedi server efficiently (issue-28_).
+  So, for example, you can create buffer-local :el:symbol:`jedi:server-args`
+  to setup project-specific Jedi server (issue-28_).
 - Do not expand common part when completing on inserting dot using
   :el:symbol:`jedi:dot-complete`.
 - Strip off newlines from candidate summary.  This prevents

@@ -97,11 +97,16 @@ Changelog
 v0.1.2 (WIP)
 ------------
 
+- Jedi.el now pools server instances.
+  So, for example, you can create buffer-local :el:symbol:`jedi:server-args`
+  to setup project-specific Jedi server (issue-28_).
 - Do not expand common part when completing on inserting dot using
   :el:symbol:`jedi:dot-complete`.
 - Strip off newlines from candidate summary.  This prevents
   popup to be disrupted when showing candidates summary
   containing newlines (e.g., ``json.__all__``).
+
+.. _issue-28: https://github.com/tkf/emacs-jedi/issues/28
 
 v0.1.1
 ------

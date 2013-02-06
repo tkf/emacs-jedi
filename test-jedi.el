@@ -28,6 +28,9 @@
 
 (eval-when-compile (require 'cl))
 (require 'ert)
+
+(require 'mocker)
+
 (require 'jedi)
 
 
@@ -37,6 +40,9 @@
 (ert-deftest jedi:version ()
   "Check if `jedi:version' can be parsed by `version-to-list'."
   (version-to-list jedi:version))
+
+
+;;; EPC
 
 (ert-deftest jedi:complete-request ()
   (jedi-testing:sync
@@ -86,6 +92,156 @@
       (should (integerp line_nr))
       (should (stringp module_path)))))
 
+
+;;; Server pool
+
+(defmacro jedi-testing:with-mocked-server (start-epc-records
+                                           epc--live-p-records
+                                           buffers
+                                           &rest body)
+  (declare (indent 3))
+  `(let ((jedi:server-pool--table (make-hash-table :test 'equal))
+         (jedi:server-pool--gc-timer nil)
+         ,@(mapcar
+            (lambda (b) `(,b (generate-new-buffer "*jedi test*")))
+            buffers))
+     (mocker-let
+         ((jedi:epc--start-epc (x y) ,start-epc-records)
+          (jedi:epc--live-p (x) ,epc--live-p-records)
+          ;; Probably this mocking is too "strong".  What I need to
+          ;; mock is only `buffer-list' in `jedi:-get-servers-in-use'.
+          (buffer-list
+           ()
+           ((:input nil
+                    :output-generator
+                    (lambda ()
+                      (loop for b in (list ,@buffers)
+                            when (buffer-live-p b) collect b))
+                    :min-occur 0)))
+          (jedi:server-pool--gc-when-idle
+           ()
+           ((:record-cls 'mocker-stub-record))))
+       (macrolet ((check-restart (&rest args)
+                                 `(jedi-testing:check-start-server ,@args))
+                  (set-server
+                   (command &optional args)
+                   `(progn
+                      (set (make-local-variable 'jedi:server-command) ,command)
+                      (set (make-local-variable 'jedi:server-args) ,args))))
+         (unwind-protect
+             (progn ,@body)
+           (mapc #'kill-buffer (list ,@buffers)))))))
+
+(defun jedi-testing:check-start-server (buffer command server)
+  (with-current-buffer buffer
+    (should-not jedi:epc)
+    (should (eq (let ((jedi:server-command command)
+                      (jedi:server-args nil))
+                  (jedi:start-server))
+                server))
+    (should (eq jedi:epc server))))
+
+(ert-deftest jedi:pool-single-server ()
+  "Successive call of `jedi:start-server' with the same setup should
+return the same server instance."
+  (jedi-testing:with-mocked-server
+      ;; Mock `epc:start-epc':
+      ((:input '("python" ("jediepcserver.py")) :output 'dummy-server))
+      ;; Mock `jedi:epc--live-p':
+      ((:input '(dummy-server) :output t))
+      ;; Buffers to use:
+      (buf1 buf2)
+    (check-restart buf1 '("python" "jediepcserver.py") 'dummy-server)
+    (check-restart buf2 '("python" "jediepcserver.py") 'dummy-server)))
+
+(ert-deftest jedi:pool-per-buffer-server ()
+  "Successive call of `jedi:start-server' with different setups should
+return the different server instances."
+  (jedi-testing:with-mocked-server
+      ;; Mock `epc:start-epc':
+      ((:input '("python" ("jediepcserver.py")) :output 'dummy-server-1)
+       (:input '("python3" ("jediepcserver.py")) :output 'dummy-server-2))
+      ;; Mock `jedi:epc--live-p':
+      ()
+      ;; Buffers to use:
+      (buf1 buf2)
+    (check-restart buf1 '("python" "jediepcserver.py") 'dummy-server-1)
+    (check-restart buf2 '("python3" "jediepcserver.py") 'dummy-server-2)))
+
+(ert-deftest jedi:pool-restart-per-buffer-server ()
+  "When one of the server died, only the died server must be
+rebooted; not still living ones."
+  (jedi-testing:with-mocked-server
+      ;; Mock `epc:start-epc':
+      ((:input '("python" ("jediepcserver.py")) :output 'dummy-server-1)
+       (:input '("python3" ("jediepcserver.py")) :output 'dummy-server-2)
+       (:input '("python" ("jediepcserver.py")) :output 'dummy-server-3))
+      ;; Mock `jedi:epc--live-p':
+      ((:input '(dummy-server-1) :output t :max-occur 1)
+       (:input '(dummy-server-1) :output nil) ; server is stopped
+       (:input '(dummy-server-2) :output t)
+       (:input '(dummy-server-3) :output t))
+      ;; Buffers to use:
+      (buf1 buf2 buf3)
+    (check-restart buf1 '("python" "jediepcserver.py") 'dummy-server-1)
+    (check-restart buf2 '("python3" "jediepcserver.py") 'dummy-server-2)
+    (check-restart buf3 '("python" "jediepcserver.py") 'dummy-server-1)
+    (mapc (lambda (b) (with-current-buffer b (setq jedi:epc nil)))
+          (list buf1 buf2 buf3))
+    ;; Now, ``(jedi:epc--live-p dummy-server-1)`` will return nil:
+    (check-restart buf1 '("python" "jediepcserver.py") 'dummy-server-3)
+    (check-restart buf2 '("python3" "jediepcserver.py") 'dummy-server-2)
+    (check-restart buf3 '("python" "jediepcserver.py") 'dummy-server-3)))
+
+(ert-deftest jedi:pool-buffer-local-server-setting ()
+  "Locally set `jedi:server-command' and `jedi:server-args' must be used."
+  (jedi-testing:with-mocked-server
+      ;; Mock `epc:start-epc':
+      ((:input '("server" ("-abc")) :output 'dummy-1)
+       (:input '("server" ("-xyz")) :output 'dummy-2))
+      ;; Mock `jedi:epc--live-p':
+      ((:input '(dummy-1) :output t))
+      ;; Buffers to use:
+      (buf1 buf2 buf3)
+    ;; Set buffer local `jedi:server-command':
+    (with-current-buffer buf1 (set-server '("server" "-abc")))
+    (with-current-buffer buf2 (set-server '("server" "-xyz")))
+    (with-current-buffer buf3 (set-server '("server" "-abc")))
+    ;; Check that the buffer local `jedi:server-command' is used:
+    (should (eq (with-current-buffer buf1 (jedi:start-server)) 'dummy-1))
+    (should (eq (with-current-buffer buf2 (jedi:start-server)) 'dummy-2))
+    (should (eq (with-current-buffer buf3 (jedi:start-server)) 'dummy-1))))
+
+(ert-deftest jedi:pool-gc-when-no-jedi-buffers ()
+  "GC should stop servers when there is no Jedi buffers."
+  (jedi-testing:with-mocked-server
+      ;; Mock `epc:start-epc':
+      ((:input '("server" ("-abc")) :output 'dummy-1)
+       (:input '("server" ("-xyz")) :output 'dummy-2))
+      ;; Mock `jedi:epc--live-p':
+      ()
+      ;; Buffers to use:
+      (buf1 buf2)
+    ;; Check that in this mocked environment there is no server yet:
+    (should (= (length (jedi:-get-servers-in-use)) 0))
+    ;; Start servers:
+    (check-restart buf1 '("server" "-abc") 'dummy-1)
+    (check-restart buf2 '("server" "-xyz") 'dummy-2)
+    ;; GC should not stop servers in use:
+    (jedi:server-pool--gc)
+    (should (= (length (jedi:-get-servers-in-use)) 2))
+    ;; GC should stop unused servers:
+    (mapc #'kill-buffer (list buf1 buf2))
+    (mocker-let ((epc:stop-epc (x) ((:input '(dummy-1))
+                                    (:input '(dummy-2)))))
+      (jedi:server-pool--gc))
+    (should (= (length (jedi:-get-servers-in-use)) 0))))
+
 (provide 'test-jedi)
+
+;; Local Variables:
+;; coding: utf-8
+;; indent-tabs-mode: nil
+;; End:
 
 ;;; test-jedi.el ends here

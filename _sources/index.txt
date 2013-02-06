@@ -64,8 +64,10 @@ Jedi.el is tested against Python 2.6, 2.7 and 3.2.
 
 Optional dependencies for automatic installation:
 -------------------------------------------------
-- virtualenv
+- virtualenv_
 - make
+
+.. _virtualenv: http://www.virtualenv.org
 
 
 Install
@@ -76,7 +78,7 @@ el-get
 
 The easiest way to install Jedi.el is to use el-get_:
 just do ``M-x el-get-install jedi``.
-You need to have `virtualenv` to automatically install Python module
+You need to have virtualenv_ to automatically install Python module
 dependencies.  If your el-get does not have the recipes for Jedi.el
 yet, get them from `this pull request`_.
 
@@ -101,11 +103,21 @@ Manual install
    `load-path`.
 3. Install Jedi_ and python-epc_ by
 
-   - ``make requirements`` or
+   - ``make requirements`` (no need for root privileges [#]_) or
    - ``pip install -r requirements.txt`` if you want to determine
-     where to install Python modules.
+     where to install Python modules.  You need root privileges (i.e.,
+     ``sudo``) to install it in system directory.
 
 4. Add ``(autoload 'jedi:setup "jedi" nil t)`` in your Emacs configuration.
+
+.. [#] You need virtualenv_ for ``make requirements``.  It installs
+   all requirements for Jedi EPC server in an isolated Python
+   environment in ``env/`` directory under the directory where jedi.el
+   locates.  Note that you don't need to worry about if you want to
+   use Jedi.el to complete modules in another virtualenv you made.
+   Jedi EPC server recognize the virtualenv it is in (i.e., the
+   environment variable ``VIRTUAL_ENV`` in your Emacs) and then add
+   modules in that environment to its ``sys.path``.
 
 
 Setup
@@ -162,6 +174,7 @@ Configuration
 .. el:function:: jedi:ac-setup
 .. el:variable:: jedi:complete-on-dot
 .. el:variable:: jedi:server-command
+   :value: '("python" "JEDI:SOURCE-DIR/jediepcserver.py")
 .. el:variable:: jedi:server-args
 .. el:variable:: jedi:get-in-function-call-timeout
 .. el:variable:: jedi:get-in-function-call-delay
@@ -175,9 +188,13 @@ Keybinds
 
 .. el:variable:: jedi:setup-keys
 .. el:variable:: jedi:key-complete
+   :value: (kbd "<C-tab>")
 .. el:variable:: jedi:key-goto-definition
+   :value: (kbd "C-.")
 .. el:variable:: jedi:key-show-doc
+   :value: (kbd "C-c d")
 .. el:variable:: jedi:key-related-names
+   :value: (kbd "C-c r")
 
 
 Command
@@ -243,11 +260,16 @@ Changelog
 v0.1.2 (WIP)
 ------------
 
+- Jedi.el now pools server instances.
+  So, for example, you can create buffer-local :el:symbol:`jedi:server-args`
+  to setup project-specific Jedi server (issue-28_).
 - Do not expand common part when completing on inserting dot using
   :el:symbol:`jedi:dot-complete`.
 - Strip off newlines from candidate summary.  This prevents
   popup to be disrupted when showing candidates summary
   containing newlines (e.g., ``json.__all__``).
+
+.. _issue-28: https://github.com/tkf/emacs-jedi/issues/28
 
 v0.1.1
 ------

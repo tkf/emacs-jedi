@@ -655,9 +655,10 @@ See also: `jedi:server-args'."
   (deferred:nextc (jedi:call-deferred 'get_definition)
     (lambda (reply)
       (with-current-buffer (get-buffer-create jedi:doc-buffer-name)
-        (erase-buffer)
         (loop with has-doc = nil
               with first = t
+              with inhibit-read-only = t
+              initially (erase-buffer)
               for def in reply
               do (destructuring-bind
                      (&key doc desc_with_module line_nr module_path

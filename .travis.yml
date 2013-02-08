@@ -31,3 +31,5 @@ before_install:
     fi
 script:
   make travis-ci
+after_failure:
+  - cat elpa/install.log

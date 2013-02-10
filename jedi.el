@@ -129,7 +129,8 @@ for Jedi.el and other EPC applications.
 
 If you want to start a new ad-hoc server for the current buffer,
 use the command `jedi:start-dedicated-server'."
-  :group 'jedi)
+  :group 'jedi
+  :safe 'listp)
 
 (defcustom jedi:complete-on-dot nil
   "Non-`nil' means automatically start completion after inserting a dot.

@@ -28,6 +28,7 @@ import sys
 import re
 import itertools
 import logging
+import site
 
 jedi = None  # I will load it later
 
@@ -226,6 +227,7 @@ def add_virtualenv_path(venv=os.getenv('VIRTUAL_ENV')):
     path = os.path.join(
         venv, 'lib', 'python%d.%d' % sys.version_info[:2], 'site-packages')
     sys.path.insert(0, path)
+    site.addsitedir(path)
 
 
 def main(args=None):

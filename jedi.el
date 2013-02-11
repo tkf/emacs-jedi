@@ -234,6 +234,10 @@ avoid collision by something like this::
 `anything-jedi-related-names'."
   :group 'jedi)
 
+(defcustom jedi:import-python-el-settings t
+  "Automatically import setting from python.el variables."
+  :group 'jedi)
+
 
 ;;; Internal variables
 
@@ -704,6 +708,25 @@ See also: `jedi:server-args'."
 
 ;;; Setup
 
+(defun jedi:import-python-el-settings-setup ()
+  "Make jedi aware of python.el virtualenv and path settings.
+This is automatically added to the `jedi-mode-hook' when
+`jedi:import-python-el-settings' is non-nil."
+  (let ((args))
+    (and (boundp 'python-shell-extra-pythonpaths)
+         python-shell-extra-pythonpaths
+         (mapc
+          (lambda (path)
+            (setq args (append (list "--sys-path" path) args)))
+          python-shell-extra-pythonpaths))
+    (and (boundp 'python-shell-virtualenv-path)
+         python-shell-virtualenv-path
+         (setq args
+               (append
+                (list "--virtual-env" python-shell-virtualenv-path)
+                args)))
+    (and args (set (make-local-variable 'jedi:server-args) args))))
+
 ;;;###autoload
 (defun jedi:setup ()
   "Fully setup jedi.el for current buffer.
@@ -719,6 +742,14 @@ You can also call this function as a command, to quickly test
 what jedi can do."
   (interactive)
   (jedi:ac-setup)
+  (and jedi:import-python-el-settings
+       ;; Hack to access buffer/dir-local vars: http://bit.ly/Y5IfMV.
+       ;; Given that `jedi:setup' is added to the `python-mode-hook'
+       ;; this will modify `hack-local-variables-hook' on python
+       ;; buffers only and will allow us to access buffer/directory
+       ;; local variables in `jedi:import-python-el-settings-setup'.
+       (add-hook 'hack-local-variables-hook
+                 #'jedi:import-python-el-settings-setup nil t))
   (jedi-mode 1))
 
 

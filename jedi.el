@@ -373,7 +373,7 @@ later when it is needed."
       (epc:stop-epc jedi:epc)
     (message "Jedi server is already killed."))
   (setq jedi:epc nil)
-  ;; If could be non-nil due to some error.  Rescue it in that case.
+  ;; It could be non-nil due to some error.  Rescue it in that case.
   (setq jedi:get-in-function-call--d nil))
 
 (defun jedi:get-epc ()

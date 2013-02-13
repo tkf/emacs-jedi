@@ -453,7 +453,8 @@ See also: `jedi:server-args'."
   "Insert dot and complete code at point."
   (interactive)
   (insert ".")
-  (jedi:complete :expand nil))
+  (unless (ac-cursor-on-diable-face-p)
+    (jedi:complete :expand nil)))
 
 
 ;;; AC source

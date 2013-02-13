@@ -357,7 +357,7 @@ key, or start new one if there is none."
 ;;; Server management
 
 (defun jedi:start-server ()
-  (if jedi:epc
+  (if (jedi:epc--live-p jedi:epc)
       (message "Jedi server is already started!")
     (setq jedi:epc (jedi:server-pool--start
                     (append jedi:server-command jedi:server-args))))

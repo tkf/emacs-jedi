@@ -724,7 +724,9 @@ This is automatically added to the `jedi-mode-hook' when
             (append
              (list "--virtual-env" python-shell-virtualenv-path)
              args)))
-    (when args (set (make-local-variable 'jedi:server-args) args))))
+    (when args
+      (set (make-local-variable 'jedi:server-args)
+           (append args jedi:server-args)))))
 
 ;;;###autoload
 (defun jedi:setup ()

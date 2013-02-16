@@ -148,7 +148,8 @@ return the same server instance."
       ;; Mock `epc:start-epc':
       ((:input '("python" ("jediepcserver.py")) :output 'dummy-server))
       ;; Mock `jedi:epc--live-p':
-      ((:input '(dummy-server) :output t))
+      ((:input '(nil) :output nil)         ; via `jedi:start-server'
+       (:input '(dummy-server) :output t)) ; via `jedi:server-pool--start'
       ;; Buffers to use:
       (buf1 buf2)
     (check-restart buf1 '("python" "jediepcserver.py") 'dummy-server)
@@ -162,7 +163,7 @@ return the different server instances."
       ((:input '("python" ("jediepcserver.py")) :output 'dummy-server-1)
        (:input '("python3" ("jediepcserver.py")) :output 'dummy-server-2))
       ;; Mock `jedi:epc--live-p':
-      ()
+      ((:input '(nil) :output nil))     ; via `jedi:start-server'
       ;; Buffers to use:
       (buf1 buf2)
     (check-restart buf1 '("python" "jediepcserver.py") 'dummy-server-1)
@@ -177,9 +178,13 @@ rebooted; not still living ones."
        (:input '("python3" ("jediepcserver.py")) :output 'dummy-server-2)
        (:input '("python" ("jediepcserver.py")) :output 'dummy-server-3))
       ;; Mock `jedi:epc--live-p':
-      ((:input '(dummy-server-1) :output t :max-occur 1)
+      ((:input '(nil) :output nil)            ; via `jedi:start-server'
+       (:input '(dummy-server-1) :output t)
+       (:input '(nil) :output nil)            ; via `jedi:start-server'
        (:input '(dummy-server-1) :output nil) ; server is stopped
+       (:input '(nil) :output nil)            ; via `jedi:start-server'
        (:input '(dummy-server-2) :output t)
+       (:input '(nil) :output nil)            ; via `jedi:start-server'
        (:input '(dummy-server-3) :output t))
       ;; Buffers to use:
       (buf1 buf2 buf3)
@@ -200,7 +205,8 @@ rebooted; not still living ones."
       ((:input '("server" ("-abc")) :output 'dummy-1)
        (:input '("server" ("-xyz")) :output 'dummy-2))
       ;; Mock `jedi:epc--live-p':
-      ((:input '(dummy-1) :output t))
+      ((:input '(nil) :output nil)     ; via `jedi:start-server'
+       (:input '(dummy-1) :output t))  ; via `jedi:server-pool--start'
       ;; Buffers to use:
       (buf1 buf2 buf3)
     ;; Set buffer local `jedi:server-command':
@@ -219,7 +225,7 @@ rebooted; not still living ones."
       ((:input '("server" ("-abc")) :output 'dummy-1)
        (:input '("server" ("-xyz")) :output 'dummy-2))
       ;; Mock `jedi:epc--live-p':
-      ()
+      ((:input '(nil) :output nil))     ; via `jedi:start-server'
       ;; Buffers to use:
       (buf1 buf2)
     ;; Check that in this mocked environment there is no server yet:

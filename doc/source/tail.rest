@@ -16,6 +16,7 @@ Configuration
 .. el:variable:: jedi:get-in-function-call-timeout
 .. el:variable:: jedi:get-in-function-call-delay
 .. el:variable:: jedi:tooltip-method
+.. el:variable:: jedi:goto-follow
 .. el:variable:: jedi:doc-mode
 .. el:variable:: jedi:doc-display-buffer
 
@@ -97,6 +98,7 @@ Changelog
 v0.1.2 (WIP)
 ------------
 
+- Add :el:symbol:`jedi:goto-follow` configurable option.
 - Jedi.el now pools server instances.
   So, for example, you can create buffer-local :el:symbol:`jedi:server-args`
   to setup project-specific Jedi server (issue-28_).

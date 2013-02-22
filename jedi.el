@@ -154,6 +154,14 @@ specified in in millisecond."
 tooltip in millisecond."
   :group 'jedi)
 
+(defcustom jedi:goto-follow nil
+  "When `t', `jedi:goto-definition' command follows import path etc.
+so you can get to the actual \"def\" or \"class\" block by one command.
+Default `nil' means that you may first jump to \"from MODULE import FUNCTION\"
+when you are looking for the definition of FUNCTION."
+  :type 'boolean
+  :group 'jedi)
+
 (defcustom jedi:doc-mode 'rst-mode
   "Major mode to use when showing document."
   :group 'jedi)
@@ -563,7 +571,8 @@ See also: `jedi:server-args'."
   "Goto the definition of the object at point."
   (interactive "P")
   (lexical-let ((other-window other-window))
-    (deferred:nextc (jedi:call-deferred 'goto)
+    (deferred:nextc (jedi:call-deferred
+                     (if jedi:goto-follow 'get_definition 'goto))
       (lambda (reply)
         (jedi:goto-definition--callback reply other-window)))))
 

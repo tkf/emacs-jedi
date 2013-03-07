@@ -316,6 +316,17 @@ associated processes to nil."
 
 ;;; Server pool
 
+(defun jedi:epc-server--title (command)
+  "Generate a title for EPC connection based on COMMAND.
+This function return a string for \"Title\" column for `epc:controller' UI."
+  (when (and (car command)
+             (string-match "\\(python[0-9\\.]\\{0,3\\}\\)\\'" (car command)))
+    (setf (car command) (match-string 1 (car command))))
+  (when (and (cadr command)
+             (string-match-p "jediepcserver.py\\'" (cadr command)))
+    (setf (cadr command) "..."))
+  (format "Jedi: %s" (mapconcat 'identity command " ")))
+
 (defvar jedi:server-pool--table (make-hash-table :test 'equal)
   "A hash table that holds a pool of EPC server instances.")
 
@@ -327,6 +338,7 @@ key, or start new one if there is none."
         cached
       (let* ((default-directory jedi:source-dir)
              (mngr (jedi:epc--start-epc (car command) (cdr command))))
+        (setf (epc:manager-title mngr) (jedi:epc-server--title command))
         (puthash command mngr jedi:server-pool--table)
         (jedi:server-pool--gc-when-idle)
         mngr))))

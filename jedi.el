@@ -319,6 +319,7 @@ associated processes to nil."
 (defun jedi:epc-server--title (command)
   "Generate a title for EPC connection based on COMMAND.
 This function return a string for \"Title\" column for `epc:controller' UI."
+  (setq command (copy-list command))
   (when (and (car command)
              (string-match "\\(python[0-9\\.]\\{0,3\\}\\)\\'" (car command)))
     (setf (car command) (match-string 1 (car command))))

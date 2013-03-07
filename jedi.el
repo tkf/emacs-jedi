@@ -116,8 +116,8 @@ like this::
   (defun my-jedi-server-setup ()
     (let ((cmds (GET-SOME-PROJECT-SPECIFIC-COMMAND))
           (args (GET-SOME-PROJECT-SPECIFIC-ARGS)))
-      (when cmds (set (make-local-variable 'jedi:server-command cmds)))
-      (when args (set (make-local-variable 'jedi:server-args args)))))
+      (when cmds (set (make-local-variable 'jedi:server-command) cmds))
+      (when args (set (make-local-variable 'jedi:server-args) args))))
 
   (add-hook 'python-mode-hook 'my-jedi-server-setup)
 

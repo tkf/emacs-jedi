@@ -133,6 +133,7 @@ def get_definition(*args):
         doc=d.doc,
         desc_with_module=d.desc_with_module,
         line_nr=d.line_nr,
+        column=d.column,
         module_path=d.module_path,
         full_name=getattr(d, 'full_name', [])
     ) for d in definitions]

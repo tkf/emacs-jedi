@@ -316,9 +316,6 @@ appropriately."
                                     (cons server-prog server-args)))
     mngr))
 
-
-;;; Server pool
-
 (defun jedi:epc-server--title (command)
   "Generate a title for EPC connection based on COMMAND.
 This function return a string for \"Title\" column for `epc:controller' UI."
@@ -330,6 +327,9 @@ This function return a string for \"Title\" column for `epc:controller' UI."
              (string-match-p "jediepcserver.py\\'" (cadr command)))
     (setf (cadr command) "..."))
   (format "Jedi: %s" (mapconcat 'identity command " ")))
+
+
+;;; Server pool
 
 (defvar jedi:server-pool--table (make-hash-table :test 'equal)
   "A hash table that holds a pool of EPC server instances.")

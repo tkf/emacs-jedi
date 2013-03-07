@@ -305,12 +305,15 @@ connection."
 
 (defun jedi:epc--start-epc (server-prog server-args)
   "Same as `epc:start-epc', but set query-on-exit flag for
-associated processes to nil."
+associated processes to nil.  Also, `epc:manager-title' is set
+appropriately."
   (let ((mngr (epc:start-epc server-prog server-args)))
     (set-process-query-on-exit-flag (epc:connection-process
                                      (epc:manager-connection mngr))
                                     nil)
     (set-process-query-on-exit-flag (epc:manager-server-process mngr) nil)
+    (setf (epc:manager-title mngr) (jedi:epc-server--title
+                                    (cons server-prog server-args)))
     mngr))
 
 
@@ -339,7 +342,6 @@ key, or start new one if there is none."
         cached
       (let* ((default-directory jedi:source-dir)
              (mngr (jedi:epc--start-epc (car command) (cdr command))))
-        (setf (epc:manager-title mngr) (jedi:epc-server--title command))
         (puthash command mngr jedi:server-pool--table)
         (jedi:server-pool--gc-when-idle)
         mngr))))

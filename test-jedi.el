@@ -94,6 +94,25 @@
       (should (stringp module_path)))))
 
 
+;;; EPC utils
+
+(defun jedi-testing:epc-server--title-check (command title)
+  (let ((copy (mapcar #'identity command)))
+    (should (equal (jedi:epc-server--title  command) title))
+    ;; COMMAND must not be modified in-place.
+    (should (equal command copy))))
+
+(ert-deftest jedi:epc-server--title/0 ()
+  (jedi-testing:epc-server--title-check
+   '("python" "jediepcserver.py")
+   "Jedi: python ..."))
+
+(ert-deftest jedi:epc-server--title/1 ()
+  (jedi-testing:epc-server--title-check
+   '("env/bin/python3" "jedi/jediepcserver.py" "--opt")
+   "Jedi: python3 ... --opt"))
+
+
 ;;; Server pool
 
 (defmacro jedi-testing:with-mocked-server (start-epc-records

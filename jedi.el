@@ -638,6 +638,9 @@ See also: `jedi:server-args'."
                   (car (where-is-internal 'jedi:goto-definition))))
        ""))))
 
+
+;;; Full name
+
 (defun jedi:get-full-name-deferred ()
   (deferred:$
     (jedi:call-deferred 'get_definition)

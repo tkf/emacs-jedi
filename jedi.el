@@ -695,6 +695,33 @@ See also: `jedi:server-args'."
                   (funcall jedi:doc-display-buffer (current-buffer)))))))))
 
 
+;;; All Python modules
+
+(defvar jedi:all-modules--value)
+
+(defun jedi:all-modules--get ()
+  (mapcar #'car (epc:call-sync (jedi:get-epc) 'get_all_modules nil)))
+
+(defvar jedi:module-names--source
+  '((name . "Jedi Python modules")
+    (candidates . jedi:all-modules--value)
+    (action . insert)))
+
+(defun jedi:importable-modules--helm (helm)
+  (let ((jedi:all-modules--value (jedi:all-modules--get)))
+    (funcall helm
+             :sources 'jedi:module-names--source
+             :buffer (format "*%s jedi:importable-modules*" helm))))
+
+(defun helm-jedi-importable-modules ()
+  (interactive)
+  (jedi:importable-modules--helm 'helm))
+
+(defun anything-jedi-importable-modules ()
+  (interactive)
+  (jedi:importable-modules--helm 'anything))
+
+
 ;;; Meta info
 
 (defun jedi:get-jedi-version-request ()

@@ -156,6 +156,11 @@ def get_module_version(module):
             return version
 
 
+def get_all_modules():
+    import pkgutil
+    return [(name, ispkg) for (_, name, ispkg) in pkgutil.iter_modules()]
+
+
 def get_jedi_version():
     import epc
     import sexpdata
@@ -185,6 +190,7 @@ def jedi_epc_server(address='localhost', port=0, port_file=sys.stdout,
     server.register_function(goto)
     server.register_function(related_names)
     server.register_function(get_definition)
+    server.register_function(get_all_modules)
     server.register_function(get_jedi_version)
 
     port_file.write(str(server.server_address[1]))  # needed for Emacs client

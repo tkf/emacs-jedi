@@ -171,7 +171,7 @@ Each element of the list is arguments (list) passed to
 
 The following setting is default (last parts are omitted).
 Nth element is used as the argument when N universal prefix
-arguments (C-u) are given.
+arguments (``C-u``) are given.::
 
     (setq jedi:goto-definition-config
           '((nil nil        nil)        ; C-.
@@ -612,7 +612,8 @@ See `jedi:goto-definition-config' for how this function works
 when universal prefix arguments \(``C-u``) are given.  If
 *numeric* prefix argument(s) \(e.g., ``M-0``) are given, goto
 point of the INDEX-th result.  Note that you cannot mix universal
-and numeric prefixes.  It is Emacs's limitation.
+and numeric prefixes.  It is Emacs's limitation.  If you mix both
+kinds of prefix, you get numeric prefix.
 
 When used as a lisp function, popup a buffer when OTHER-WINDOW is
 non-nil.  DEFTYPE must be either `assignment' (default) or

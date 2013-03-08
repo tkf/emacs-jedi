@@ -567,21 +567,42 @@ See also: `jedi:server-args'."
 
 ;;; Goto
 
+(defvar jedi:goto-definition--index nil)
+(defvar jedi:goto-definition--cache nil)
+
 (defun jedi:goto-definition (&optional other-window)
   "Goto the definition of the object at point."
   (interactive "P")
-  (lexical-let ((other-window other-window))
-    (deferred:nextc (jedi:call-deferred
-                     (if jedi:goto-follow 'get_definition 'goto))
-      (lambda (reply)
-        (jedi:goto-definition--callback reply other-window)))))
+  (if (and (eq last-command 'jedi:goto-definition)
+           (> (length jedi:goto-definition--cache) 1))
+      (jedi:goto-definition-next other-window)
+    (lexical-let ((other-window other-window))
+      (deferred:nextc (jedi:call-deferred
+                       (if jedi:goto-follow 'get_definition 'goto))
+        (lambda (reply)
+          (jedi:goto-definition--callback reply other-window))))))
+
+(defun jedi:goto-definition-next (&optional other-window)
+  "Goto the next cached definition.  See: `jedi:goto-definition'."
+  (interactive "P")
+  (let ((len (length jedi:goto-definition--cache))
+        (n (1+ jedi:goto-definition--index)))
+    (setq jedi:goto-definition--index (if (>= n len) 0 n))
+    (jedi:goto-definition--nth other-window)))
 
 (defun jedi:goto-definition--callback (reply other-window)
   (if (not reply)
       (message "Definition not found.")
+    (setq jedi:goto-definition--cache reply)
+    (setq jedi:goto-definition--index 0)
+    (jedi:goto-definition--nth other-window)))
+
+(defun jedi:goto-definition--nth (other-window)
+  (let ((len (length jedi:goto-definition--cache))
+        (n jedi:goto-definition--index))
     (destructuring-bind (&key line_nr column module_path module_name
                               &allow-other-keys)
-        (car reply)
+        (nth n jedi:goto-definition--cache)
       (cond
        ((equal module_name "__builtin__")
         (message "Cannot see the definition of __builtin__."))
@@ -593,7 +614,22 @@ See also: `jedi:server-args'."
                  module_path)
         (goto-char (point-min))
         (forward-line (1- line_nr))
-        (forward-char column))))))
+        (forward-char column)
+        (jedi:goto-definition--notify-alternatives len n))))))
+
+(defun jedi:goto-definition--notify-alternatives (len n)
+  (unless (= len 1)
+    (message
+     "%d-th point in %d candidates.%s"
+     (1+ n)
+     len
+     ;; Note: It must be `last-command', not `last-command' because
+     ;;       this function is called in deferred at the first time.
+     (if (eq last-command 'jedi:goto-definition)
+         (format "  Type %s to go to the next point."
+                 (key-description
+                  (car (where-is-internal 'jedi:goto-definition))))
+       ""))))
 
 (defun jedi:get-full-name-deferred ()
   (deferred:$

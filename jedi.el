@@ -310,6 +310,7 @@ toolitp when inside of function call.
   (if jedi-mode
       (progn
         (jedi:defined-names-deferred)
+        (setq imenu-create-index-function 'jedi:create-imenu-index)
         (add-hook 'post-command-hook 'jedi:handle-post-command nil t)
         (add-hook 'after-change-functions 'jedi:after-change-handler nil t)
         (add-hook 'kill-buffer-hook 'jedi:server-pool--gc-when-idle nil t))
@@ -823,6 +824,21 @@ INDEX-th result."
 
 (defun jedi:after-change-handler (&rest _)
   (jedi:defined-names-deferred))
+
+(defun jedi:create-imenu-index-1 (def)
+  (destructuring-bind (&key line_nr desc_with_module &allow-other-keys) def
+    (cons desc_with_module line_nr)))
+
+(defun jedi:create-imenu-index (&optional items)
+  "`imenu-create-index-function' for Jedi.el.
+Return an object described in `imenu--index-alist'."
+  (loop for (def . subdefs) in (or items jedi:defined-names--cache)
+        if subdefs
+        collect (list (plist-get def :full_name)
+                      (cons (jedi:create-imenu-index-1 def)
+                            (mapcar #'jedi:create-imenu-index-1 subdefs)))
+        else
+        collect (jedi:create-imenu-index-1 def)))
 
 
 ;;; Meta info

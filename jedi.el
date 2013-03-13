@@ -154,12 +154,47 @@ specified in in millisecond."
 tooltip in millisecond."
   :group 'jedi)
 
-(defcustom jedi:goto-follow nil
-  "When `t', `jedi:goto-definition' command follows import path etc.
-so you can get to the actual \"def\" or \"class\" block by one command.
-Default `nil' means that you may first jump to \"from MODULE import FUNCTION\"
-when you are looking for the definition of FUNCTION."
-  :type 'boolean
+(defcustom jedi:goto-definition-config
+  '((nil nil        nil)
+    (t   nil        nil)
+    (nil definition nil)
+    (t   definition nil)
+    (nil nil        t  )
+    (t   nil        t  )
+    (nil definition t  )
+    (t   definition t  ))
+  "Configure how prefix argument modifies `jedi:goto-definition' behavior.
+
+Each element of the list is arguments (list) passed to
+`jedi:goto-definition'.  Note that this variable has no effect on
+`jedi:goto-definition' when it is used as a lisp function
+
+The following setting is default (last parts are omitted).
+Nth element is used as the argument when N universal prefix
+arguments (``C-u``) are given.::
+
+    (setq jedi:goto-definition-config
+          '((nil nil        nil)        ; C-.
+            (t   nil        nil)        ; C-u C-.
+            (nil definition nil)        ; C-u C-u C-.
+            (t   definition nil)        ; C-u C-u C-u C-.
+            ...))
+
+For example, if you want to follow \"substitution path\" by default,
+use the setting like this::
+
+    (setq jedi:goto-definition-config
+          '((nil definition nil)
+            (t   definition nil)
+            (nil nil        nil)
+            (t   nil        nil)
+            (nil definition t  )
+            (t   definition t  )
+            (nil nil        t  )
+            (t   nil        t  )))
+
+You can rearrange the order to have most useful sets of arguments
+at the top."
   :group 'jedi)
 
 (defcustom jedi:doc-mode 'rst-mode
@@ -567,33 +602,106 @@ See also: `jedi:server-args'."
 
 ;;; Goto
 
-(defun jedi:goto-definition (&optional other-window)
-  "Goto the definition of the object at point."
+(defvar jedi:goto-definition--index nil)
+(defvar jedi:goto-definition--cache nil)
+
+(defun jedi:goto-definition (&optional other-window deftype use-cache index)
+  "Goto the definition of the object at point.
+
+See `jedi:goto-definition-config' for how this function works
+when universal prefix arguments \(``C-u``) are given.  If
+*numeric* prefix argument(s) \(e.g., ``M-0``) are given, goto
+point of the INDEX-th result.  Note that you cannot mix universal
+and numeric prefixes.  It is Emacs's limitation.  If you mix both
+kinds of prefix, you get numeric prefix.
+
+When used as a lisp function, popup a buffer when OTHER-WINDOW is
+non-nil.  DEFTYPE must be either `assignment' (default) or
+`definition'.  When USE-CACHE is non-nil, use the locations of
+the last invocation of this command.  If INDEX is specified, goto
+INDEX-th result."
+  (interactive
+   (if (integerp current-prefix-arg)
+       (list nil nil nil current-prefix-arg)
+     (nth (let ((i (car current-prefix-arg)))
+            (if i (floor (log i 4)) 0))
+          jedi:goto-definition-config)))
+  (cond
+   ((and (or use-cache index)
+         jedi:goto-definition--cache)
+    (setq jedi:goto-definition--index (or index 0))
+    (jedi:goto-definition--nth other-window))
+   ((and (eq last-command 'jedi:goto-definition)
+         (> (length jedi:goto-definition--cache) 1))
+    (jedi:goto-definition-next other-window))
+   (t
+    (setq jedi:goto-definition--index (or index 0))
+    (lexical-let ((other-window other-window))
+      (deferred:nextc (jedi:call-deferred
+                       (case deftype
+                         ((assignment nil) 'goto)
+                         (definition 'get_definition)
+                         (t (error "Unsupported deftype: %s" deftype))))
+        (lambda (reply)
+          (jedi:goto-definition--callback reply other-window)))))))
+
+(defun jedi:goto-definition-next (&optional other-window)
+  "Goto the next cached definition.  See: `jedi:goto-definition'."
   (interactive "P")
-  (lexical-let ((other-window other-window))
-    (deferred:nextc (jedi:call-deferred
-                     (if jedi:goto-follow 'get_definition 'goto))
-      (lambda (reply)
-        (jedi:goto-definition--callback reply other-window)))))
+  (let ((len (length jedi:goto-definition--cache))
+        (n (1+ jedi:goto-definition--index)))
+    (setq jedi:goto-definition--index (if (>= n len) 0 n))
+    (jedi:goto-definition--nth other-window)))
 
 (defun jedi:goto-definition--callback (reply other-window)
   (if (not reply)
       (message "Definition not found.")
+    (setq jedi:goto-definition--cache reply)
+    (jedi:goto-definition--nth other-window t)))
+
+(defun jedi:goto-definition--nth (other-window &optional try-next)
+  (let* ((len (length jedi:goto-definition--cache))
+         (n jedi:goto-definition--index)
+         (next (lambda ()
+                 (when (< n (1- len))
+                   (incf jedi:goto-definition--index)
+                   (jedi:goto-definition--nth other-window)
+                   t))))
     (destructuring-bind (&key line_nr column module_path module_name
                               &allow-other-keys)
-        (car reply)
+        (nth n jedi:goto-definition--cache)
       (cond
        ((equal module_name "__builtin__")
-        (message "Cannot see the definition of __builtin__."))
+        (unless (and try-next (funcall next))
+          (message "Cannot see the definition of __builtin__.")))
        ((not (and module_path (file-exists-p module_path)))
-        (message "File '%s' does not exist." module_path))
+        (unless (and try-next (funcall next))
+          (message "File '%s' does not exist." module_path)))
        (t
         (push-mark)
         (funcall (if other-window #'find-file-other-window #'find-file)
                  module_path)
         (goto-char (point-min))
         (forward-line (1- line_nr))
-        (forward-char column))))))
+        (forward-char column)
+        (jedi:goto-definition--notify-alternatives len n))))))
+
+(defun jedi:goto-definition--notify-alternatives (len n)
+  (unless (= len 1)
+    (message
+     "%d-th point in %d candidates.%s"
+     (1+ n)
+     len
+     ;; Note: It must be `last-command', not `last-command' because
+     ;;       this function is called in deferred at the first time.
+     (if (eq last-command 'jedi:goto-definition)
+         (format "  Type %s to go to the next point."
+                 (key-description
+                  (car (where-is-internal 'jedi:goto-definition))))
+       ""))))
+
+
+;;; Full name
 
 (defun jedi:get-full-name-deferred ()
   (deferred:$

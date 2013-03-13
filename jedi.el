@@ -309,9 +309,12 @@ toolitp when inside of function call.
       (define-key map "." nil)))
   (if jedi-mode
       (progn
+        (jedi:defined-names-deferred)
         (add-hook 'post-command-hook 'jedi:handle-post-command nil t)
+        (add-hook 'after-change-functions 'jedi:after-change-handler nil t)
         (add-hook 'kill-buffer-hook 'jedi:server-pool--gc-when-idle nil t))
     (remove-hook 'post-command-hook 'jedi:handle-post-command t)
+    (remove-hook 'after-change-functions 'jedi:after-change-handler t)
     (remove-hook 'kill-buffer-hook 'jedi:server-pool--gc-when-idle t)
     (jedi:server-pool--gc-when-idle)))
 
@@ -817,6 +820,9 @@ INDEX-th result."
            buffer-file-name))
     (lambda (reply)
       (setq jedi:defined-names--cache reply))))
+
+(defun jedi:after-change-handler (&rest _)
+  (jedi:defined-names-deferred))
 
 
 ;;; Meta info

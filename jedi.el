@@ -803,6 +803,22 @@ INDEX-th result."
                   (funcall jedi:doc-display-buffer (current-buffer)))))))))
 
 
+;;; Defined names (imenu)
+
+(defvar jedi:defined-names--cache nil)
+(make-variable-buffer-local 'jedi:defined-names--cache)
+
+(defun jedi:defined-names-deferred ()
+  (deferred:nextc
+    (epc:call-deferred
+     (jedi:get-epc)
+     'defined_names
+     (list (buffer-substring-no-properties (point-min) (point-max))
+           buffer-file-name))
+    (lambda (reply)
+      (setq jedi:defined-names--cache reply))))
+
+
 ;;; Meta info
 
 (defun jedi:get-jedi-version-request ()

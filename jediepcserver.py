@@ -127,16 +127,40 @@ def related_names(*args):
     return _goto(jedi.Script.related_names, *args)
 
 
-def get_definition(*args):
-    definitions = jedi_script(*args).get_definition()
-    return [dict(
+def definition_to_dict(d):
+    return dict(
         doc=d.doc,
         desc_with_module=d.desc_with_module,
         line_nr=d.line_nr,
         column=d.column,
         module_path=d.module_path,
-        full_name=getattr(d, 'full_name', [])
-    ) for d in definitions]
+        full_name=getattr(d, 'full_name', []),
+        type=getattr(d, 'type', []),
+    )
+
+
+def get_definition(*args):
+    definitions = jedi_script(*args).get_definition()
+    return list(map(definition_to_dict, definitions))
+
+
+def get_names_recursively(definition):
+    """
+    Fetch interesting defined names in sub-scopes under `definition`.
+
+    :type names: jedi.api_classes.Definition
+
+    """
+    d = definition_to_dict(definition)
+    if definition.type in ('class',):
+        ds = definition.defined_names()
+        return [d] + list(map(get_names_recursively, ds))
+    else:
+        return [d]
+
+
+def defined_names(*args):
+    return list(map(get_names_recursively, jedi.api.defined_names(*args)))
 
 
 def get_module_version(module):
@@ -185,6 +209,7 @@ def jedi_epc_server(address='localhost', port=0, port_file=sys.stdout,
     server.register_function(goto)
     server.register_function(related_names)
     server.register_function(get_definition)
+    server.register_function(defined_names)
     server.register_function(get_jedi_version)
 
     port_file.write(str(server.server_address[1]))  # needed for Emacs client
@@ -217,6 +242,7 @@ def import_jedi():
     import jedi
     import jedi.parsing
     import jedi.evaluate
+    import jedi.api
     return jedi
 
 

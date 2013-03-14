@@ -826,8 +826,8 @@ INDEX-th result."
   (jedi:defined-names-deferred))
 
 (defun jedi:create-imenu-index-1 (def)
-  (destructuring-bind (&key line_nr desc_with_module &allow-other-keys) def
-    (cons desc_with_module line_nr)))
+  (destructuring-bind (&key line_nr name &allow-other-keys) def
+    (cons name line_nr)))
 
 (defun jedi:create-imenu-index (&optional items)
   "`imenu-create-index-function' for Jedi.el.

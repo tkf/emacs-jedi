@@ -134,6 +134,7 @@ def definition_to_dict(d):
         line_nr=d.line_nr,
         column=d.column,
         module_path=d.module_path,
+        name=getattr(d, 'name', []),
         full_name=getattr(d, 'full_name', []),
         type=getattr(d, 'type', []),
     )

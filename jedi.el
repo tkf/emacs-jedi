@@ -834,9 +834,10 @@ INDEX-th result."
 Return an object described in `imenu--index-alist'."
   (loop for (def . subdefs) in (or items jedi:defined-names--cache)
         if subdefs
-        collect (list (plist-get def :full_name)
-                      (cons (jedi:create-imenu-index-1 def)
-                            (mapcar #'jedi:create-imenu-index-1 subdefs)))
+        collect (append
+                 (list (plist-get def :full_name)
+                       (jedi:create-imenu-index-1 def))
+                 (jedi:create-imenu-index subdefs))
         else
         collect (jedi:create-imenu-index-1 def)))
 

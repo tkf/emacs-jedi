@@ -130,6 +130,7 @@ def related_names(*args):
 def definition_to_dict(d):
     return dict(
         doc=d.doc,
+        description=d.description,
         desc_with_module=d.desc_with_module,
         line_nr=d.line_nr,
         column=d.column,
@@ -153,7 +154,8 @@ def get_names_recursively(definition):
 
     """
     d = definition_to_dict(definition)
-    if definition.type in ('class',):
+    # FIXME: use appropriate method to do this (when Jedi implement some)
+    if definition.description.startswith('class '):
         ds = definition.defined_names()
         return [d] + list(map(get_names_recursively, ds))
     else:

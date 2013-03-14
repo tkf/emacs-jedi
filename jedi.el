@@ -668,6 +668,12 @@ INDEX-th result."
     (setq jedi:goto-definition--cache reply)
     (jedi:goto-definition--nth other-window t)))
 
+(defun jedi:goto--line-column (line column)
+  "Like `goto-char' but specify the position by LINE and COLUMN."
+  (goto-char (point-min))
+  (forward-line (1- line))
+  (forward-char column))
+
 (defun jedi:goto-definition--nth (other-window &optional try-next)
   (let* ((len (length jedi:goto-definition--cache))
          (n jedi:goto-definition--index)
@@ -690,9 +696,7 @@ INDEX-th result."
         (push-mark)
         (funcall (if other-window #'find-file-other-window #'find-file)
                  module_path)
-        (goto-char (point-min))
-        (forward-line (1- line_nr))
-        (forward-char column)
+        (jedi:goto--line-column line_nr column)
         (jedi:goto-definition--notify-alternatives len n))))))
 
 (defun jedi:goto-definition--notify-alternatives (len n)
@@ -831,8 +835,9 @@ INDEX-th result."
   (jedi:defined-names-deferred))
 
 (defun jedi:create-imenu-index-1 (def)
-  (destructuring-bind (&key line_nr name &allow-other-keys) def
-    (cons name line_nr)))
+  (destructuring-bind (&key name line_nr column &allow-other-keys) def
+    (cons name (save-excursion (jedi:goto--line-column line_nr column)
+                               (point-marker)))))
 
 (defun jedi:create-imenu-index (&optional items)
   "`imenu-create-index-function' for Jedi.el.

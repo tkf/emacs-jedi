@@ -4,7 +4,7 @@
 
 ;; Author: Takafumi Arakaki <aka.tkf at gmail.com>
 ;; Package-Requires: ((epc "0.1.0") (auto-complete "1.4"))
-;; Version: 0.1.2alpha1
+;; Version: 0.1.2alpha2
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -38,7 +38,7 @@
   :group 'completion
   :prefix "jedi:")
 
-(defconst jedi:version "0.1.2alpha1")
+(defconst jedi:version "0.1.2alpha2")
 
 (defvar jedi:source-dir (if load-file-name
                             (file-name-directory load-file-name)

@@ -210,6 +210,10 @@ at the top."
   "A function to be called with a buffer to show document."
   :group 'jedi)
 
+(defcustom jedi:install-imenu nil
+  "[EXPERIMENTAL] If `t', use Jedi to create `imenu' index."
+  :group 'jedi)
+
 (defcustom jedi:setup-keys nil
   "Setup recommended keybinds.
 
@@ -309,9 +313,14 @@ toolitp when inside of function call.
       (define-key map "." nil)))
   (if jedi-mode
       (progn
+        (when jedi:install-imenu
+          (add-hook 'after-change-functions 'jedi:after-change-handler nil t)
+          (jedi:defined-names-deferred)
+          (setq imenu-create-index-function 'jedi:create-imenu-index))
         (add-hook 'post-command-hook 'jedi:handle-post-command nil t)
         (add-hook 'kill-buffer-hook 'jedi:server-pool--gc-when-idle nil t))
     (remove-hook 'post-command-hook 'jedi:handle-post-command t)
+    (remove-hook 'after-change-functions 'jedi:after-change-handler t)
     (remove-hook 'kill-buffer-hook 'jedi:server-pool--gc-when-idle t)
     (jedi:server-pool--gc-when-idle)))
 
@@ -659,6 +668,12 @@ INDEX-th result."
     (setq jedi:goto-definition--cache reply)
     (jedi:goto-definition--nth other-window t)))
 
+(defun jedi:goto--line-column (line column)
+  "Like `goto-char' but specify the position by LINE and COLUMN."
+  (goto-char (point-min))
+  (forward-line (1- line))
+  (forward-char column))
+
 (defun jedi:goto-definition--nth (other-window &optional try-next)
   (let* ((len (length jedi:goto-definition--cache))
          (n jedi:goto-definition--index)
@@ -681,9 +696,7 @@ INDEX-th result."
         (push-mark)
         (funcall (if other-window #'find-file-other-window #'find-file)
                  module_path)
-        (goto-char (point-min))
-        (forward-line (1- line_nr))
-        (forward-char column)
+        (jedi:goto--line-column line_nr column)
         (jedi:goto-definition--notify-alternatives len n))))))
 
 (defun jedi:goto-definition--notify-alternatives (len n)
@@ -801,6 +814,42 @@ INDEX-th result."
                     (funcall jedi:doc-mode))
                   (run-hooks 'jedi:doc-hook)
                   (funcall jedi:doc-display-buffer (current-buffer)))))))))
+
+
+;;; Defined names (imenu)
+
+(defvar jedi:defined-names--cache nil)
+(make-variable-buffer-local 'jedi:defined-names--cache)
+
+(defun jedi:defined-names-deferred ()
+  (deferred:nextc
+    (epc:call-deferred
+     (jedi:get-epc)
+     'defined_names
+     (list (buffer-substring-no-properties (point-min) (point-max))
+           buffer-file-name))
+    (lambda (reply)
+      (setq jedi:defined-names--cache reply))))
+
+(defun jedi:after-change-handler (&rest _)
+  (jedi:defined-names-deferred))
+
+(defun jedi:create-imenu-index-1 (def)
+  (destructuring-bind (&key name line_nr column &allow-other-keys) def
+    (cons name (save-excursion (jedi:goto--line-column line_nr column)
+                               (point-marker)))))
+
+(defun jedi:create-imenu-index (&optional items)
+  "`imenu-create-index-function' for Jedi.el.
+Return an object described in `imenu--index-alist'."
+  (loop for (def . subdefs) in (or items jedi:defined-names--cache)
+        if subdefs
+        collect (append
+                 (list (plist-get def :full_name)
+                       (jedi:create-imenu-index-1 def))
+                 (jedi:create-imenu-index subdefs))
+        else
+        collect (jedi:create-imenu-index-1 def)))
 
 
 ;;; Meta info

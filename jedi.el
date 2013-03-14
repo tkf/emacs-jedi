@@ -210,6 +210,10 @@ at the top."
   "A function to be called with a buffer to show document."
   :group 'jedi)
 
+(defcustom jedi:install-imenu nil
+  "[EXPERIMENTAL] If `t', use Jedi to create `imenu' index."
+  :group 'jedi)
+
 (defcustom jedi:setup-keys nil
   "Setup recommended keybinds.
 
@@ -310,7 +314,8 @@ toolitp when inside of function call.
   (if jedi-mode
       (progn
         (jedi:defined-names-deferred)
-        (setq imenu-create-index-function 'jedi:create-imenu-index)
+        (when jedi:install-imenu
+          (setq imenu-create-index-function 'jedi:create-imenu-index))
         (add-hook 'post-command-hook 'jedi:handle-post-command nil t)
         (add-hook 'after-change-functions 'jedi:after-change-handler nil t)
         (add-hook 'kill-buffer-hook 'jedi:server-pool--gc-when-idle nil t))

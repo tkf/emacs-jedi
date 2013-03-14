@@ -313,11 +313,11 @@ toolitp when inside of function call.
       (define-key map "." nil)))
   (if jedi-mode
       (progn
-        (jedi:defined-names-deferred)
         (when jedi:install-imenu
+          (add-hook 'after-change-functions 'jedi:after-change-handler nil t)
+          (jedi:defined-names-deferred)
           (setq imenu-create-index-function 'jedi:create-imenu-index))
         (add-hook 'post-command-hook 'jedi:handle-post-command nil t)
-        (add-hook 'after-change-functions 'jedi:after-change-handler nil t)
         (add-hook 'kill-buffer-hook 'jedi:server-pool--gc-when-idle nil t))
     (remove-hook 'post-command-hook 'jedi:handle-post-command t)
     (remove-hook 'after-change-functions 'jedi:after-change-handler t)

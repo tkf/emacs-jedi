@@ -222,6 +222,7 @@ def jedi_epc_server(address='localhost', port=0, port_file=sys.stdout,
         port_file.close()
 
     if log:
+        server.log_traceback = True
         handler = logging.FileHandler(filename=log, mode='w')
         if log_level:
             log_level = getattr(logging, log_level.upper())

@@ -291,6 +291,9 @@ avoid collision by something like this::
 (defvar jedi:get-in-function-call--d nil
   "Bounded to deferred object while requesting get-in-function-call.")
 
+(defvar jedi:defined-names--singleton-d nil
+  "Bounded to deferred object while requesting defined_names.")
+
 
 ;;; Jedi mode
 
@@ -426,7 +429,8 @@ later when it is needed."
     (message "Jedi server is already killed."))
   (setq jedi:epc nil)
   ;; It could be non-nil due to some error.  Rescue it in that case.
-  (setq jedi:get-in-function-call--d nil))
+  (setq jedi:get-in-function-call--d nil)
+  (setq jedi:defined-names--singleton-d nil))
 
 (defun jedi:get-epc ()
   (if (jedi:epc--live-p jedi:epc)
@@ -831,8 +835,17 @@ INDEX-th result."
     (lambda (reply)
       (setq jedi:defined-names--cache reply))))
 
+(defun jedi:defined-names--singleton-deferred ()
+  "Like `jedi:defined-names-deferred', but make sure that only
+one request at the time is emitted."
+  (unless jedi:defined-names--singleton-d
+    (setq jedi:defined-names--singleton-d
+          (deferred:watch (jedi:defined-names-deferred)
+            (lambda (_) (setq jedi:defined-names--singleton-d nil))))))
+
 (defun jedi:after-change-handler (&rest _)
-  (jedi:defined-names-deferred))
+  (unless (or (ac-menu-live-p) (ac-inline-live-p))
+    (jedi:defined-names--singleton-deferred)))
 
 (defun jedi:create-imenu-index-1 (def)
   (destructuring-bind (&key name line_nr column &allow-other-keys) def

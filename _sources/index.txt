@@ -179,8 +179,10 @@ Configuration
 .. el:variable:: jedi:get-in-function-call-timeout
 .. el:variable:: jedi:get-in-function-call-delay
 .. el:variable:: jedi:tooltip-method
+.. el:variable:: jedi:goto-definition-config
 .. el:variable:: jedi:doc-mode
 .. el:variable:: jedi:doc-display-buffer
+.. el:variable:: jedi:install-imenu
 
 
 Keybinds
@@ -260,6 +262,10 @@ Changelog
 v0.1.2 (WIP)
 ------------
 
+- Add imenu support (see :el:symbol:`jedi:install-imenu`).
+  Currently it is not on by default as it needs developmental version
+  of Jedi_.
+- Add :el:symbol:`jedi:goto-definition-config` configurable option.
 - Jedi.el now pools server instances.
   So, for example, you can create buffer-local :el:symbol:`jedi:server-args`
   to setup project-specific Jedi server (issue-28_).

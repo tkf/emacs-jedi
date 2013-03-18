@@ -7,7 +7,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Jedi.el - Python auto-completion for Emacs &mdash; Emacs Jedi 0.1.2alpha0 documentation</title>
+    <title>Jedi.el - Python auto-completion for Emacs &mdash; Emacs Jedi 0.1.2alpha2 documentation</title>
     
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.1.2alpha0',
+        VERSION:     '0.1.2alpha2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,7 +24,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="Emacs Jedi 0.1.2alpha0 documentation" href="#" /> 
+    <link rel="top" title="Emacs Jedi 0.1.2alpha2 documentation" href="#" /> 
   </head>
   <body>
     <div class="related">
@@ -33,7 +33,7 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
-        <li><a href="#">Emacs Jedi 0.1.2alpha0 documentation</a> &raquo;</li> 
+        <li><a href="#">Emacs Jedi 0.1.2alpha2 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -264,8 +264,8 @@ like this:</p>
 <div class="highlight-cl"><div class="highlight"><pre><span class="p">(</span><span class="nb">defun</span> <span class="nv">my-jedi-server-setup</span> <span class="p">()</span>
   <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">cmds</span> <span class="p">(</span><span class="nv">GET-SOME-PROJECT-SPECIFIC-COMMAND</span><span class="p">))</span>
         <span class="p">(</span><span class="nv">args</span> <span class="p">(</span><span class="nv">GET-SOME-PROJECT-SPECIFIC-ARGS</span><span class="p">)))</span>
-    <span class="p">(</span><span class="nb">when</span> <span class="nv">cmds</span> <span class="p">(</span><span class="nb">set</span> <span class="p">(</span><span class="nv">make-local-variable</span> <span class="ss">&#39;jedi:server-command</span> <span class="nv">cmds</span><span class="p">)))</span>
-    <span class="p">(</span><span class="nb">when</span> <span class="nv">args</span> <span class="p">(</span><span class="nb">set</span> <span class="p">(</span><span class="nv">make-local-variable</span> <span class="ss">&#39;jedi:server-args</span> <span class="nv">args</span><span class="p">)))))</span>
+    <span class="p">(</span><span class="nb">when</span> <span class="nv">cmds</span> <span class="p">(</span><span class="nb">set</span> <span class="p">(</span><span class="nv">make-local-variable</span> <span class="ss">&#39;jedi:server-command</span><span class="p">)</span> <span class="nv">cmds</span><span class="p">))</span>
+    <span class="p">(</span><span class="nb">when</span> <span class="nv">args</span> <span class="p">(</span><span class="nb">set</span> <span class="p">(</span><span class="nv">make-local-variable</span> <span class="ss">&#39;jedi:server-args</span><span class="p">)</span> <span class="nv">args</span><span class="p">))))</span>
 
 <span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;python-mode-hook</span> <span class="ss">&#39;my-jedi-server-setup</span><span class="p">)</span>
 </pre></div>
@@ -303,6 +303,41 @@ value to nil means to use minibuffer instead of tooltip.</p>
 </dd></dl>
 
 <dl class="variable">
+<dt id="jedi:goto-definition-config">
+<em class="property">variable </em><big>(</big><tt class="descname">jedi:goto-definition-config </tt><em>'((nil nil nil) (t nil nil) (nil definition nil) (t definition nil) (nil nil t) (t nil t) (nil definition t) (t definition t))</em><big>)</big><a class="headerlink" href="#jedi:goto-definition-config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configure how prefix argument modifies <a class="reference internal" href="#jedi:goto-definition" title="jedi:goto-definition"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:goto-definition</span></tt></a> behavior.</p>
+<p>Each element of the list is arguments (list) passed to
+<a class="reference internal" href="#jedi:goto-definition" title="jedi:goto-definition"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:goto-definition</span></tt></a>.  Note that this variable has no effect on
+<a class="reference internal" href="#jedi:goto-definition" title="jedi:goto-definition"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:goto-definition</span></tt></a> when it is used as a lisp function</p>
+<p>The following setting is default (last parts are omitted).
+Nth element is used as the argument when N universal prefix
+arguments (<tt class="docutils literal"><span class="pre">C-u</span></tt>) are given.:</p>
+<div class="highlight-cl"><div class="highlight"><pre><span class="p">(</span><span class="k">setq</span> <span class="nv">jedi:goto-definition-config</span>
+      <span class="o">&#39;</span><span class="p">((</span><span class="no">nil</span> <span class="no">nil</span>        <span class="no">nil</span><span class="p">)</span>        <span class="c1">; C-.</span>
+        <span class="p">(</span><span class="no">t</span>   <span class="no">nil</span>        <span class="no">nil</span><span class="p">)</span>        <span class="c1">; C-u C-.</span>
+        <span class="p">(</span><span class="no">nil</span> <span class="nv">definition</span> <span class="no">nil</span><span class="p">)</span>        <span class="c1">; C-u C-u C-.</span>
+        <span class="p">(</span><span class="no">t</span>   <span class="nv">definition</span> <span class="no">nil</span><span class="p">)</span>        <span class="c1">; C-u C-u C-u C-.</span>
+        <span class="o">...</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>For example, if you want to follow &#8220;substitution path&#8221; by default,
+use the setting like this:</p>
+<div class="highlight-cl"><div class="highlight"><pre><span class="p">(</span><span class="k">setq</span> <span class="nv">jedi:goto-definition-config</span>
+      <span class="o">&#39;</span><span class="p">((</span><span class="no">nil</span> <span class="nv">definition</span> <span class="no">nil</span><span class="p">)</span>
+        <span class="p">(</span><span class="no">t</span>   <span class="nv">definition</span> <span class="no">nil</span><span class="p">)</span>
+        <span class="p">(</span><span class="no">nil</span> <span class="no">nil</span>        <span class="no">nil</span><span class="p">)</span>
+        <span class="p">(</span><span class="no">t</span>   <span class="no">nil</span>        <span class="no">nil</span><span class="p">)</span>
+        <span class="p">(</span><span class="no">nil</span> <span class="nv">definition</span> <span class="no">t</span>  <span class="p">)</span>
+        <span class="p">(</span><span class="no">t</span>   <span class="nv">definition</span> <span class="no">t</span>  <span class="p">)</span>
+        <span class="p">(</span><span class="no">nil</span> <span class="no">nil</span>        <span class="no">t</span>  <span class="p">)</span>
+        <span class="p">(</span><span class="no">t</span>   <span class="no">nil</span>        <span class="no">t</span>  <span class="p">)))</span>
+</pre></div>
+</div>
+<p>You can rearrange the order to have most useful sets of arguments
+at the top.</p>
+</dd></dl>
+
+<dl class="variable">
 <dt id="jedi:doc-mode">
 <em class="property">variable </em><big>(</big><tt class="descname">jedi:doc-mode </tt><em>'rst-mode</em><big>)</big><a class="headerlink" href="#jedi:doc-mode" title="Permalink to this definition">¶</a></dt>
 <dd><p>Major mode to use when showing document.</p>
@@ -312,6 +347,14 @@ value to nil means to use minibuffer instead of tooltip.</p>
 <dt id="jedi:doc-display-buffer">
 <em class="property">variable </em><big>(</big><tt class="descname">jedi:doc-display-buffer </tt><em>'display-buffer</em><big>)</big><a class="headerlink" href="#jedi:doc-display-buffer" title="Permalink to this definition">¶</a></dt>
 <dd><p>A function to be called with a buffer to show document.</p>
+</dd></dl>
+
+<dl class="variable">
+<dt id="jedi:install-imenu">
+<em class="property">variable </em><big>(</big><tt class="descname">jedi:install-imenu </tt><em>nil</em><big>)</big><a class="headerlink" href="#jedi:install-imenu" title="Permalink to this definition">¶</a></dt>
+<dd><p>[EXPERIMENTAL] If <tt class="xref el el-symbol docutils literal"><span class="pre">t</span></tt>, use Jedi to create <tt class="xref el el-symbol docutils literal"><span class="pre">imenu</span></tt> index.
+To use this feature, you need to install the developmental
+version (&#8220;dev&#8221; branch) of Jedi.</p>
 </dd></dl>
 
 <div class="section" id="keybinds">
@@ -433,8 +476,19 @@ See also: <a class="reference internal" href="#jedi:server-args" title="jedi:ser
 
 <dl class="function">
 <dt id="jedi:goto-definition">
-<em class="property">function </em><big>(</big><tt class="descname">jedi:goto-definition </tt><em>&amp;optional</em> <em>other-window</em><big>)</big><a class="headerlink" href="#jedi:goto-definition" title="Permalink to this definition">¶</a></dt>
+<em class="property">function </em><big>(</big><tt class="descname">jedi:goto-definition </tt><em>&amp;optional</em> <em>other-window</em> <em>deftype</em> <em>use-cache</em> <em>index</em><big>)</big><a class="headerlink" href="#jedi:goto-definition" title="Permalink to this definition">¶</a></dt>
 <dd><p>Goto the definition of the object at point.</p>
+<p>See <a class="reference internal" href="#jedi:goto-definition-config" title="jedi:goto-definition-config"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:goto-definition-config</span></tt></a> for how this function works
+when universal prefix arguments (<tt class="docutils literal"><span class="pre">C-u</span></tt>) are given.  If
+<em>numeric</em> prefix argument(s) (e.g., <tt class="docutils literal"><span class="pre">M-0</span></tt>) are given, goto
+point of the INDEX-th result.  Note that you cannot mix universal
+and numeric prefixes.  It is Emacs&#8217;s limitation.  If you mix both
+kinds of prefix, you get numeric prefix.</p>
+<p>When used as a lisp function, popup a buffer when OTHER-WINDOW is
+non-nil.  DEFTYPE must be either <tt class="xref el el-symbol docutils literal"><span class="pre">assignment</span></tt> (default) or
+<tt class="xref el el-symbol docutils literal"><span class="pre">definition</span></tt>.  When USE-CACHE is non-nil, use the locations of
+the last invocation of this command.  If INDEX is specified, goto
+INDEX-th result.</p>
 </dd></dl>
 
 <dl class="function">
@@ -522,6 +576,10 @@ It should return something like the following (formatted):</p>
 <div class="section" id="v0-1-2-wip">
 <h3>v0.1.2 (WIP)<a class="headerlink" href="#v0-1-2-wip" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
+<li>Add imenu support (see <a class="reference internal" href="#jedi:install-imenu" title="jedi:install-imenu"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:install-imenu</span></tt></a>).
+Currently it is not on by default as it needs developmental version
+of <a class="reference external" href="https://github.com/davidhalter/jedi">Jedi</a>.</li>
+<li>Add <a class="reference internal" href="#jedi:goto-definition-config" title="jedi:goto-definition-config"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:goto-definition-config</span></tt></a> configurable option.</li>
 <li>Jedi.el now pools server instances.
 So, for example, you can create buffer-local <a class="reference internal" href="#jedi:server-args" title="jedi:server-args"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:server-args</span></tt></a>
 to setup project-specific Jedi server (<a class="reference external" href="https://github.com/tkf/emacs-jedi/issues/28">issue-28</a>).</li>
@@ -577,7 +635,7 @@ davidhalter/jedi</a></td></tr>
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
-        <li><a href="#">Emacs Jedi 0.1.2alpha0 documentation</a> &raquo;</li> 
+        <li><a href="#">Emacs Jedi 0.1.2alpha2 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

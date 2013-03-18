@@ -19,6 +19,7 @@ Configuration
 .. el:variable:: jedi:goto-definition-config
 .. el:variable:: jedi:doc-mode
 .. el:variable:: jedi:doc-display-buffer
+.. el:variable:: jedi:install-imenu
 
 
 Keybinds

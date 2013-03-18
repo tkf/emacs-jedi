@@ -98,6 +98,9 @@ Changelog
 v0.1.2 (WIP)
 ------------
 
+- Add imenu support (see :el:symbol:`jedi:install-imenu`).
+  Currently it is not on by default as it needs developmental version
+  of Jedi_.
 - Add :el:symbol:`jedi:goto-definition-config` configurable option.
 - Jedi.el now pools server instances.
   So, for example, you can create buffer-local :el:symbol:`jedi:server-args`

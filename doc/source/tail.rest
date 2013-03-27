@@ -76,8 +76,14 @@ investigate the problem by yourself.  Here is some checklist.
 
    If you install carton_ in a different place or you don't add it to
    the ``$PATH``, you can call ``make`` like this:
-   ``make CARTON=PATH/TO/bin/carton tryout`` .
+   ``make CARTON=PATH/TO/bin/carton tryout``.
    Typically, ``PATH/TO/bin/carton`` is ``~/.carton/bin/carton``.
+
+   If you are too lazy to go to carton_ site to checkout how to
+   install it, here is what you need to do::
+
+     curl -fsSkL https://raw.github.com/rejeep/carton/master/go | sh
+     make CARTON=$HOME/.carton/bin/carton tryout
 
 #. To make sure that jedi.el is running correctly, you can
    do ``M-x jedi:show-jedi-version``.  It will show the versions

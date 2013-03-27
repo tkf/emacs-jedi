@@ -64,11 +64,12 @@ investigate the problem by yourself.  Here is some checklist.
 
 #. You can try Jedi.el without installing it, by running
    ``make tryout`` if you have carton_ installed.  This will
-   install requirements for Jedi.el separated from your local
-   setup in ``.emacs.d``.  You can also check the configuration file
-   tryout-jedi.el_ which is used by ``make tryout`` to see the
-   minimum working configuration.  If you have trouble setting up
-   Jedi.el, compare your configuration file and ``tryout-jedi.el``.
+   install requirements for Jedi.el separated from your local setup in
+   ``.emacs.d``.  You can also check the configuration file
+   tryout-jedi.el_ to see a minimum working configuration.  This is
+   the configuration file loaded by ``make tryout``.  If you have
+   trouble setting up Jedi.el, compare your configuration file and
+   ``tryout-jedi.el``.
 
    .. _carton: https://github.com/rejeep/carton
    .. _tryout-jedi.el:

@@ -542,13 +542,37 @@ running server.</p>
 <p>Before posting question or bug report in the <a class="reference external" href="https://github.com/tkf/emacs-jedi/issues">issue tracker</a>, please
 investigate the problem by yourself.  Here is some checklist.</p>
 <ol class="arabic">
+<li><p class="first">You can try Jedi.el without installing it, by running
+<tt class="docutils literal"><span class="pre">make</span> <span class="pre">tryout</span></tt> if you have <a class="reference external" href="https://github.com/rejeep/carton">carton</a> installed.  This will
+install requirements for Jedi.el separated from your local
+setup in <tt class="docutils literal"><span class="pre">.emacs.d</span></tt>.  You can also check the configuration file
+<a class="reference external" href="https://github.com/tkf/emacs-jedi/blob/master/tryout-jedi.el">tryout-jedi.el</a> which is used by <tt class="docutils literal"><span class="pre">make</span> <span class="pre">tryout</span></tt> to see the
+minimum working configuration.  If you have trouble setting up
+Jedi.el, compare your configuration file and <tt class="docutils literal"><span class="pre">tryout-jedi.el</span></tt>.</p>
+<p>If you install <a class="reference external" href="https://github.com/rejeep/carton">carton</a> in a different place or you don&#8217;t add it to
+the <tt class="docutils literal"><span class="pre">$PATH</span></tt>, you can call <tt class="docutils literal"><span class="pre">make</span></tt> like this:
+<tt class="docutils literal"><span class="pre">make</span> <span class="pre">CARTON=PATH/TO/bin/carton</span> <span class="pre">tryout</span></tt>.
+Typically, <tt class="docutils literal"><span class="pre">PATH/TO/bin/carton</span></tt> is <tt class="docutils literal"><span class="pre">~/.carton/bin/carton</span></tt>.</p>
+<p>If you are too lazy to go to <a class="reference external" href="https://github.com/rejeep/carton">carton</a> site to checkout how to
+install it, here is what you need to do:</p>
+<div class="highlight-cl"><pre>curl -fsSkL https://raw.github.com/rejeep/carton/master/go | sh
+make CARTON=$HOME/.carton/bin/carton tryout</pre>
+</div>
+</li>
 <li><p class="first">To make sure that jedi.el is running correctly, you can
 do <tt class="docutils literal"><span class="pre">M-x</span> <span class="pre">jedi:show-jedi-version</span></tt>.  It will show the versions
 of the Python libraries you are using.</p>
+<p>This is least complex way to communicate with the Jedi server.  If
+it doesn&#8217;t work, rest of Jedi.el functions will not work.</p>
 </li>
 <li><p class="first">To check that <a class="reference internal" href="#jedi:setup" title="jedi:setup"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:setup</span></tt></a> is called properly via
 <tt class="xref el el-symbol docutils literal"><span class="pre">python-mode-hook</span></tt>, run <tt class="docutils literal"><span class="pre">M-:</span> <span class="pre">jedi-mode</span> <span class="pre">RET</span></tt> in
 some Python file.  It should return <cite>t</cite>.</p>
+</li>
+<li><p class="first">If you see message &#8220;auto-complete-mode is not enabled&#8221;, you might
+forget to setup auto-complete properly.  Calling
+<tt class="docutils literal"><span class="pre">(global-auto-complete-mode</span> <span class="pre">t)</span></tt> in your Emacs configuration
+after loading auto-complete should solve this problem.</p>
 </li>
 <li><p class="first">It is possible that Jedi&#8217;s keybind conflicts with keybinds
 of other libraries.  You can check the definition of keybind
@@ -558,9 +582,9 @@ This one should show the help for <a class="reference internal" href="#jedi:show
 change it by using <a class="reference internal" href="#jedi:key-show-doc" title="jedi:key-show-doc"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:key-show-doc</span></tt></a>, etc.
 See: <a class="reference internal" href="#jedi:setup-keys" title="jedi:setup-keys"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:setup-keys</span></tt></a>.</p>
 </li>
-<li><p class="first">Make sure that <tt class="docutils literal"><span class="pre">(require</span> <span class="pre">'jedi)</span></tt> is <em>not</em> called anywhere
-before the line <tt class="docutils literal"><span class="pre">(setq</span> <span class="pre">jedi:setup-keys</span> <span class="pre">t)</span></tt>.
-See: <a class="reference internal" href="#jedi:setup-keys" title="jedi:setup-keys"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:setup-keys</span></tt></a>.</p>
+<li><p class="first">If you have trouble setting keybinds, make sure that
+<tt class="docutils literal"><span class="pre">(require</span> <span class="pre">'jedi)</span></tt> is <em>not</em> called anywhere before the line
+<tt class="docutils literal"><span class="pre">(setq</span> <span class="pre">jedi:setup-keys</span> <span class="pre">t)</span></tt>.</p>
 <p>To check that keybind setup works, do <tt class="docutils literal"><span class="pre">M-:</span> <span class="pre">jedi-mode-map</span> <span class="pre">RET</span></tt>.
 It should return something like the following (formatted):</p>
 <div class="highlight-cl"><div class="highlight"><pre><span class="p">(</span><span class="nv">keymap</span> <span class="p">(</span><span class="mi">3</span> <span class="nv">keymap</span> <span class="p">(</span><span class="mi">100</span> <span class="o">.</span> <span class="nv">jedi:show-doc</span><span class="p">))</span>
@@ -568,8 +592,21 @@ It should return something like the following (formatted):</p>
         <span class="p">(</span><span class="nv">C-tab</span> <span class="o">.</span> <span class="nv">jedi:complete</span><span class="p">))</span>
 </pre></div>
 </div>
+<p>Note that using <tt class="docutils literal"><span class="pre">(require</span> <span class="pre">'jedi)</span></tt> is <em>not</em> recommended way
+to configure Jedi.el because it slows down your Emacs startup <a class="footnote-reference" href="#id5" id="id4">[2]</a>.
+If you use package.el or el-get to install Jedi.el, there should
+be no need for adding <tt class="docutils literal"><span class="pre">(require</span> <span class="pre">'jedi)</span></tt> to your configuration.
+See: <a class="reference internal" href="#jedi:setup-keys" title="jedi:setup-keys"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:setup-keys</span></tt></a>.</p>
 </li>
 </ol>
+<table class="docutils footnote" frame="void" id="id5" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id4">[2]</a></td><td>But if you know what you are doing <tt class="docutils literal"><span class="pre">(require</span> <span class="pre">'jedi)</span></tt> can be a
+good choice.  For example, this way is faster to open the first
+Python file in an Emacs session.</td></tr>
+</tbody>
+</table>
 </div>
 <div class="section" id="changelog">
 <h2>Changelog<a class="headerlink" href="#changelog" title="Permalink to this headline">¶</a></h2>
@@ -593,7 +630,7 @@ containing newlines (e.g., <tt class="docutils literal"><span class="pre">json._
 <div class="section" id="v0-1-1">
 <h3>v0.1.1<a class="headerlink" href="#v0-1-1" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li>Add experimental &#8220;full-name&#8221; support <a class="footnote-reference" href="#fullname" id="id4">[2]</a>.</li>
+<li>Add experimental &#8220;full-name&#8221; support <a class="footnote-reference" href="#fullname" id="id6">[3]</a>.</li>
 <li><a class="reference external" href="https://github.com/tkf/emacs-jedi/pull/11">PR-11</a> fixes Makefile for BSD make (thanks, <a class="reference external" href="https://github.com/goro1080">&#64;goro1080</a>!).</li>
 <li>Fix <a class="reference external" href="https://github.com/tkf/emacs-jedi/issues/9">issue-9</a>: line number sent to the server was shifted when the cursor
 is at the beginning of line.</li>
@@ -605,7 +642,7 @@ Jedi commands to <tt class="xref el el-symbol docutils literal"><span class="pre
 <table class="docutils footnote" frame="void" id="fullname" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id4">[2]</a></td><td><cite>jedi:get-full-name-*</cite> functions require developmental
+<tr><td class="label"><a class="fn-backref" href="#id6">[3]</a></td><td><cite>jedi:get-full-name-*</cite> functions require developmental
 version of <a class="reference external" href="https://github.com/davidhalter/jedi">Jedi</a>.
 See also: <a class="reference external" href="https://github.com/davidhalter/jedi/issues/61">Request: Definition.fullname · Issue #61 ·
 davidhalter/jedi</a></td></tr>

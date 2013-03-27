@@ -225,15 +225,46 @@ Troubleshooting
 Before posting question or bug report in the `issue tracker`_, please
 investigate the problem by yourself.  Here is some checklist.
 
-1. To make sure that jedi.el is running correctly, you can
+#. You can try Jedi.el without installing it, by running
+   ``make tryout`` if you have carton_ installed.  This will
+   install requirements for Jedi.el separated from your local
+   setup in ``.emacs.d``.  You can also check the configuration file
+   tryout-jedi.el_ which is used by ``make tryout`` to see the
+   minimum working configuration.  If you have trouble setting up
+   Jedi.el, compare your configuration file and ``tryout-jedi.el``.
+
+   .. _carton: https://github.com/rejeep/carton
+   .. _tryout-jedi.el:
+      https://github.com/tkf/emacs-jedi/blob/master/tryout-jedi.el
+
+   If you install carton_ in a different place or you don't add it to
+   the ``$PATH``, you can call ``make`` like this:
+   ``make CARTON=PATH/TO/bin/carton tryout``.
+   Typically, ``PATH/TO/bin/carton`` is ``~/.carton/bin/carton``.
+
+   If you are too lazy to go to carton_ site to checkout how to
+   install it, here is what you need to do::
+
+     curl -fsSkL https://raw.github.com/rejeep/carton/master/go | sh
+     make CARTON=$HOME/.carton/bin/carton tryout
+
+#. To make sure that jedi.el is running correctly, you can
    do ``M-x jedi:show-jedi-version``.  It will show the versions
    of the Python libraries you are using.
 
-2. To check that :el:symbol:`jedi:setup` is called properly via
+   This is least complex way to communicate with the Jedi server.  If
+   it doesn't work, rest of Jedi.el functions will not work.
+
+#. To check that :el:symbol:`jedi:setup` is called properly via
    :el:symbol:`python-mode-hook`, run ``M-: jedi-mode RET`` in
    some Python file.  It should return `t`.
 
-3. It is possible that Jedi's keybind conflicts with keybinds
+#. If you see message "auto-complete-mode is not enabled", you might
+   forget to setup auto-complete properly.  Calling
+   ``(global-auto-complete-mode t)`` in your Emacs configuration
+   after loading auto-complete should solve this problem.
+
+#. It is possible that Jedi's keybind conflicts with keybinds
    of other libraries.  You can check the definition of keybind
    by ``<f1> k C-c d`` (or ``C-h`` instead of ``<f1>``), for example.
    This one should show the help for :el:symbol:`jedi:show-doc`.
@@ -242,9 +273,9 @@ investigate the problem by yourself.  Here is some checklist.
    change it by using :el:symbol:`jedi:key-show-doc`, etc.
    See: :el:symbol:`jedi:setup-keys`.
 
-4. Make sure that ``(require 'jedi)`` is *not* called anywhere
-   before the line ``(setq jedi:setup-keys t)``.
-   See: :el:symbol:`jedi:setup-keys`.
+#. If you have trouble setting keybinds, make sure that
+   ``(require 'jedi)`` is *not* called anywhere before the line
+   ``(setq jedi:setup-keys t)``.
 
    To check that keybind setup works, do ``M-: jedi-mode-map RET``.
    It should return something like the following (formatted):
@@ -254,6 +285,16 @@ investigate the problem by yourself.  Here is some checklist.
       (keymap (3 keymap (100 . jedi:show-doc))
               (67108910 . jedi:goto-definition)
               (C-tab . jedi:complete))
+
+   Note that using ``(require 'jedi)`` is *not* recommended way
+   to configure Jedi.el because it slows down your Emacs startup [#]_.
+   If you use package.el or el-get to install Jedi.el, there should
+   be no need for adding ``(require 'jedi)`` to your configuration.
+   See: :el:symbol:`jedi:setup-keys`.
+
+.. [#] But if you know what you are doing ``(require 'jedi)`` can be a
+       good choice.  For example, this way is faster to open the first
+       Python file in an Emacs session.
 
 
 Changelog

@@ -62,9 +62,29 @@ Troubleshooting
 Before posting question or bug report in the `issue tracker`_, please
 investigate the problem by yourself.  Here is some checklist.
 
+#. You can try Jedi.el without installing it, by running
+   ``make tryout`` if you have carton_ installed.  This will
+   install requirements for Jedi.el separated from your local
+   setup in ``.emacs.d``.  You can also check the configuration file
+   tryout-jedi.el_ which is used by ``make tryout`` to see the
+   minimum working configuration.  If you have trouble setting up
+   Jedi.el, compare your configuration file and ``tryout-jedi.el``.
+
+   .. _carton: https://github.com/rejeep/carton
+   .. _tryout-jedi.el:
+      https://github.com/tkf/emacs-jedi/blob/master/tryout-jedi.el
+
+   If you install carton_ in a different place or you don't add it to
+   the ``$PATH``, you can call ``make`` like this:
+   ``make CARTON=PATH/TO/bin/carton tryout`` .
+   Typically, ``PATH/TO/bin/carton`` is ``~/.carton/bin/carton``.
+
 #. To make sure that jedi.el is running correctly, you can
    do ``M-x jedi:show-jedi-version``.  It will show the versions
    of the Python libraries you are using.
+
+   This is least complex way to communicate with the Jedi server.  If
+   it doesn't work, rest of Jedi.el functions will not work.
 
 #. To check that :el:symbol:`jedi:setup` is called properly via
    :el:symbol:`python-mode-hook`, run ``M-: jedi-mode RET`` in

@@ -96,6 +96,11 @@ investigate the problem by yourself.  Here is some checklist.
    :el:symbol:`python-mode-hook`, run ``M-: jedi-mode RET`` in
    some Python file.  It should return `t`.
 
+#. If you see message "auto-complete-mode is not enabled", you might
+   forget to setup auto-complete properly.  Calling
+   ``(global-auto-complete-mode t)`` in your Emacs configuration
+   after loading auto-complete should solve this problem.
+
 #. It is possible that Jedi's keybind conflicts with keybinds
    of other libraries.  You can check the definition of keybind
    by ``<f1> k C-c d`` (or ``C-h`` instead of ``<f1>``), for example.

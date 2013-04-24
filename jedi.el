@@ -283,7 +283,7 @@ avoid collision by something like this::
 `anything-jedi-related-names'."
   :group 'jedi)
 
-(defcustom jedi:key-goto-definition-pop-marker (kbd "M-*")
+(defcustom jedi:key-goto-definition-pop-marker (kbd "C-,")
   "Keybind for command `jedi:goto-definition-pop-marker'."
   :group 'jedi)
 

@@ -36,7 +36,7 @@ Keybinds
 .. el:variable:: jedi:key-related-names
    :value: (kbd "C-c r")
 .. el:variable:: jedi:goto-definition-pop-marker
-   :value: (kbd "M-*")
+   :value: (kbd "C-,")
 
 
 Command

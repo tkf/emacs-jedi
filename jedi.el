@@ -283,6 +283,10 @@ avoid collision by something like this::
 `anything-jedi-related-names'."
   :group 'jedi)
 
+(defcustom jedi:key-goto-definition-pop-marker (kbd "M-*")
+  "Keybind for command `jedi:goto-definition-pop-marker'."
+  :group 'jedi)
+
 (defcustom jedi:import-python-el-settings t
   "Automatically import setting from python.el variables."
   :group 'jedi)
@@ -338,7 +342,8 @@ toolitp when inside of function call.
     (define-key map jedi:key-complete        'jedi:complete)
     (define-key map jedi:key-goto-definition 'jedi:goto-definition)
     (define-key map jedi:key-show-doc        'jedi:show-doc)
-    (define-key map (kbd "M-*")              'jedi:goto-definition-pop-marker)
+    (define-key map jedi:key-goto-definition-pop-marker
+      'jedi:goto-definition-pop-marker)
     (let ((command (cond
                     ((featurep 'helm) 'helm-jedi-related-names)
                     ((featurep 'anything) 'anything-jedi-related-names))))

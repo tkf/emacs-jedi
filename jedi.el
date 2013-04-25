@@ -674,7 +674,7 @@ INDEX-th result."
           (jedi:goto-definition--callback reply other-window)))))))
 
 (defun jedi:goto-definition-push-marker ()
-  (interactive)
+  "Push point onto goto-definition marker ring."
   (ring-insert jedi:goto-definition--marker-ring (point-marker)))
 
 (defun jedi:goto-definition-pop-marker ()

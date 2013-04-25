@@ -47,7 +47,6 @@ Command
 .. el:function:: jedi:complete
 .. el:function:: jedi:get-in-function-call
 .. el:function:: jedi:goto-definition
-.. el:function:: jedi:goto-definition-push-marker
 .. el:function:: jedi:goto-definition-pop-marker
 .. el:function:: jedi:show-doc
 

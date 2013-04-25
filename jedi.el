@@ -283,8 +283,16 @@ avoid collision by something like this::
 `anything-jedi-related-names'."
   :group 'jedi)
 
+(defcustom jedi:key-goto-definition-pop-marker (kbd "C-,")
+  "Keybind for command `jedi:goto-definition-pop-marker'."
+  :group 'jedi)
+
 (defcustom jedi:import-python-el-settings t
   "Automatically import setting from python.el variables."
+  :group 'jedi)
+
+(defcustom jedi:goto-definition-marker-ring-length 16
+  "Length of marker ring to store `jedi:goto-definition' call positions"
   :group 'jedi)
 
 
@@ -334,6 +342,8 @@ toolitp when inside of function call.
     (define-key map jedi:key-complete        'jedi:complete)
     (define-key map jedi:key-goto-definition 'jedi:goto-definition)
     (define-key map jedi:key-show-doc        'jedi:show-doc)
+    (define-key map jedi:key-goto-definition-pop-marker
+      'jedi:goto-definition-pop-marker)
     (let ((command (cond
                     ((featurep 'helm) 'helm-jedi-related-names)
                     ((featurep 'anything) 'anything-jedi-related-names))))
@@ -619,6 +629,9 @@ See also: `jedi:server-args'."
 
 (defvar jedi:goto-definition--index nil)
 (defvar jedi:goto-definition--cache nil)
+(defvar jedi:goto-definition--marker-ring
+  (make-ring jedi:goto-definition-marker-ring-length)
+  "Marker ring that stores `jedi:goto-definition' call positions")
 
 (defun jedi:goto-definition (&optional other-window deftype use-cache index)
   "Goto the definition of the object at point.
@@ -660,6 +673,22 @@ INDEX-th result."
         (lambda (reply)
           (jedi:goto-definition--callback reply other-window)))))))
 
+(defun jedi:goto-definition-push-marker ()
+  "Push point onto goto-definition marker ring."
+  (ring-insert jedi:goto-definition--marker-ring (point-marker)))
+
+(defun jedi:goto-definition-pop-marker ()
+  "Goto the last point where `jedi:goto-definition' was called."
+  (interactive)
+  (if (ring-empty-p jedi:goto-definition--marker-ring)
+      (error "Jedi marker ring is empty, can't pop")
+    (let ((marker (ring-remove jedi:goto-definition--marker-ring 0)))
+      (switch-to-buffer (or (marker-buffer marker)
+                            (error "Buffer has been deleted")))
+      (goto-char (marker-position marker))
+      ;; Cleanup the marker so as to avoid them piling up.
+      (set-marker marker nil nil))))
+
 (defun jedi:goto-definition-next (&optional other-window)
   "Goto the next cached definition.  See: `jedi:goto-definition'."
   (interactive "P")
@@ -699,7 +728,7 @@ INDEX-th result."
         (unless (and try-next (funcall next))
           (message "File '%s' does not exist." module_path)))
        (t
-        (push-mark)
+        (jedi:goto-definition-push-marker)
         (funcall (if other-window #'find-file-other-window #'find-file)
                  module_path)
         (jedi:goto--line-column line_nr column)

@@ -2,3 +2,4 @@ env
 elpa
 doc/build
 doc/source/index.rst
+jedi-port.log

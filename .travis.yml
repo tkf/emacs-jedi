@@ -10,6 +10,21 @@ env:
     - EMACS=emacs-snapshot
   global:
     - CARTON=$HOME/.carton/bin/carton
+matrix:
+  allow_failures:
+    # Allow failures with EMACS=emacs
+    - env:
+        - EMACS=emacs
+        - CARTON=$HOME/.carton/bin/carton
+      python: "2.6"
+    - env:
+        - EMACS=emacs
+        - CARTON=$HOME/.carton/bin/carton
+      python: "2.7"
+    - env:
+        - EMACS=emacs
+        - CARTON=$HOME/.carton/bin/carton
+      python: "3.2"
 before_install:
   - pip install -q virtualenv nose
   - pip install -q --requirement requirements.txt

@@ -13,17 +13,11 @@ env:
 matrix:
   allow_failures:
     # Allow failures with EMACS=emacs
-    - env:
-        - EMACS=emacs
-        - CARTON=$HOME/.carton/bin/carton
+    - env: EMACS=emacs
       python: "2.6"
-    - env:
-        - EMACS=emacs
-        - CARTON=$HOME/.carton/bin/carton
+    - env: EMACS=emacs
       python: "2.7"
-    - env:
-        - EMACS=emacs
-        - CARTON=$HOME/.carton/bin/carton
+    - env: EMACS=emacs
       python: "3.2"
 before_install:
   - pip install -q virtualenv nose

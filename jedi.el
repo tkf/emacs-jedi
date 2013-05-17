@@ -479,12 +479,18 @@ See also: `jedi:server-args'."
   (set (make-local-variable 'jedi:server-args) nil)
   (jedi:start-server))
 
+(defun jedi:-buffer-file-name ()
+  "Return `buffer-file-name' without text properties.
+See: https://github.com/tkf/emacs-jedi/issues/54"
+  (when (stringp buffer-file-name)
+    (substring-no-properties buffer-file-name)))
+
 (defun jedi:call-deferred (method-name)
   "Call ``Script(...).METHOD-NAME`` and return a deferred object."
   (let ((source      (buffer-substring-no-properties (point-min) (point-max)))
         (line        (count-lines (point-min) (min (1+ (point)) (point-max))))
         (column      (current-column))
-        (source-path buffer-file-name))
+        (source-path (jedi:-buffer-file-name)))
     (epc:call-deferred (jedi:get-epc)
                        method-name
                        (list source line column source-path))))
@@ -862,7 +868,7 @@ INDEX-th result."
      (jedi:get-epc)
      'defined_names
      (list (buffer-substring-no-properties (point-min) (point-max))
-           buffer-file-name))
+           (jedi:-buffer-file-name)))
     (lambda (reply)
       (setq jedi:defined-names--cache reply))))
 

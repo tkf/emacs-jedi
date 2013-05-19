@@ -70,6 +70,18 @@ communicate with Python process.  It also uses excellent Emacs
 always calls Python function asynchronously (thanks to <a class="reference external" href="https://github.com/kiwanami/emacs-epc">EPC</a>), it will
 not block your Emacs while your are editing.</p>
 </div>
+<div class="section" id="quick-start">
+<h2>Quick start<a class="headerlink" href="#quick-start" title="Permalink to this headline">¶</a></h2>
+<p>Install Jedi.el via el-get or MELPA (see <a class="reference internal" href="#install">install</a> for more info) and
+add this to your Emacs configuration:</p>
+<div class="highlight-cl"><div class="highlight"><pre><span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;python-mode-hook</span> <span class="ss">&#39;jedi:setup</span><span class="p">)</span>
+<span class="p">(</span><span class="k">setq</span> <span class="nv">jedi:setup-keys</span> <span class="no">t</span><span class="p">)</span>                      <span class="c1">; optional</span>
+<span class="p">(</span><span class="k">setq</span> <span class="nv">jedi:complete-on-dot</span> <span class="no">t</span><span class="p">)</span>                 <span class="c1">; optional</span>
+</pre></div>
+</div>
+<p>If you install Jedi.el manually (BTW, you shouldn&#8217;t!), you need to add
+more stuff to it.  See <a class="reference internal" href="#manual-install">manual install</a> section.</p>
+</div>
 <div class="section" id="requirements">
 <h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="emacs">
@@ -338,6 +350,12 @@ at the top.</p>
 </dd></dl>
 
 <dl class="variable">
+<dt id="jedi:goto-definition-marker-ring-length">
+<em class="property">variable </em><big>(</big><tt class="descname">jedi:goto-definition-marker-ring-length </tt><em>16</em><big>)</big><a class="headerlink" href="#jedi:goto-definition-marker-ring-length" title="Permalink to this definition">¶</a></dt>
+<dd><p>Length of marker ring to store <a class="reference internal" href="#jedi:goto-definition" title="jedi:goto-definition"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:goto-definition</span></tt></a> call positions</p>
+</dd></dl>
+
+<dl class="variable">
 <dt id="jedi:doc-mode">
 <em class="property">variable </em><big>(</big><tt class="descname">jedi:doc-mode </tt><em>'rst-mode</em><big>)</big><a class="headerlink" href="#jedi:doc-mode" title="Permalink to this definition">¶</a></dt>
 <dd><p>Major mode to use when showing document.</p>
@@ -435,6 +453,12 @@ avoid collision by something like this:</p>
 <a class="reference internal" href="#anything-jedi-related-names" title="anything-jedi-related-names"><tt class="xref el el-symbol docutils literal"><span class="pre">anything-jedi-related-names</span></tt></a>.</p>
 </dd></dl>
 
+<dl class="variable">
+<dt id="jedi:goto-definition-pop-marker">
+<em class="property">variable </em><big>(</big><tt class="descname">jedi:goto-definition-pop-marker </tt><em>(kbd &quot;C-,&quot;)</em><big>)</big><a class="headerlink" href="#jedi:goto-definition-pop-marker" title="Permalink to this definition">¶</a></dt>
+<dd><p>Goto the last point where <a class="reference internal" href="#jedi:goto-definition" title="jedi:goto-definition"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:goto-definition</span></tt></a> was called.</p>
+</dd></dl>
+
 </div>
 </div>
 <div class="section" id="command">
@@ -492,6 +516,12 @@ INDEX-th result.</p>
 </dd></dl>
 
 <dl class="function">
+<dt>
+<em class="property">function </em><tt class="descname">jedi:goto-definition-pop-marker</tt></dt>
+<dd><p>Goto the last point where <a class="reference internal" href="#jedi:goto-definition" title="jedi:goto-definition"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:goto-definition</span></tt></a> was called.</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="jedi:show-doc">
 <em class="property">function </em><tt class="descname">jedi:show-doc</tt><a class="headerlink" href="#jedi:show-doc" title="Permalink to this definition">¶</a></dt>
 <dd><p>Show the documentation of the object at point.</p>
@@ -544,11 +574,15 @@ investigate the problem by yourself.  Here is some checklist.</p>
 <ol class="arabic">
 <li><p class="first">You can try Jedi.el without installing it, by running
 <tt class="docutils literal"><span class="pre">make</span> <span class="pre">tryout</span></tt> if you have <a class="reference external" href="https://github.com/rejeep/carton">carton</a> installed.  This will
-install requirements for Jedi.el separated from your local
-setup in <tt class="docutils literal"><span class="pre">.emacs.d</span></tt>.  You can also check the configuration file
-<a class="reference external" href="https://github.com/tkf/emacs-jedi/blob/master/tryout-jedi.el">tryout-jedi.el</a> which is used by <tt class="docutils literal"><span class="pre">make</span> <span class="pre">tryout</span></tt> to see the
-minimum working configuration.  If you have trouble setting up
-Jedi.el, compare your configuration file and <tt class="docutils literal"><span class="pre">tryout-jedi.el</span></tt>.</p>
+install requirements for Jedi.el separated from your local setup in
+<tt class="docutils literal"><span class="pre">.emacs.d</span></tt>.  You can also check the configuration file
+<a class="reference external" href="https://github.com/tkf/emacs-jedi/blob/master/tryout-jedi.el">tryout-jedi.el</a> to see a minimum working configuration.  This is
+the configuration file loaded by <tt class="docutils literal"><span class="pre">make</span> <span class="pre">tryout</span></tt>.  If you have
+trouble setting up Jedi.el, compare your configuration file and
+<tt class="docutils literal"><span class="pre">tryout-jedi.el</span></tt>.</p>
+<p>If you get some error during <tt class="docutils literal"><span class="pre">make</span> <span class="pre">tryout</span></tt> or any other <tt class="docutils literal"><span class="pre">make</span></tt>
+tasks, checking <tt class="docutils literal"><span class="pre">elpa/install.log</span></tt> may help you finding the
+problem.</p>
 <p>If you install <a class="reference external" href="https://github.com/rejeep/carton">carton</a> in a different place or you don&#8217;t add it to
 the <tt class="docutils literal"><span class="pre">$PATH</span></tt>, you can call <tt class="docutils literal"><span class="pre">make</span></tt> like this:
 <tt class="docutils literal"><span class="pre">make</span> <span class="pre">CARTON=PATH/TO/bin/carton</span> <span class="pre">tryout</span></tt>.
@@ -558,6 +592,7 @@ install it, here is what you need to do:</p>
 <div class="highlight-cl"><pre>curl -fsSkL https://raw.github.com/rejeep/carton/master/go | sh
 make CARTON=$HOME/.carton/bin/carton tryout</pre>
 </div>
+<p>Note that this <a class="reference external" href="https://github.com/rejeep/carton">carton</a> is different from <a class="reference external" href="https://github.com/miyagawa/carton">the one for Perl</a>.</p>
 </li>
 <li><p class="first">To make sure that jedi.el is running correctly, you can
 do <tt class="docutils literal"><span class="pre">M-x</span> <span class="pre">jedi:show-jedi-version</span></tt>.  It will show the versions
@@ -572,7 +607,10 @@ some Python file.  It should return <cite>t</cite>.</p>
 <li><p class="first">If you see message &#8220;auto-complete-mode is not enabled&#8221;, you might
 forget to setup auto-complete properly.  Calling
 <tt class="docutils literal"><span class="pre">(global-auto-complete-mode</span> <span class="pre">t)</span></tt> in your Emacs configuration
-after loading auto-complete should solve this problem.</p>
+after <em>loading</em> auto-complete should solve this problem.</p>
+<p>&#8220;After loading&#8221; means you need to call <tt class="docutils literal"><span class="pre">(require</span> <span class="pre">'auto-complete)</span></tt>
+(or <tt class="docutils literal"><span class="pre">(require</span> <span class="pre">'auto-complete-config)</span></tt> if you need) before
+calling <tt class="docutils literal"><span class="pre">(global-auto-complete-mode</span> <span class="pre">t)</span></tt>.</p>
 </li>
 <li><p class="first">It is possible that Jedi&#8217;s keybind conflicts with keybinds
 of other libraries.  You can check the definition of keybind

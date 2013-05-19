@@ -37,6 +37,20 @@ not block your Emacs while your are editing.
 .. _auto-complete: https://github.com/auto-complete/auto-complete
 
 
+Quick start
+===========
+
+Install Jedi.el via el-get or MELPA (see install_ for more info) and
+add this to your Emacs configuration::
+
+  (add-hook 'python-mode-hook 'jedi:setup)
+  (setq jedi:setup-keys t)                      ; optional
+  (setq jedi:complete-on-dot t)                 ; optional
+
+If you install Jedi.el manually (BTW, you shouldn't!), you need to add
+more stuff to it.  See `manual install`_ section.
+
+
 Requirements
 ============
 
@@ -180,6 +194,7 @@ Configuration
 .. el:variable:: jedi:get-in-function-call-delay
 .. el:variable:: jedi:tooltip-method
 .. el:variable:: jedi:goto-definition-config
+.. el:variable:: jedi:goto-definition-marker-ring-length
 .. el:variable:: jedi:doc-mode
 .. el:variable:: jedi:doc-display-buffer
 .. el:variable:: jedi:install-imenu
@@ -197,6 +212,8 @@ Keybinds
    :value: (kbd "C-c d")
 .. el:variable:: jedi:key-related-names
    :value: (kbd "C-c r")
+.. el:variable:: jedi:goto-definition-pop-marker
+   :value: (kbd "C-,")
 
 
 Command
@@ -207,6 +224,7 @@ Command
 .. el:function:: jedi:complete
 .. el:function:: jedi:get-in-function-call
 .. el:function:: jedi:goto-definition
+.. el:function:: jedi:goto-definition-pop-marker
 .. el:function:: jedi:show-doc
 
 .. el:package:: helm
@@ -227,11 +245,16 @@ investigate the problem by yourself.  Here is some checklist.
 
 #. You can try Jedi.el without installing it, by running
    ``make tryout`` if you have carton_ installed.  This will
-   install requirements for Jedi.el separated from your local
-   setup in ``.emacs.d``.  You can also check the configuration file
-   tryout-jedi.el_ which is used by ``make tryout`` to see the
-   minimum working configuration.  If you have trouble setting up
-   Jedi.el, compare your configuration file and ``tryout-jedi.el``.
+   install requirements for Jedi.el separated from your local setup in
+   ``.emacs.d``.  You can also check the configuration file
+   tryout-jedi.el_ to see a minimum working configuration.  This is
+   the configuration file loaded by ``make tryout``.  If you have
+   trouble setting up Jedi.el, compare your configuration file and
+   ``tryout-jedi.el``.
+
+   If you get some error during ``make tryout`` or any other ``make``
+   tasks, checking ``elpa/install.log`` may help you finding the
+   problem.
 
    .. _carton: https://github.com/rejeep/carton
    .. _tryout-jedi.el:
@@ -248,6 +271,9 @@ investigate the problem by yourself.  Here is some checklist.
      curl -fsSkL https://raw.github.com/rejeep/carton/master/go | sh
      make CARTON=$HOME/.carton/bin/carton tryout
 
+   Note that this carton_ is different from `the one for Perl
+   <https://github.com/miyagawa/carton>`_.
+
 #. To make sure that jedi.el is running correctly, you can
    do ``M-x jedi:show-jedi-version``.  It will show the versions
    of the Python libraries you are using.
@@ -262,7 +288,11 @@ investigate the problem by yourself.  Here is some checklist.
 #. If you see message "auto-complete-mode is not enabled", you might
    forget to setup auto-complete properly.  Calling
    ``(global-auto-complete-mode t)`` in your Emacs configuration
-   after loading auto-complete should solve this problem.
+   after *loading* auto-complete should solve this problem.
+
+   "After loading" means you need to call ``(require 'auto-complete)``
+   (or ``(require 'auto-complete-config)`` if you need) before
+   calling ``(global-auto-complete-mode t)``.
 
 #. It is possible that Jedi's keybind conflicts with keybinds
    of other libraries.  You can check the definition of keybind

@@ -552,7 +552,8 @@ See: https://github.com/tkf/emacs-jedi/issues/54"
                         :symbol symbol
                         :document (unless (equal doc "") doc)
                         :summary description)))
-   (when (= jedi:complete-request-point (point))
+   (when (or (not (= (length jedi:complete-reply) 1))
+             (= jedi:complete-request-point (point)))
      ;; Check the cursor location to avoid inserting extraneous text.
      ;; See: https://github.com/tkf/emacs-jedi/issues/59
      jedi:complete-reply)))

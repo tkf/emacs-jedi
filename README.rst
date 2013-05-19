@@ -37,6 +37,20 @@ not block your Emacs while your are editing.
 .. _auto-complete: https://github.com/auto-complete/auto-complete
 
 
+Quick start
+===========
+
+Install Jedi.el via el-get or MELPA (see install_ for more info) and
+add this to your Emacs configuration::
+
+  (add-hook 'python-mode-hook 'jedi:setup)
+  (setq jedi:setup-keys t)                      ; optional
+  (setq jedi:complete-on-dot t)                 ; optional
+
+If you install Jedi.el manually (BTW, you shouldn't!), you need to add
+more stuff to it.  See `manual install`_ section.
+
+
 Requirements
 ============
 

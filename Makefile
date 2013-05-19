@@ -1,8 +1,13 @@
 ENV = env
 
+VIRTUALENV_SYSTEM_SITE_PACKAGES ?= true
+VIRTUALENV = \
+	VIRTUALENV_SYSTEM_SITE_PACKAGES=$(VIRTUALENV_SYSTEM_SITE_PACKAGES) \
+		virtualenv --python=$(PYTHON)
 PYTHON ?= python
 CARTON ?= carton
 EMACS ?= emacs
+
 
 EL4T_SCRIPT = tools/el4t/emacs.sh
 EL4T_CARTON = EL4T_EMACS=${EMACS} EMACS=${EL4T_SCRIPT} ${CARTON}
@@ -48,7 +53,7 @@ requirements: env
 
 env: $(ENV)/bin/activate
 $(ENV)/bin/activate:
-	virtualenv --python=$(PYTHON) $(ENV)
+	$(VIRTUALENV) $(ENV)
 
 clean-env:
 	rm -rf $(ENV)

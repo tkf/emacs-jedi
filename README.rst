@@ -56,25 +56,85 @@ Requirements
 
 Emacs
 -----
-- EPC_
-- deferred.el_ (> v0.3)
-- auto-complete_
+The following are the minimum requirements within Emacs to get Jedi.el up
+and running. If you install Jedi.el via el-get, please move to the Python
+dependencies.
 
-If your completion popup is broken when width of completion candidates
-is wide, try the newest version of popup.el_.
+EPC_
+****
+This package can be installed by MELPA or manually following the
+instructions on the repo home page. The bare minimum configuration is
+to have ``(require 'epc)`` somewhere in your init.el and/or load path.
+
+deferred.el_ (> v0.3)
+*********************
+deferred.el does not require any special configuration and installs
+automatically when EPC_ is installed.
+
+auto-complete_
+**************
+Auto-complete is a powerful completion package and we shall not attempt to
+replicate the documentation here. It is in your best interest to read the
+documentation for configuration to suit your needs and system. The following
+is a basic configuration to get you started::
+
+    ;; Require
+    (require 'auto-complete)
+    ;; recommended configurations
+    (require 'auto-complete-config)
+    (ac-config-default)
+
+    (setq
+         ac-auto-start 2
+         ac-override-local-map nil
+         ac-use-menu-map t
+         ac-set-trigger-key "TAB")
+    ;; Default settings
+    (define-key ac-menu-map "\C-n" 'ac-next)
+    (define-key ac-menu-map "\C-p" 'ac-previous)
+
+    ;; making it a bit faster
+    (setq
+         ac-delay 5
+         ac-auto-show-menu 0.4
+         ac-quick-help-delay 0.5)
+    ;; using a dictionary
+    (add-to-list 'ac-dictionary-directories"~/path/to/autocomplete/dict")
+
+    (provide 'user-auto-complete)
+
+- If your completion popup is broken when width of completion candidates is wide, try the newest version of popup.el_.
 
 .. _deferred.el: https://github.com/kiwanami/emacs-deferred
 .. _popup.el: https://github.com/auto-complete/popup-el
 
-Jedi.el is currently tested against Emacs 24.3-devel, 24.2 and 23.1.
+- Jedi.el is currently tested against Emacs 24.3-devel, 24.2 and 23.1.
 
 Python
 ------
-- Jedi_
-- python-epc_
-- argparse (for Python 2.6)
+The following are the minimum requirements within your Python environment
+to get Jedi.el up and running. Verify these have been installed with
+``pip freeze`` in the virtualenv currently activated.
 
-Jedi.el is tested against Python 2.6, 2.7 and 3.2.
+Jedi_
+*****
+Jedi.py is an awesome Python auto-completion module specifically built
+to be awesomer than awesome. In other words, it works really well. Install
+Jedi.py into the virtualenv you are working on or system wide: Docs_
+
+.. _Docs: https://jedi.readthedocs.org/en/latest/docs/installation.html
+
+python-epc_
+***********
+``pip install epc`` This can be system wide or per virtualenv as described
+above.
+
+argparse
+********
+If you are using Python 2.6 or earlier, please install argparse for completion
+support.
+
+- Jedi.el is tested against Python 2.6, 2.7 and 3.2.
 
 Optional dependencies for automatic installation:
 -------------------------------------------------

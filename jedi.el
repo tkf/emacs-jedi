@@ -1006,6 +1006,7 @@ running server."
   (if jedi:server-command--backup
       (progn
         (setq jedi:server-command jedi:server-command--backup
+              jedi:server-command--backup nil
               jedi:server-args jedi:server-args--backup)
         (jedi:stop-server)
         (message "Quit debugging.  Original setting restored."))

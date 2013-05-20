@@ -216,6 +216,14 @@ To use this feature, you need to install the developmental
 version (\"dev\" branch) of Jedi."
   :group 'jedi)
 
+(defcustom jedi:imenu-create-index-function 'jedi:create-imenu-index
+  "`imenu-create-index-function' for Jedi.el.
+It must be a function that takes no argument and return an object
+described in `imenu--index-alist'.
+This can be set to `jedi:create-flat-imenu-index'.
+Default is `jedi:create-imenu-index'."
+  :group 'jedi)
+
 (defcustom jedi:setup-keys nil
   "Setup recommended keybinds.
 
@@ -329,7 +337,7 @@ toolitp when inside of function call.
         (when jedi:install-imenu
           (add-hook 'after-change-functions 'jedi:after-change-handler nil t)
           (jedi:defined-names-deferred)
-          (setq imenu-create-index-function 'jedi:create-imenu-index))
+          (setq imenu-create-index-function jedi:imenu-create-index-function))
         (add-hook 'post-command-hook 'jedi:handle-post-command nil t)
         (add-hook 'kill-buffer-hook 'jedi:server-pool--gc-when-idle nil t))
     (remove-hook 'post-command-hook 'jedi:handle-post-command t)
@@ -894,7 +902,7 @@ one request at the time is emitted."
 
 (defun jedi:create-imenu-index (&optional items)
   "`imenu-create-index-function' for Jedi.el.
-Return an object described in `imenu--index-alist'."
+See also `jedi:imenu-create-index-function'."
   (loop for (def . subdefs) in (or items jedi:defined-names--cache)
         if subdefs
         collect (append
@@ -905,6 +913,8 @@ Return an object described in `imenu--index-alist'."
         collect (jedi:create-imenu-index-1 def)))
 
 (defun jedi:create-flat-imenu-index (&optional items)
+  "`imenu-create-index-function' for Jedi.el to create flatten index.
+See also `jedi:imenu-create-index-function'."
   (loop for (def . subdefs) in (or items jedi:defined-names--cache)
         collect (cons (plist-get def :full_name) (jedi:imenu-make-marker def))
         when subdefs

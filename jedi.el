@@ -28,6 +28,8 @@
 
 ;;; Code:
 
+(require 'ring)
+
 (require 'epc)
 (require 'auto-complete)
 (declare-function pos-tip-show "pos-tip")

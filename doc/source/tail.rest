@@ -21,6 +21,7 @@ Configuration
 .. el:variable:: jedi:doc-mode
 .. el:variable:: jedi:doc-display-buffer
 .. el:variable:: jedi:install-imenu
+.. el:variable:: jedi:imenu-create-index-function
 
 
 Keybinds
@@ -156,7 +157,8 @@ Changelog
 v0.1.2 (WIP)
 ------------
 
-- Add imenu support (see :el:symbol:`jedi:install-imenu`).
+- Add imenu support (see :el:symbol:`jedi:install-imenu` and
+  :el:symbol:`jedi:imenu-create-index-function`).
   Currently it is not on by default as it needs developmental version
   of Jedi_.
 - Add :el:symbol:`jedi:goto-definition-config` configurable option.

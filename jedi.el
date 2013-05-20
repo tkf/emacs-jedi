@@ -884,10 +884,13 @@ one request at the time is emitted."
   (unless (or (ac-menu-live-p) (ac-inline-live-p))
     (jedi:defined-names--singleton-deferred)))
 
+(defun jedi:imenu-make-marker (def)
+  (destructuring-bind (&key line_nr column &allow-other-keys) def
+    (save-excursion (jedi:goto--line-column line_nr column)
+                    (point-marker))))
+
 (defun jedi:create-imenu-index-1 (def)
-  (destructuring-bind (&key name line_nr column &allow-other-keys) def
-    (cons name (save-excursion (jedi:goto--line-column line_nr column)
-                               (point-marker)))))
+  (cons (plist-get def :name) (jedi:imenu-make-marker def)))
 
 (defun jedi:create-imenu-index (&optional items)
   "`imenu-create-index-function' for Jedi.el.
@@ -900,6 +903,12 @@ Return an object described in `imenu--index-alist'."
                  (jedi:create-imenu-index subdefs))
         else
         collect (jedi:create-imenu-index-1 def)))
+
+(defun jedi:create-flat-imenu-index (&optional items)
+  (loop for (def . subdefs) in (or items jedi:defined-names--cache)
+        collect (cons (plist-get def :full_name) (jedi:imenu-make-marker def))
+        when subdefs
+        append (jedi:create-flat-imenu-index subdefs)))
 
 
 ;;; Meta info

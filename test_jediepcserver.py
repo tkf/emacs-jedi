@@ -2,8 +2,6 @@ import os
 import textwrap
 from contextlib import contextmanager
 
-import pytest
-
 import jediepcserver as jep
 jep.import_jedi()
 
@@ -39,7 +37,6 @@ def check_defined_names(source, keys, deftree):
     assert dicts == deftree
 
 
-@pytest.mark.skipif("not os.environ.get('USE_JEDI_DEV')")
 def test_defined_names_imports():
     item = lambda name, local_name: {'name': name, 'local_name': local_name}
     keys = ['name', 'local_name']
@@ -56,7 +53,6 @@ def test_defined_names_imports():
     """, keys, dicts)
 
 
-@pytest.mark.skipif("not os.environ.get('USE_JEDI_DEV')")
 def test_defined_names_nested_classes():
     item = lambda name, local_name: {'name': name, 'local_name': local_name}
     keys = ['name', 'local_name']

@@ -146,7 +146,7 @@ def get_definition(*args):
     return list(map(definition_to_dict, definitions))
 
 
-def get_names_recursively(definition):
+def get_names_recursively(definition, parent=None):
     """
     Fetch interesting defined names in sub-scopes under `definition`.
 
@@ -154,10 +154,13 @@ def get_names_recursively(definition):
 
     """
     d = definition_to_dict(definition)
-    # FIXME: use appropriate method to do this (when Jedi implement some)
-    if definition.description.startswith('class '):
+    try:
+        d['local_name'] = parent['local_name'] + '.' + d['name']
+    except (AttributeError, TypeError):
+        d['local_name'] = d['name']
+    if definition.type == 'class':
         ds = definition.defined_names()
-        return [d] + list(map(get_names_recursively, ds))
+        return [d] + [get_names_recursively(c, d) for c in ds]
     else:
         return [d]
 

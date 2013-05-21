@@ -158,8 +158,7 @@ def get_names_recursively(definition, parent=None):
         d['local_name'] = parent['local_name'] + '.' + d['name']
     except (AttributeError, TypeError):
         d['local_name'] = d['name']
-    # FIXME: use appropriate method to do this (when Jedi implement some)
-    if definition.description.startswith('class '):
+    if definition.type == 'class':
         ds = definition.defined_names()
         return [d] + [get_names_recursively(c, d) for c in ds]
     else:

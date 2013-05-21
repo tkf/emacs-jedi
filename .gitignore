@@ -1,3 +1,5 @@
+MANIFEST
+.tox
 env
 elpa
 doc/build

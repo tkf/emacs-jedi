@@ -218,6 +218,14 @@ To use this feature, you need to install the developmental
 version (\"dev\" branch) of Jedi."
   :group 'jedi)
 
+(defcustom jedi:imenu-create-index-function 'jedi:create-nested-imenu-index
+  "`imenu-create-index-function' for Jedi.el.
+It must be a function that takes no argument and return an object
+described in `imenu--index-alist'.
+This can be set to `jedi:create-flat-imenu-index'.
+Default is `jedi:create-nested-imenu-index'."
+  :group 'jedi)
+
 (defcustom jedi:setup-keys nil
   "Setup recommended keybinds.
 
@@ -331,7 +339,7 @@ toolitp when inside of function call.
         (when jedi:install-imenu
           (add-hook 'after-change-functions 'jedi:after-change-handler nil t)
           (jedi:defined-names-deferred)
-          (setq imenu-create-index-function 'jedi:create-imenu-index))
+          (setq imenu-create-index-function jedi:imenu-create-index-function))
         (add-hook 'post-command-hook 'jedi:handle-post-command nil t)
         (add-hook 'kill-buffer-hook 'jedi:server-pool--gc-when-idle nil t))
     (remove-hook 'post-command-hook 'jedi:handle-post-command t)
@@ -886,22 +894,33 @@ one request at the time is emitted."
   (unless (or (ac-menu-live-p) (ac-inline-live-p))
     (jedi:defined-names--singleton-deferred)))
 
-(defun jedi:create-imenu-index-1 (def)
-  (destructuring-bind (&key name line_nr column &allow-other-keys) def
-    (cons name (save-excursion (jedi:goto--line-column line_nr column)
-                               (point-marker)))))
+(defun jedi:imenu-make-marker (def)
+  (destructuring-bind (&key line_nr column &allow-other-keys) def
+    (save-excursion (jedi:goto--line-column line_nr column)
+                    (point-marker))))
 
-(defun jedi:create-imenu-index (&optional items)
+(defun jedi:create-nested-imenu-index-1 (def)
+  (cons (plist-get def :name) (jedi:imenu-make-marker def)))
+
+(defun jedi:create-nested-imenu-index (&optional items)
   "`imenu-create-index-function' for Jedi.el.
-Return an object described in `imenu--index-alist'."
+See also `jedi:imenu-create-index-function'."
   (loop for (def . subdefs) in (or items jedi:defined-names--cache)
         if subdefs
         collect (append
-                 (list (plist-get def :full_name)
-                       (jedi:create-imenu-index-1 def))
-                 (jedi:create-imenu-index subdefs))
+                 (list (plist-get def :local_name)
+                       (jedi:create-nested-imenu-index-1 def))
+                 (jedi:create-nested-imenu-index subdefs))
         else
-        collect (jedi:create-imenu-index-1 def)))
+        collect (jedi:create-nested-imenu-index-1 def)))
+
+(defun jedi:create-flat-imenu-index (&optional items)
+  "`imenu-create-index-function' for Jedi.el to create flatten index.
+See also `jedi:imenu-create-index-function'."
+  (loop for (def . subdefs) in (or items jedi:defined-names--cache)
+        collect (cons (plist-get def :local_name) (jedi:imenu-make-marker def))
+        when subdefs
+        append (jedi:create-flat-imenu-index subdefs)))
 
 
 ;;; Meta info

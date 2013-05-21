@@ -70,7 +70,7 @@ Jedi.el is currently tested against Emacs 24.3-devel, 24.2 and 23.1.
 
 Python
 ------
-- Jedi_
+- Jedi_ (>= 0.6.0)
 - python-epc_
 - argparse (for Python 2.6)
 

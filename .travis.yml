@@ -10,6 +10,8 @@ env:
     - EMACS=emacs-snapshot
   global:
     - CARTON=$HOME/.carton/bin/carton
+    # Use Python version of the one used for running tox
+    - TOXENV=py
 matrix:
   allow_failures:
     # Allow failures with EMACS=emacs
@@ -20,7 +22,7 @@ matrix:
     - env: EMACS=emacs
       python: "3.2"
 before_install:
-  - pip install -q virtualenv nose
+  - pip install -q virtualenv tox
   - pip install -q --requirement requirements.txt
   - curl -fsSkL
         --max-time 10

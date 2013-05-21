@@ -4,6 +4,9 @@ VIRTUALENV_SYSTEM_SITE_PACKAGES ?= true
 VIRTUALENV = \
 	VIRTUALENV_SYSTEM_SITE_PACKAGES=$(VIRTUALENV_SYSTEM_SITE_PACKAGES) \
 		virtualenv --python=$(PYTHON)
+PIP_INSTALL = $(ENV)/bin/pip install --use-mirrors
+JEDI_DEV_URL = https://github.com/davidhalter/jedi/archive/dev.zip
+
 PYTHON ?= python
 CARTON ?= carton
 EMACS ?= emacs
@@ -23,7 +26,7 @@ test-1:
 	rm -f elpa/mocker-*/*elc  # workaround a bug in mocker.el
 	${EL4T_CARTON_EMACS} -Q -batch \
 		-L . -l test-jedi.el -f ert-run-tests-batch-and-exit
-	nosetests test_jediepcserver.py
+	tox
 
 compile: elpa clean-elc
 	${EL4T_CARTON_EMACS} -Q -batch \
@@ -49,7 +52,10 @@ clean-elpa:
 	rm -rf elpa
 
 requirements: env
-	$(ENV)/bin/pip install --requirement requirements.txt
+	${PIP_INSTALL} --requirement requirements.txt
+
+install-jedi-dev:
+	${PIP_INSTALL} --upgrade ${JEDI_DEV_URL}
 
 env: $(ENV)/bin/activate
 $(ENV)/bin/activate:

@@ -4,6 +4,7 @@ VIRTUALENV_SYSTEM_SITE_PACKAGES ?= true
 VIRTUALENV = \
 	VIRTUALENV_SYSTEM_SITE_PACKAGES=$(VIRTUALENV_SYSTEM_SITE_PACKAGES) \
 		virtualenv --python=$(PYTHON)
+USE_JEDI_DEV ?=
 PYTHON ?= python
 CARTON ?= carton
 EMACS ?= emacs
@@ -51,7 +52,7 @@ clean-elpa:
 
 requirements: env
 	$(ENV)/bin/pip install --requirement requirements.txt
-	${MAKE} install-jedi-dev
+	if [ -n "${USE_JEDI_DEV}" ]; then ${MAKE} install-jedi-dev; fi
 
 install-jedi-dev:
 	$(ENV)/bin/pip install -U https://github.com/davidhalter/jedi/archive/dev.zip

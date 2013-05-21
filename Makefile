@@ -4,6 +4,9 @@ VIRTUALENV_SYSTEM_SITE_PACKAGES ?= true
 VIRTUALENV = \
 	VIRTUALENV_SYSTEM_SITE_PACKAGES=$(VIRTUALENV_SYSTEM_SITE_PACKAGES) \
 		virtualenv --python=$(PYTHON)
+PIP_INSTALL = $(ENV)/bin/pip install --use-mirrors
+JEDI_DEV_URL = https://github.com/davidhalter/jedi/archive/dev.zip
+
 PYTHON ?= python
 CARTON ?= carton
 EMACS ?= emacs
@@ -49,10 +52,10 @@ clean-elpa:
 	rm -rf elpa
 
 requirements: env
-	$(ENV)/bin/pip install --requirement requirements.txt
+	${PIP_INSTALL} --requirement requirements.txt
 
 install-jedi-dev:
-	$(ENV)/bin/pip install -U https://github.com/davidhalter/jedi/archive/dev.zip
+	${PIP_INSTALL} --upgrade ${JEDI_DEV_URL}
 
 env: $(ENV)/bin/activate
 $(ENV)/bin/activate:

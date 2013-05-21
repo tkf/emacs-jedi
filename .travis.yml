@@ -20,7 +20,7 @@ matrix:
     - env: EMACS=emacs
       python: "3.2"
 before_install:
-  - pip install -q virtualenv nose
+  - pip install -q virtualenv
   - pip install -q --requirement requirements.txt
   - curl -fsSkL
         --max-time 10

@@ -51,6 +51,10 @@ clean-elpa:
 
 requirements: env
 	$(ENV)/bin/pip install --requirement requirements.txt
+	${MAKE} install-jedi-dev
+
+install-jedi-dev:
+	$(ENV)/bin/pip install -U https://github.com/davidhalter/jedi/archive/dev.zip
 
 env: $(ENV)/bin/activate
 $(ENV)/bin/activate:

@@ -155,13 +155,13 @@ def get_names_recursively(definition, parent=None):
     """
     d = definition_to_dict(definition)
     try:
-        d['local_name'] = parent.name + '.' + d['name']
+        d['local_name'] = parent['local_name'] + '.' + d['name']
     except (AttributeError, TypeError):
         d['local_name'] = d['name']
     # FIXME: use appropriate method to do this (when Jedi implement some)
     if definition.description.startswith('class '):
         ds = definition.defined_names()
-        return [d] + [get_names_recursively(c, definition) for c in ds]
+        return [d] + [get_names_recursively(c, d) for c in ds]
     else:
         return [d]
 

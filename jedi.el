@@ -906,7 +906,7 @@ See also `jedi:imenu-create-index-function'."
   (loop for (def . subdefs) in (or items jedi:defined-names--cache)
         if subdefs
         collect (append
-                 (list (plist-get def :full_name)
+                 (list (plist-get def :local_name)
                        (jedi:create-imenu-index-1 def))
                  (jedi:create-imenu-index subdefs))
         else
@@ -916,7 +916,7 @@ See also `jedi:imenu-create-index-function'."
   "`imenu-create-index-function' for Jedi.el to create flatten index.
 See also `jedi:imenu-create-index-function'."
   (loop for (def . subdefs) in (or items jedi:defined-names--cache)
-        collect (cons (plist-get def :full_name) (jedi:imenu-make-marker def))
+        collect (cons (plist-get def :local_name) (jedi:imenu-make-marker def))
         when subdefs
         append (jedi:create-flat-imenu-index subdefs)))
 

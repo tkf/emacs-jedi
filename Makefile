@@ -17,14 +17,14 @@ EL4T_CARTON_EMACS = ${EL4T_CARTON} exec ${EL4T_SCRIPT}
 	print-deps travis-ci doc
 
 test: elpa requirements
-	$(ENV)/bin/pip install --use-mirrors nose
+	$(ENV)/bin/pip install --use-mirrors pytest
 	${MAKE} test-1
 
 test-1:
 	rm -f elpa/mocker-*/*elc  # workaround a bug in mocker.el
 	${EL4T_CARTON_EMACS} -Q -batch \
 		-L . -l test-jedi.el -f ert-run-tests-batch-and-exit
-	$(ENV)/bin/nosetests test_jediepcserver.py
+	$(ENV)/bin/py.test test_jediepcserver.py
 
 compile: elpa clean-elc
 	${EL4T_CARTON_EMACS} -Q -batch \

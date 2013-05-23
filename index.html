@@ -7,7 +7,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Jedi.el - Python auto-completion for Emacs &mdash; Emacs Jedi 0.1.2alpha2 documentation</title>
+    <title>Jedi.el - Python auto-completion for Emacs &mdash; Emacs Jedi 0.1.2alpha3 documentation</title>
     
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.1.2alpha2',
+        VERSION:     '0.1.2alpha3',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,7 +24,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="Emacs Jedi 0.1.2alpha2 documentation" href="#" /> 
+    <link rel="top" title="Emacs Jedi 0.1.2alpha3 documentation" href="#" /> 
   </head>
   <body>
     <div class="related">
@@ -33,7 +33,7 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
-        <li><a href="#">Emacs Jedi 0.1.2alpha2 documentation</a> &raquo;</li> 
+        <li><a href="#">Emacs Jedi 0.1.2alpha3 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -63,12 +63,6 @@
 It aims at helping your Python coding in a non-destructive way.
 It also helps you to find information about Python objects, such as
 docstring, function arguments and code location.</p>
-<p>Jedi.el uses <a class="reference external" href="https://github.com/davidhalter/jedi">jedi</a> (an awesome Python auto-completion library) and
-<a class="reference external" href="https://github.com/kiwanami/emacs-epc">EPC</a> (an RPC stack for Emacs Lisp) and its <a class="reference external" href="https://github.com/tkf/python-epc">Python binding</a> to
-communicate with Python process.  It also uses excellent Emacs
-<a class="reference external" href="https://github.com/auto-complete/auto-complete">auto-complete</a> module to start completion automatically.  As Jedi.el
-always calls Python function asynchronously (thanks to <a class="reference external" href="https://github.com/kiwanami/emacs-epc">EPC</a>), it will
-not block your Emacs while your are editing.</p>
 </div>
 <div class="section" id="quick-start">
 <h2>Quick start<a class="headerlink" href="#quick-start" title="Permalink to this headline">¶</a></h2>
@@ -81,6 +75,32 @@ add this to your Emacs configuration:</p>
 </div>
 <p>If you install Jedi.el manually (BTW, you shouldn&#8217;t!), you need to add
 more stuff to it.  See <a class="reference internal" href="#manual-install">manual install</a> section.</p>
+</div>
+<div class="section" id="screenshots">
+<h2>Screenshots<a class="headerlink" href="#screenshots" title="Permalink to this headline">¶</a></h2>
+<p>Jedi.el comes with a set of useful features.  Here is a list of screenshots
+to show some of them.</p>
+<div class="figure">
+<img alt="http://farm9.staticflickr.com/8261/8804536872_8d266b88ed_o.png" src="http://farm9.staticflickr.com/8261/8804536872_8d266b88ed_o.png" />
+<p class="caption">Auto-completion and popup help.  This is the main feature of Jedi.el.
+You don&#8217;t need to type any special command.  Completions and help
+popup as you type.</p>
+</div>
+<div class="figure">
+<img alt="http://farm3.staticflickr.com/2845/8793986161_e1c58607f0_o.png" src="http://farm3.staticflickr.com/2845/8793986161_e1c58607f0_o.png" />
+<p class="caption">Popup-style call signature help.
+This is useful when you don&#8217;t remember what argument to pass.</p>
+</div>
+<div class="figure">
+<img alt="http://farm8.staticflickr.com/7312/8794015799_989e2a7217_o.png" src="http://farm8.staticflickr.com/7312/8794015799_989e2a7217_o.png" />
+<p class="caption">eldoc-style call signature help.
+This is another style of showing arguments.
+Use <cite>jedi:tooltip-method</cite> to configure which style to use.</p>
+</div>
+<div class="figure">
+<img alt="http://farm4.staticflickr.com/3784/8804246558_0b3c998050_o.png" src="http://farm4.staticflickr.com/3784/8804246558_0b3c998050_o.png" />
+<p class="caption">Source code viewer (need <a class="reference external" href="https://github.com/tkf/emacs-jedi-direx">jedi-direx</a> extension).</p>
+</div>
 </div>
 <div class="section" id="requirements">
 <h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
@@ -98,7 +118,7 @@ is wide, try the newest version of <a class="reference external" href="https://g
 <div class="section" id="python">
 <h3>Python<a class="headerlink" href="#python" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li><a class="reference external" href="https://github.com/davidhalter/jedi">Jedi</a></li>
+<li><a class="reference external" href="https://github.com/davidhalter/jedi">Jedi</a> (&gt;= 0.6.0)</li>
 <li><a class="reference external" href="https://github.com/tkf/python-epc">python-epc</a></li>
 <li>argparse (for Python 2.6)</li>
 </ul>
@@ -375,6 +395,16 @@ To use this feature, you need to install the developmental
 version (&#8220;dev&#8221; branch) of Jedi.</p>
 </dd></dl>
 
+<dl class="variable">
+<dt id="jedi:imenu-create-index-function">
+<em class="property">variable </em><big>(</big><tt class="descname">jedi:imenu-create-index-function </tt><em>'jedi:create-nested-imenu-index</em><big>)</big><a class="headerlink" href="#jedi:imenu-create-index-function" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#jedi:imenu-create-index-function" title="jedi:imenu-create-index-function"><tt class="xref el el-symbol docutils literal"><span class="pre">imenu-create-index-function</span></tt></a> for Jedi.el.
+It must be a function that takes no argument and return an object
+described in <tt class="xref el el-symbol docutils literal"><span class="pre">imenu--index-alist</span></tt>.
+This can be set to <tt class="xref el el-symbol docutils literal"><span class="pre">jedi:create-flat-imenu-index</span></tt>.
+Default is <tt class="xref el el-symbol docutils literal"><span class="pre">jedi:create-nested-imenu-index</span></tt>.</p>
+</dd></dl>
+
 <div class="section" id="keybinds">
 <h3>Keybinds<a class="headerlink" href="#keybinds" title="Permalink to this headline">¶</a></h3>
 <dl class="variable">
@@ -646,12 +676,22 @@ Python file in an Emacs session.</td></tr>
 </tbody>
 </table>
 </div>
+<div class="section" id="how-it-works">
+<h2>How it works<a class="headerlink" href="#how-it-works" title="Permalink to this headline">¶</a></h2>
+<p>Jedi.el uses <a class="reference external" href="https://github.com/davidhalter/jedi">jedi</a> (an awesome Python auto-completion library) and
+<a class="reference external" href="https://github.com/kiwanami/emacs-epc">EPC</a> (an RPC stack for Emacs Lisp) and its <a class="reference external" href="https://github.com/tkf/python-epc">Python binding</a> to
+communicate with Python process.  It also uses excellent Emacs
+<a class="reference external" href="https://github.com/auto-complete/auto-complete">auto-complete</a> module to start completion automatically.  As Jedi.el
+always calls Python function asynchronously (thanks to <a class="reference external" href="https://github.com/kiwanami/emacs-epc">EPC</a>), it will
+not block your Emacs while your are editing.</p>
+</div>
 <div class="section" id="changelog">
 <h2>Changelog<a class="headerlink" href="#changelog" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="v0-1-2-wip">
 <h3>v0.1.2 (WIP)<a class="headerlink" href="#v0-1-2-wip" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li>Add imenu support (see <a class="reference internal" href="#jedi:install-imenu" title="jedi:install-imenu"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:install-imenu</span></tt></a>).
+<li>Add imenu support (see <a class="reference internal" href="#jedi:install-imenu" title="jedi:install-imenu"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:install-imenu</span></tt></a> and
+<a class="reference internal" href="#jedi:imenu-create-index-function" title="jedi:imenu-create-index-function"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:imenu-create-index-function</span></tt></a>).
 Currently it is not on by default as it needs developmental version
 of <a class="reference external" href="https://github.com/davidhalter/jedi">Jedi</a>.</li>
 <li>Add <a class="reference internal" href="#jedi:goto-definition-config" title="jedi:goto-definition-config"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:goto-definition-config</span></tt></a> configurable option.</li>
@@ -710,7 +750,7 @@ davidhalter/jedi</a></td></tr>
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
-        <li><a href="#">Emacs Jedi 0.1.2alpha2 documentation</a> &raquo;</li> 
+        <li><a href="#">Emacs Jedi 0.1.2alpha3 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

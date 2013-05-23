@@ -151,6 +151,17 @@ investigate the problem by yourself.  Here is some checklist.
        Python file in an Emacs session.
 
 
+How it works
+============
+
+Jedi.el uses jedi_ (an awesome Python auto-completion library) and
+EPC_ (an RPC stack for Emacs Lisp) and its `Python binding`_ to
+communicate with Python process.  It also uses excellent Emacs
+auto-complete_ module to start completion automatically.  As Jedi.el
+always calls Python function asynchronously (thanks to EPC_), it will
+not block your Emacs while your are editing.
+
+
 Changelog
 =========
 

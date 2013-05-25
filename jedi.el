@@ -894,6 +894,11 @@ one request at the time is emitted."
           (deferred:watch (jedi:defined-names-deferred)
             (lambda (_) (setq jedi:defined-names--singleton-d nil))))))
 
+(defun jedi:defined-names--sync ()
+  (unless jedi:defined-names--cache
+    (epc:sync (jedi:get-epc) (jedi:defined-names--singleton-deferred)))
+  jedi:defined-names--cache)
+
 (defun jedi:after-change-handler (&rest _)
   (unless (or (ac-menu-live-p) (ac-inline-live-p))
     (jedi:defined-names--singleton-deferred)))
@@ -903,28 +908,36 @@ one request at the time is emitted."
     (save-excursion (jedi:goto--line-column line_nr column)
                     (point-marker))))
 
-(defun jedi:create-nested-imenu-index-1 (def)
+(defun jedi:create-nested-imenu-index--item (def)
   (cons (plist-get def :name) (jedi:imenu-make-marker def)))
 
-(defun jedi:create-nested-imenu-index (&optional items)
+(defun jedi:create-nested-imenu-index ()
   "`imenu-create-index-function' for Jedi.el.
 See also `jedi:imenu-create-index-function'."
+  (when (called-interactively-p 'interactive) (jedi:defined-names--sync))
+  (jedi:create-nested-imenu-index-1))
+
+(defun jedi:create-nested-imenu-index-1 (&optional items)
   (loop for (def . subdefs) in (or items jedi:defined-names--cache)
         if subdefs
         collect (append
                  (list (plist-get def :local_name)
-                       (jedi:create-nested-imenu-index-1 def))
-                 (jedi:create-nested-imenu-index subdefs))
+                       (jedi:create-nested-imenu-index--item def))
+                 (jedi:create-nested-imenu-index-1 subdefs))
         else
-        collect (jedi:create-nested-imenu-index-1 def)))
+        collect (jedi:create-nested-imenu-index--item def)))
 
-(defun jedi:create-flat-imenu-index (&optional items)
+(defun jedi:create-flat-imenu-index ()
   "`imenu-create-index-function' for Jedi.el to create flatten index.
 See also `jedi:imenu-create-index-function'."
+  (when (called-interactively-p 'interactive) (jedi:defined-names--sync))
+  (jedi:create-flat-imenu-index-1))
+
+(defun jedi:create-flat-imenu-index-1 (&optional items)
   (loop for (def . subdefs) in (or items jedi:defined-names--cache)
         collect (cons (plist-get def :local_name) (jedi:imenu-make-marker def))
         when subdefs
-        append (jedi:create-flat-imenu-index subdefs)))
+        append (jedi:create-flat-imenu-index-1 subdefs)))
 
 
 ;;; Meta info

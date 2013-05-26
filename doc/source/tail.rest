@@ -165,8 +165,8 @@ not block your Emacs while your are editing.
 Changelog
 =========
 
-v0.1.2 (WIP)
-------------
+v0.1.2 (2013-05-26)
+-------------------
 
 - Add imenu support (see :el:symbol:`jedi:install-imenu` and
   :el:symbol:`jedi:imenu-create-index-function`).

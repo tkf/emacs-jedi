@@ -98,3 +98,37 @@ ${JOBS}: job-%:
 	${MAKE} EMACS=$* ${EL4T_MET_MAKEFLAGS} test-1
 
 test-all: requirements ${JOBS}
+
+
+
+### Packaging
+#
+# Create dist/${PACKAGE}-${VERSION}.tar.gz ready for distribution.
+#
+# See: (info "(elisp) Multi-file Packages")
+PACKAGE = jedi
+VERSION = $(shell grep ';; Version:' jedi.el | sed 's/^.* \([0-9].*\)$$/\1/')
+DIST_FILES = jedi-pkg.el jedi.el jediepcserver.py \
+	requirements.txt Makefile tryout-jedi.el
+
+.PHONY: dist ${PACKAGE}-${VERSION}.tar.gz ${PACKAGE}-${VERSION} \
+	clean-dist clean-dist-all
+
+dist: dist/${PACKAGE}-${VERSION}.tar.gz
+
+dist/${PACKAGE}-${VERSION}.tar.gz: clean-dist
+	${MAKE} ${PACKAGE}-${VERSION}.tar.gz
+
+${PACKAGE}-${VERSION}.tar.gz: ${PACKAGE}-${VERSION}
+	tar --directory dist -cvzf dist/$@ $<
+
+${PACKAGE}-${VERSION}: dist/${PACKAGE}-${VERSION}
+dist/${PACKAGE}-${VERSION}:
+	mkdir -p $@
+	cp -v ${DIST_FILES} $@
+
+clean-dist:
+	rm -rf dist/${PACKAGE}-${VERSION}*
+
+clean-dist-all:
+	rm -rf dist

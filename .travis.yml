@@ -10,6 +10,8 @@ env:
     - EMACS=emacs-snapshot
   global:
     - CARTON=$HOME/.carton/bin/carton
+    # Turn on --use-mirrors option everywhere (even in tox):
+    - PIP_USE_MIRRORS=t
     # Use Python version of the one used for running tox
     - TOXENV=py
 matrix:

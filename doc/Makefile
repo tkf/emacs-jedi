@@ -45,7 +45,7 @@ help:
 clean:
 	-rm -rf $(BUILDDIR)/*/*
 
-source: source/index.rst
+source: source/index.rst releases
 source/index.rst: ../README.rst source/tail.rest
 	sed -r 's% <http://tkf.github.com/emacs-jedi#[[:alnum:]]+>%%' $^ > $@
 
@@ -161,6 +161,34 @@ doctest:
 	      "results in $(BUILDDIR)/doctest/output.txt."
 
 
+
+## Generate contributions list
+RELEASES = $(wildcard source/releases/v*)
+RELEASES_AUTHORS = $(addsuffix /authors.txt, $(RELEASES))
+RELEASES_CLOSED = $(addsuffix /closed.txt, $(RELEASES))
+ISSUE_URL = https://github.com/tkf/emacs-jedi/issues
+
+releases: $(RELEASES_AUTHORS) $(RELEASES_CLOSED)
+
+source/releases/%/authors.txt: source/releases/%/range Makefile
+	git log --format='format:%an' $$(cat $<) \
+		| grep --invert-match "Takafumi Arakaki" \
+		| sort --unique \
+		| sed 's/\(.*\)/- `\1`_/' \
+		> $@
+
+source/releases/%/closed.txt: source/releases/%/range Makefile
+	git log --format='format:%s %b' --grep='#[0-9]\+' $$(cat $<) \
+		| grep -e 'fix\(es\)\?' -e 'pull request' \
+		| grep --extended-regexp --only-matching '#[0-9]+' \
+		| grep --extended-regexp --only-matching '[0-9]+' \
+		| sort --unique \
+		| sort --numeric-sort \
+		| sed 's%\(.*\)%`#\1 <$(ISSUE_URL)/\1>`_%' \
+		> $@
+
+
+
 ## GitHub Pages
 REPO_URL = git@github.com:tkf/emacs-jedi.git
 

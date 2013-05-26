@@ -182,10 +182,18 @@ v0.1.2 (WIP)
   popup to be disrupted when showing candidates summary
   containing newlines (e.g., ``json.__all__``).
 
+Contributions from:
+
+.. include:: releases/v0.1.2/authors.txt
+
+Closed issues and pulled patches:
+
+   .. include:: releases/v0.1.2/closed.txt
+
 .. _issue-28: https://github.com/tkf/emacs-jedi/issues/28
 
-v0.1.1
-------
+v0.1.1 (2012-12-01)
+-------------------
 
 - Add experimental "full-name" support [#fullname]_.
 - PR-11_ fixes Makefile for BSD make (thanks, `@goro1080`_!).
@@ -195,6 +203,14 @@ v0.1.1
 - Fix issue-7_: server process was killed unexpectedly.
 - Add :el:symbol:`jedi:setup-keys`.  You don't need to manually add
   Jedi commands to :el:symbol:`python-mode-map` now.
+
+Contributions from:
+
+.. include:: releases/v0.1.1/authors.txt
+
+Closed issues and pulled patches:
+
+   .. include:: releases/v0.1.1/closed.txt
 
 .. _@goro1080: https://github.com/goro1080
 
@@ -208,13 +224,21 @@ v0.1.1
    See also: `Request: Definition.fullname · Issue #61 ·
    davidhalter/jedi <https://github.com/davidhalter/jedi/issues/61>`_
 
-v0.1
-----
+v0.1.0 (2012-11-09)
+-------------------
 
 - PR-8_ adds ELDoc like argument highlighting (thanks, `@syohex`_!).
 - PR-2_ adds meta-data in header comment for ELPA (thanks, `@syohex`_!).
 - PR-1_ fixes Makefile for newer pip version (thanks, `@L42y`_!).
 - First version.
+
+Contributions from:
+
+.. include:: releases/v0.1.0/authors.txt
+
+Closed issues and pulled patches:
+
+   .. include:: releases/v0.1.0/closed.txt
 
 .. _PR-8: https://github.com/tkf/emacs-jedi/pull/8
 .. _PR-2: https://github.com/tkf/emacs-jedi/pull/2
@@ -222,3 +246,16 @@ v0.1
 
 .. _@syohex: https://github.com/syohex
 .. _@L42y: https://github.com/L42y
+
+
+.. authors-to-github account map:
+
+.. _Aaron Meurer: https://github.com/asmeurer
+.. _Danilo Bargen: https://github.com/dbrgn
+.. _Fabián Ezequiel Gallina: https://github.com/fgallina
+.. _immerrr: https://github.com/immerrr
+.. _Jaakko Pallari: https://github.com/jkpl
+.. _Kiyono Goro: https://github.com/goro1080
+.. _L42y: https://github.com/L42y
+.. _Ryan Olf: https://github.com/ryanolf
+.. _Syohei YOSHIDA: https://github.com/syohex

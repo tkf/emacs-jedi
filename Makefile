@@ -41,8 +41,11 @@ tryout: compile requirements
 doc: elpa
 	make -C doc html
 
-${EL4T_SCRIPT}:
+${EL4T_SCRIPT}: ensure-git
 	git submodule update --init
+
+ensure-git:
+	test -d .git  # Running task that can be run only in git repository
 
 elpa: ${EL4T_SCRIPT}
 	mkdir -p elpa
@@ -98,3 +101,68 @@ ${JOBS}: job-%:
 	${MAKE} EMACS=$* ${EL4T_MET_MAKEFLAGS} test-1
 
 test-all: requirements ${JOBS}
+
+
+
+### Packaging
+#
+# Create dist/${PACKAGE}-${VERSION}.tar.gz ready for distribution.
+#
+# See: (info "(elisp) Multi-file Packages")
+PACKAGE = jedi
+VERSION = $(shell grep ';; Version:' jedi.el | sed 's/^.* \([0-9].*\)$$/\1/')
+DIST_FILES = jedi-pkg.el jedi.el jediepcserver.py \
+	requirements.txt Makefile tryout-jedi.el
+
+.PHONY: dist ${PACKAGE}-${VERSION}.tar.gz ${PACKAGE}-${VERSION} \
+	clean-dist clean-dist-all
+
+dist: clean-dist
+	${MAKE} dist-1
+
+dist-1: dist/${PACKAGE}-${VERSION}.tar dist/${PACKAGE}-${VERSION}.tar.gz
+
+dist/${PACKAGE}-${VERSION}.tar: ${PACKAGE}-${VERSION}.tar
+${PACKAGE}-${VERSION}.tar: ${PACKAGE}-${VERSION}
+	tar --directory dist -cvf dist/$@ $<
+
+dist/${PACKAGE}-${VERSION}.tar.gz: ${PACKAGE}-${VERSION}.tar.gz
+${PACKAGE}-${VERSION}.tar.gz: ${PACKAGE}-${VERSION}
+	tar --directory dist -cvzf dist/$@ $<
+
+${PACKAGE}-${VERSION}: dist/${PACKAGE}-${VERSION}
+dist/${PACKAGE}-${VERSION}:
+	mkdir -p $@
+	cp -v ${DIST_FILES} $@
+
+clean-dist:
+	rm -rf dist/${PACKAGE}-${VERSION}*
+
+clean-dist-all:
+	rm -rf dist
+
+
+
+### Package installation
+PACKAGE_USER_DIR =
+TEST_PACKAGE_DIR = dist/test
+
+install-dist:
+	test -d '${PACKAGE_USER_DIR}'
+	${EMACS} --batch -Q \
+	-l package \
+        --eval " \
+        (add-to-list 'package-archives \
+             '(\"marmalade\" . \"http://marmalade-repo.org/packages/\") t)" \
+	--eval '(setq package-user-dir "${PWD}/${PACKAGE_USER_DIR}")' \
+	--eval '(package-list-packages)' \
+	--eval '(package-install-file "${PWD}/dist/${PACKAGE}-${VERSION}.tar")'
+
+test-install: dist/${PACKAGE}-${VERSION}.tar
+	rm -rf ${TEST_PACKAGE_DIR}
+	mkdir -p ${TEST_PACKAGE_DIR}
+	${MAKE} install-dist PACKAGE_USER_DIR=${TEST_PACKAGE_DIR}
+
+test-install-requirement: test-install
+	${MAKE} --directory ${TEST_PACKAGE_DIR}/${PACKAGE}-${VERSION} \
+		requirements

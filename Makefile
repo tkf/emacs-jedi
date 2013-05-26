@@ -77,6 +77,9 @@ print-deps: elpa requirements
 	ls -d $(ENV)/lib/python*/site-packages/*egg-info
 	@echo "------------------------------------------------------------"
 
+before-test: requirements
+	tox --notest
+
 travis-ci: print-deps test
 
 

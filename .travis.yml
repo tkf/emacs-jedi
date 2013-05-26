@@ -42,6 +42,9 @@ before_install:
       sudo apt-get install -qq
           emacs-snapshot-el emacs-snapshot-gtk emacs-snapshot;
     fi
+  # The following command does (should) not have any effect on test,
+  # but to separate installation phase and testing phase:
+  - make before-test
 script:
   make travis-ci
 after_failure:

@@ -41,8 +41,11 @@ tryout: compile requirements
 doc: elpa
 	make -C doc html
 
-${EL4T_SCRIPT}:
+${EL4T_SCRIPT}: ensure-git
 	git submodule update --init
+
+ensure-git:
+	test -d .git  # Running task that can be run only in git repository
 
 elpa: ${EL4T_SCRIPT}
 	mkdir -p elpa

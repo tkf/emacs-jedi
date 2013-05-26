@@ -10,6 +10,8 @@ env:
     - EMACS=emacs-snapshot
   global:
     - CARTON=$HOME/.carton/bin/carton
+    # Turn on --use-mirrors option everywhere (even in tox):
+    - PIP_USE_MIRRORS=t
     # Use Python version of the one used for running tox
     - TOXENV=py
 matrix:
@@ -29,6 +31,14 @@ before_install:
         --retry 10
         --retry-delay 10
         https://raw.github.com/rejeep/carton/master/go | sh
+
+  # Use old carton, until virtualenv-emacs is ready
+  # See: https://github.com/tkf/emacs-jedi/issues/55
+  - if [ "$EMACS" = "emacs" ]; then (
+        cd ~/.carton;
+        git checkout v0.1.0
+    ) fi
+
   - if [ "$EMACS" = "emacs24" ]; then
         sudo add-apt-repository -y ppa:cassou/emacs &&
         sudo apt-get update -qq &&
@@ -40,6 +50,10 @@ before_install:
       sudo apt-get install -qq
           emacs-snapshot-el emacs-snapshot-gtk emacs-snapshot;
     fi
+
+  # The following command does (should) not have any effect on test,
+  # but to separate installation phase and testing phase:
+  - make before-test
 script:
   make travis-ci
 after_failure:

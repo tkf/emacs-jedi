@@ -192,8 +192,8 @@ Closed issues and pulled patches:
 
 .. _issue-28: https://github.com/tkf/emacs-jedi/issues/28
 
-v0.1.1
-------
+v0.1.1 (2012-12-01)
+-------------------
 
 - Add experimental "full-name" support [#fullname]_.
 - PR-11_ fixes Makefile for BSD make (thanks, `@goro1080`_!).
@@ -224,8 +224,8 @@ Closed issues and pulled patches:
    See also: `Request: Definition.fullname · Issue #61 ·
    davidhalter/jedi <https://github.com/davidhalter/jedi/issues/61>`_
 
-v0.1
-----
+v0.1.0 (2012-11-09)
+-------------------
 
 - PR-8_ adds ELDoc like argument highlighting (thanks, `@syohex`_!).
 - PR-2_ adds meta-data in header comment for ELPA (thanks, `@syohex`_!).

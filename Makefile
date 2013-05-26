@@ -114,11 +114,16 @@ DIST_FILES = jedi-pkg.el jedi.el jediepcserver.py \
 .PHONY: dist ${PACKAGE}-${VERSION}.tar.gz ${PACKAGE}-${VERSION} \
 	clean-dist clean-dist-all
 
-dist: dist/${PACKAGE}-${VERSION}.tar.gz
+dist: clean-dist
+	${MAKE} dist-1
 
-dist/${PACKAGE}-${VERSION}.tar.gz: clean-dist
-	${MAKE} ${PACKAGE}-${VERSION}.tar.gz
+dist-1: dist/${PACKAGE}-${VERSION}.tar dist/${PACKAGE}-${VERSION}.tar.gz
 
+dist/${PACKAGE}-${VERSION}.tar: ${PACKAGE}-${VERSION}.tar
+${PACKAGE}-${VERSION}.tar: ${PACKAGE}-${VERSION}
+	tar --directory dist -cvf dist/$@ $<
+
+dist/${PACKAGE}-${VERSION}.tar.gz: ${PACKAGE}-${VERSION}.tar.gz
 ${PACKAGE}-${VERSION}.tar.gz: ${PACKAGE}-${VERSION}
 	tar --directory dist -cvzf dist/$@ $<
 

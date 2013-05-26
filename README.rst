@@ -27,8 +27,8 @@ docstring, function arguments and code location.
 Quick start
 ===========
 
-Install Jedi.el via el-get or MELPA (see install_ for more info) and
-add this to your Emacs configuration::
+Install Jedi.el via el-get, Marmalade or MELPA (see install_ for
+more info) and add this to your Emacs configuration::
 
   (add-hook 'python-mode-hook 'jedi:setup)
   (setq jedi:setup-keys t)                      ; optional
@@ -115,13 +115,14 @@ yet, get them from `this pull request`_.
 .. _this pull request: https://github.com/dimitri/el-get/pull/927
 
 
-package.el (MELPA)
-------------------
+package.el (Marmalade or MELPA)
+-------------------------------
 
-You can install Jedi.el using package.el interface from MELPA_.  As
-package.el does not support installing non-elisp packages, you need to
-install Python part manually (see the next section).
+You can install Jedi.el using package.el interface from Marmalade_ or
+MELPA_.  As package.el does not support installing non-elisp packages,
+you need to install Python part manually (see the next section).
 
+.. _marmalade: http://marmalade-repo.org/packages/jedi
 .. _MELPA: http://melpa.milkbox.net
 
 Manual install

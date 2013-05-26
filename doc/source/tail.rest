@@ -168,6 +168,9 @@ Changelog
 v0.1.2 (2013-05-26)
 -------------------
 
+Highlights:
+
+- Package is available from Marmalade_.
 - Add imenu support (see :el:symbol:`jedi:install-imenu` and
   :el:symbol:`jedi:imenu-create-index-function`).
   Currently it is not on by default as it needs developmental version
@@ -190,6 +193,7 @@ Closed issues and pulled patches:
 
    .. include:: releases/v0.1.2/closed.txt
 
+.. _marmalade: http://marmalade-repo.org/packages/jedi
 .. _issue-28: https://github.com/tkf/emacs-jedi/issues/28
 
 v0.1.1 (2012-12-01)

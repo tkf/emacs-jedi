@@ -137,3 +137,24 @@ clean-dist:
 
 clean-dist-all:
 	rm -rf dist
+
+
+
+### Package installation
+PACKAGE_USER_DIR =
+
+install-dist:
+	test -d '${PACKAGE_USER_DIR}'
+	${EMACS} --batch -Q \
+	-l package \
+        --eval " \
+        (add-to-list 'package-archives \
+             '(\"marmalade\" . \"http://marmalade-repo.org/packages/\") t)" \
+	--eval '(setq package-user-dir "${PWD}/${PACKAGE_USER_DIR}")' \
+	--eval '(package-list-packages)' \
+	--eval '(package-install-file "${PWD}/dist/${PACKAGE}-${VERSION}.tar")'
+
+test-install: dist/${PACKAGE}-${VERSION}.tar
+	rm -rf dist/test
+	mkdir -p dist/test
+	${MAKE} install-dist PACKAGE_USER_DIR=dist/test

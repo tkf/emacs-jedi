@@ -145,6 +145,7 @@ clean-dist-all:
 
 ### Package installation
 PACKAGE_USER_DIR =
+TEST_PACKAGE_DIR = dist/test
 
 install-dist:
 	test -d '${PACKAGE_USER_DIR}'
@@ -158,6 +159,10 @@ install-dist:
 	--eval '(package-install-file "${PWD}/dist/${PACKAGE}-${VERSION}.tar")'
 
 test-install: dist/${PACKAGE}-${VERSION}.tar
-	rm -rf dist/test
-	mkdir -p dist/test
-	${MAKE} install-dist PACKAGE_USER_DIR=dist/test
+	rm -rf ${TEST_PACKAGE_DIR}
+	mkdir -p ${TEST_PACKAGE_DIR}
+	${MAKE} install-dist PACKAGE_USER_DIR=${TEST_PACKAGE_DIR}
+
+test-install-requirement: test-install
+	${MAKE} --directory ${TEST_PACKAGE_DIR}/${PACKAGE}-${VERSION} \
+		requirements

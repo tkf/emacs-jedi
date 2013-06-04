@@ -174,7 +174,7 @@ v0.1.3 (WIP)
 Highlights:
 
 - Add default keybind and a simple way to setup recommended keybinds.
-  See: `#47`_.
+  See issue `#47`_ for the reason and discussion behind this change.
 
 Contributions from:
 

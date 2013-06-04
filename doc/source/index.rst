@@ -316,12 +316,8 @@ investigate the problem by yourself.  Here is some checklist.
 
 #. It is possible that Jedi's keybind conflicts with keybinds
    of other libraries.  You can check the definition of keybind
-   by ``<f1> k C-c d`` (or ``C-h`` instead of ``<f1>``), for example.
+   by ``<f1> k C-c ?`` (or ``C-h`` instead of ``<f1>``), for example.
    This one should show the help for :el:symbol:`jedi:show-doc`.
-
-   If you find other command using the keybind, you can
-   change it by using :el:symbol:`jedi:key-show-doc`, etc.
-   See: :el:symbol:`jedi:setup-keys`.
 
 #. Make sure you are reading right version of document.  If you
    are using developmental version (installed via el-get, MELPA
@@ -329,29 +325,6 @@ investigate the problem by yourself.  Here is some checklist.
    <http://tkf.github.io/emacs-jedi/latest>`_.  If you installed
    from Marmalade, you should read `released version
    <http://tkf.github.io/emacs-jedi/released>`_.
-
-#. If you have trouble setting keybinds, make sure that
-   ``(require 'jedi)`` is *not* called anywhere before the line
-   ``(setq jedi:setup-keys t)``.
-
-   To check that keybind setup works, do ``M-: jedi-mode-map RET``.
-   It should return something like the following (formatted):
-
-   .. sourcecode:: cl
-
-      (keymap (3 keymap (100 . jedi:show-doc))
-              (67108910 . jedi:goto-definition)
-              (C-tab . jedi:complete))
-
-   Note that using ``(require 'jedi)`` is *not* recommended way
-   to configure Jedi.el because it slows down your Emacs startup [#]_.
-   If you use package.el or el-get to install Jedi.el, there should
-   be no need for adding ``(require 'jedi)`` to your configuration.
-   See: :el:symbol:`jedi:setup-keys`.
-
-.. [#] But if you know what you are doing ``(require 'jedi)`` can be a
-       good choice.  For example, this way is faster to open the first
-       Python file in an Emacs session.
 
 
 How it works

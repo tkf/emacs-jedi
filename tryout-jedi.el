@@ -1,7 +1,3 @@
-;; Auto-complete
-(require 'auto-complete)
-(global-auto-complete-mode t)
-
 ;; Jedi
 (autoload 'jedi:setup "jedi" nil t)
 (add-hook 'python-mode-hook 'jedi:setup)

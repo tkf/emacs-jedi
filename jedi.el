@@ -606,9 +606,14 @@ If auto-completion is all you need, you can call this function instead
 of `jedi:setup', like this::
 
    (add-hook 'python-mode-hook 'jedi:ac-setup)
-"
+
+Note that this function calls `auto-complete-mode' if it is not
+already enabled, for people who don't call `global-auto-complete-mode'
+in their Emacs configuration."
   (interactive)
-  (add-to-list 'ac-sources 'ac-source-jedi-direct))
+  (add-to-list 'ac-sources 'ac-source-jedi-direct)
+  (unless auto-complete-mode
+    (auto-complete-mode)))
 
 
 ;;; Call signature (get_in_function_call)

@@ -348,6 +348,12 @@ Highlights:
 
 - Add default keybind and a simple way to setup recommended keybinds.
   See issue `#47`_ for the reason and discussion behind this change.
+- Now :el:symbol:`jedi:ac-setup` auto-magically enables auto-complete-mode.
+  This is to help people from setting up auto-complete when they were not
+  using it before installing jedi.el.  See:
+  `#40 <https://github.com/tkf/emacs-jedi/issues/40>`_,
+  `bbatsov/prelude#251 <https://github.com/bbatsov/prelude/issues/251>`_,
+  `stackoverflow <http://stackoverflow.com/questions/15658963>`_.
 
 Contributions from:
 

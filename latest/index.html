@@ -45,8 +45,8 @@
 <h1>Jedi.el - Python auto-completion for Emacs<a class="headerlink" href="#jedi-el-python-auto-completion-for-emacs" title="Permalink to this headline">¶</a></h1>
 <div class="sidebar">
 <p class="first sidebar-title">Links:</p>
-<ul class="last simple">
-<li><a class="reference external" href="http://tkf.github.com/emacs-jedi/">Documentation</a> (at GitHub Pages)<ul>
+<ul class="simple">
+<li><a class="reference external" href="http://tkf.github.io/emacs-jedi/">Documentation</a> (at GitHub Pages) <a class="footnote-reference" href="#id2" id="id1">[1]</a><ul>
 <li><a class="reference internal" href="#configuration">Configuration</a></li>
 <li><a class="reference internal" href="#command">Command</a></li>
 <li><a class="reference internal" href="#troubleshooting">Troubleshooting</a></li>
@@ -56,6 +56,14 @@
 <li><a class="reference external" href="https://github.com/tkf/emacs-jedi/issues">Issue tracker</a> (at GitHub)</li>
 <li><a class="reference external" href="https://travis-ci.org/#!/tkf/emacs-jedi">Travis CI</a> <a class="reference external" href="http://travis-ci.org/tkf/emacs-jedi"><img alt="Build Status" src="https://secure.travis-ci.org/tkf/emacs-jedi.png?branch=master" /></a></li>
 </ul>
+<table class="last docutils footnote" frame="void" id="id2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>There are
+<a class="reference external" href="http://tkf.github.io/emacs-jedi/released">released version</a>  and
+<a class="reference external" href="http://tkf.github.io/emacs-jedi/latest">developmental version</a>.</td></tr>
+</tbody>
+</table>
 </div>
 <div class="section" id="what-is-it">
 <h2>What is it?<a class="headerlink" href="#what-is-it" title="Permalink to this headline">¶</a></h2>
@@ -154,7 +162,7 @@ you need to install Python part manually (see the next section).</p>
 <li>Install Jedi.el.  Download the repository of Jedi.el and add it to
 <cite>load-path</cite>.</li>
 <li>Install <a class="reference external" href="https://github.com/davidhalter/jedi">Jedi</a> and <a class="reference external" href="https://github.com/tkf/python-epc">python-epc</a> by<ul>
-<li><tt class="docutils literal"><span class="pre">make</span> <span class="pre">requirements</span></tt> (no need for root privileges <a class="footnote-reference" href="#id3" id="id2">[1]</a>) or</li>
+<li><tt class="docutils literal"><span class="pre">make</span> <span class="pre">requirements</span></tt> (no need for root privileges <a class="footnote-reference" href="#id5" id="id4">[2]</a>) or</li>
 <li><tt class="docutils literal"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-r</span> <span class="pre">requirements.txt</span></tt> if you want to determine
 where to install Python modules.  You need root privileges (i.e.,
 <tt class="docutils literal"><span class="pre">sudo</span></tt>) to install it in system directory.</li>
@@ -162,10 +170,10 @@ where to install Python modules.  You need root privileges (i.e.,
 </li>
 <li>Add <tt class="docutils literal"><span class="pre">(autoload</span> <span class="pre">'jedi:setup</span> <span class="pre">&quot;jedi&quot;</span> <span class="pre">nil</span> <span class="pre">t)</span></tt> in your Emacs configuration.</li>
 </ol>
-<table class="docutils footnote" frame="void" id="id3" rules="none">
+<table class="docutils footnote" frame="void" id="id5" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id2">[1]</a></td><td>You need <a class="reference external" href="http://www.virtualenv.org">virtualenv</a> for <tt class="docutils literal"><span class="pre">make</span> <span class="pre">requirements</span></tt>.  It installs
+<tr><td class="label"><a class="fn-backref" href="#id4">[2]</a></td><td>You need <a class="reference external" href="http://www.virtualenv.org">virtualenv</a> for <tt class="docutils literal"><span class="pre">make</span> <span class="pre">requirements</span></tt>.  It installs
 all requirements for Jedi EPC server in an isolated Python
 environment in <tt class="docutils literal"><span class="pre">env/</span></tt> directory under the directory where jedi.el
 locates.  Note that you don&#8217;t need to worry about if you want to
@@ -222,6 +230,9 @@ of <a class="reference internal" href="#jedi:setup" title="jedi:setup"><tt class
 <div class="highlight-cl"><div class="highlight"><pre><span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;python-mode-hook</span> <span class="ss">&#39;jedi:ac-setup</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>Note that this function calls <tt class="xref el el-symbol docutils literal"><span class="pre">auto-complete-mode</span></tt> if it is not
+already enabled, for people who don&#8217;t call <tt class="xref el el-symbol docutils literal"><span class="pre">global-auto-complete-mode</span></tt>
+in their Emacs configuration.</p>
 </dd></dl>
 
 <dl class="variable">
@@ -695,37 +706,15 @@ calling <tt class="docutils literal"><span class="pre">(global-auto-complete-mod
 </li>
 <li><p class="first">It is possible that Jedi&#8217;s keybind conflicts with keybinds
 of other libraries.  You can check the definition of keybind
-by <tt class="docutils literal"><span class="pre">&lt;f1&gt;</span> <span class="pre">k</span> <span class="pre">C-c</span> <span class="pre">d</span></tt> (or <tt class="docutils literal"><span class="pre">C-h</span></tt> instead of <tt class="docutils literal"><span class="pre">&lt;f1&gt;</span></tt>), for example.
+by <tt class="docutils literal"><span class="pre">&lt;f1&gt;</span> <span class="pre">k</span> <span class="pre">C-c</span> <span class="pre">?</span></tt> (or <tt class="docutils literal"><span class="pre">C-h</span></tt> instead of <tt class="docutils literal"><span class="pre">&lt;f1&gt;</span></tt>), for example.
 This one should show the help for <a class="reference internal" href="#jedi:show-doc" title="jedi:show-doc"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:show-doc</span></tt></a>.</p>
-<p>If you find other command using the keybind, you can
-change it by using <a class="reference internal" href="#jedi:key-show-doc" title="jedi:key-show-doc"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:key-show-doc</span></tt></a>, etc.
-See: <a class="reference internal" href="#jedi:setup-keys" title="jedi:setup-keys"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:setup-keys</span></tt></a>.</p>
 </li>
-<li><p class="first">If you have trouble setting keybinds, make sure that
-<tt class="docutils literal"><span class="pre">(require</span> <span class="pre">'jedi)</span></tt> is <em>not</em> called anywhere before the line
-<tt class="docutils literal"><span class="pre">(setq</span> <span class="pre">jedi:setup-keys</span> <span class="pre">t)</span></tt>.</p>
-<p>To check that keybind setup works, do <tt class="docutils literal"><span class="pre">M-:</span> <span class="pre">jedi-mode-map</span> <span class="pre">RET</span></tt>.
-It should return something like the following (formatted):</p>
-<div class="highlight-cl"><div class="highlight"><pre><span class="p">(</span><span class="nv">keymap</span> <span class="p">(</span><span class="mi">3</span> <span class="nv">keymap</span> <span class="p">(</span><span class="mi">100</span> <span class="o">.</span> <span class="nv">jedi:show-doc</span><span class="p">))</span>
-        <span class="p">(</span><span class="mi">67108910</span> <span class="o">.</span> <span class="nv">jedi:goto-definition</span><span class="p">)</span>
-        <span class="p">(</span><span class="nv">C-tab</span> <span class="o">.</span> <span class="nv">jedi:complete</span><span class="p">))</span>
-</pre></div>
-</div>
-<p>Note that using <tt class="docutils literal"><span class="pre">(require</span> <span class="pre">'jedi)</span></tt> is <em>not</em> recommended way
-to configure Jedi.el because it slows down your Emacs startup <a class="footnote-reference" href="#id5" id="id4">[2]</a>.
-If you use package.el or el-get to install Jedi.el, there should
-be no need for adding <tt class="docutils literal"><span class="pre">(require</span> <span class="pre">'jedi)</span></tt> to your configuration.
-See: <a class="reference internal" href="#jedi:setup-keys" title="jedi:setup-keys"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:setup-keys</span></tt></a>.</p>
+<li><p class="first">Make sure you are reading right version of document.  If you
+are using developmental version (installed via el-get, MELPA
+or manually from github), you should read <a class="reference external" href="http://tkf.github.io/emacs-jedi/latest">developmental version</a>.  If you installed
+from Marmalade, you should read <a class="reference external" href="http://tkf.github.io/emacs-jedi/released">released version</a>.</p>
 </li>
 </ol>
-<table class="docutils footnote" frame="void" id="id5" rules="none">
-<colgroup><col class="label" /><col /></colgroup>
-<tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id4">[2]</a></td><td>But if you know what you are doing <tt class="docutils literal"><span class="pre">(require</span> <span class="pre">'jedi)</span></tt> can be a
-good choice.  For example, this way is faster to open the first
-Python file in an Emacs session.</td></tr>
-</tbody>
-</table>
 </div>
 <div class="section" id="how-it-works">
 <h2>How it works<a class="headerlink" href="#how-it-works" title="Permalink to this headline">¶</a></h2>
@@ -744,6 +733,12 @@ not block your Emacs while your are editing.</p>
 <ul class="simple">
 <li>Add default keybind and a simple way to setup recommended keybinds.
 See issue <a class="reference external" href="https://github.com/tkf/emacs-jedi/issues/47">#47</a> for the reason and discussion behind this change.</li>
+<li>Now <a class="reference internal" href="#jedi:ac-setup" title="jedi:ac-setup"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:ac-setup</span></tt></a> auto-magically enables auto-complete-mode.
+This is to help people from setting up auto-complete when they were not
+using it before installing jedi.el.  See:
+<a class="reference external" href="https://github.com/tkf/emacs-jedi/issues/40">#40</a>,
+<a class="reference external" href="https://github.com/bbatsov/prelude/issues/251">bbatsov/prelude#251</a>,
+<a class="reference external" href="http://stackoverflow.com/questions/15658963">stackoverflow</a>.</li>
 </ul>
 <p>Contributions from:</p>
 <p>Closed issues and pulled patches:</p>
@@ -800,7 +795,7 @@ containing newlines (e.g., <tt class="docutils literal"><span class="pre">json._
 <div class="section" id="v0-1-1-2012-12-01">
 <h3>v0.1.1 (2012-12-01)<a class="headerlink" href="#v0-1-1-2012-12-01" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li>Add experimental &#8220;full-name&#8221; support <a class="footnote-reference" href="#fullname" id="id24">[3]</a>.</li>
+<li>Add experimental &#8220;full-name&#8221; support <a class="footnote-reference" href="#fullname" id="id27">[3]</a>.</li>
 <li><a class="reference external" href="https://github.com/tkf/emacs-jedi/pull/11">PR-11</a> fixes Makefile for BSD make (thanks, <a class="reference external" href="https://github.com/goro1080">&#64;goro1080</a>!).</li>
 <li>Fix <a class="reference external" href="https://github.com/tkf/emacs-jedi/issues/9">issue-9</a>: line number sent to the server was shifted when the cursor
 is at the beginning of line.</li>
@@ -822,7 +817,7 @@ Jedi commands to <tt class="xref el el-symbol docutils literal"><span class="pre
 <table class="docutils footnote" frame="void" id="fullname" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id24">[3]</a></td><td><cite>jedi:get-full-name-*</cite> functions require developmental
+<tr><td class="label"><a class="fn-backref" href="#id27">[3]</a></td><td><cite>jedi:get-full-name-*</cite> functions require developmental
 version of <a class="reference external" href="https://github.com/davidhalter/jedi">Jedi</a>.
 See also: <a class="reference external" href="https://github.com/davidhalter/jedi/issues/61">Request: Definition.fullname · Issue #61 ·
 davidhalter/jedi</a></td></tr>

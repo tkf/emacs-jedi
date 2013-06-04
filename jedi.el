@@ -226,8 +226,12 @@ This can be set to `jedi:create-flat-imenu-index'.
 Default is `jedi:create-nested-imenu-index'."
   :group 'jedi)
 
+(make-obsolete-variable 'jedi:setup-keys nil "0.1.3")
 (defcustom jedi:setup-keys nil
   "Setup recommended keybinds.
+
+.. warning:: Use of this value is obsolete now.
+   As of 0.1.3, jedi.el has default keybinds.
 
 .. admonition:: Default keybinds
 
@@ -297,6 +301,14 @@ avoid collision by something like this::
   "Keybind for command `jedi:goto-definition-pop-marker'."
   :group 'jedi)
 
+(defcustom jedi:use-shortcuts nil
+  "If non-`nil', enable the following shortcuts:
+
+| ``M-.``  `jedi:goto-definition'
+| ``M-,``  `jedi:goto-definition-pop-marker'
+"
+  :group 'jedi)
+
 (defcustom jedi:import-python-el-settings t
   "Automatically import setting from python.el variables."
   :group 'jedi)
@@ -331,6 +343,9 @@ toolitp when inside of function call.
   :keymap jedi-mode-map
   :group 'jedi
   (let ((map jedi-mode-map))
+    (when jedi:use-shortcuts
+      (define-key map (kbd "M-.") 'jedi:goto-definition)
+      (define-key map (kbd "M-,") 'jedi:goto-definition-pop-marker))
     (if jedi:complete-on-dot
         (define-key map "." 'jedi:dot-complete)
       (define-key map "." nil)))
@@ -346,6 +361,21 @@ toolitp when inside of function call.
     (remove-hook 'after-change-functions 'jedi:after-change-handler t)
     (remove-hook 'kill-buffer-hook 'jedi:server-pool--gc-when-idle t)
     (jedi:server-pool--gc-when-idle)))
+
+;; Define keybinds.
+;; See: https://github.com/tkf/emacs-jedi/issues/47
+(let ((map jedi-mode-map))
+  (define-key map (kbd "<C-tab>") 'jedi:complete)
+  (define-key map (kbd "C-c ?") 'jedi:show-doc)
+  (define-key map (kbd "C-c .") 'jedi:goto-definition)
+  (define-key map (kbd "C-c ,") 'jedi:goto-definition-pop-marker)
+  (let ((command (cond
+                  ((featurep 'helm) 'helm-jedi-related-names)
+                  ((featurep 'anything) 'anything-jedi-related-names)
+                  ((locate-library "helm") 'helm-jedi-related-names)
+                  ((locate-library "anything") 'anything-jedi-related-names))))
+    (when command
+      (define-key map (kbd "C-c /") command))))
 
 (when jedi:setup-keys
   (let ((map jedi-mode-map))

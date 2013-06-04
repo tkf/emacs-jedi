@@ -3,8 +3,17 @@ REPO_DIR = gh-pages
 DOC_VER = latest  # can be "master", "v1.0", etc.
 DOC_DIR = $(REPO_DIR)/$(DOC_VER)
 
+# To use this file from --file option, let's define variables in
+# Sphinx's Makefile, if they are not defined:
+ifndef BUILDDIR
+BUILDDIR = build
+endif
+
 .PHONY: _gh-pages-assert-repo gh-pages-update gh-pages-push \
-	gh-pages-clone gh-pages-pull
+	gh-pages-clone gh-pages-pull gh-pages-all
+
+.NOTPARALLEL: gh-pages-all
+gh-pages-all: gh-pages-pull gh-pages-update gh-pages-push
 
 # Check if $(REPO_DIR) is really a git repository.  Otherwise,
 # committing files in there is pretty dangerous as it might goes into
@@ -19,7 +28,8 @@ gh-pages-clone:
 gh-pages-pull: _gh-pages-assert-repo
 	cd $(REPO_DIR) && git pull
 
-gh-pages-update: _gh-pages-assert-repo clean html
+gh-pages-update: _gh-pages-assert-repo
+	$(MAKE) clean html
 	@echo "Clean $(DOC_DIR)"
 	rm -rf $(DOC_DIR)
 	mkdir -p $(DOC_DIR)

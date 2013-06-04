@@ -301,6 +301,14 @@ avoid collision by something like this::
   "Keybind for command `jedi:goto-definition-pop-marker'."
   :group 'jedi)
 
+(defcustom jedi:use-shortcuts nil
+  "If non-`nil', enable the following shortcuts:
+
+| ``M-.``  `jedi:goto-definition'
+| ``M-,``  `jedi:goto-definition-pop-marker'
+"
+  :group 'jedi)
+
 (defcustom jedi:import-python-el-settings t
   "Automatically import setting from python.el variables."
   :group 'jedi)
@@ -335,6 +343,9 @@ toolitp when inside of function call.
   :keymap jedi-mode-map
   :group 'jedi
   (let ((map jedi-mode-map))
+    (when jedi:use-shortcuts
+      (define-key map (kbd "M-.") 'jedi:goto-definition)
+      (define-key map (kbd "M-,") 'jedi:goto-definition-pop-marker))
     (if jedi:complete-on-dot
         (define-key map "." 'jedi:dot-complete)
       (define-key map "." nil)))

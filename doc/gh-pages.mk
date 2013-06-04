@@ -14,6 +14,7 @@ REPO_DIR = gh-pages
 # $(DOC_VER) can be "stable", "v1.0", etc.:
 DOC_VER = latest
 DOC_DIR = $(REPO_DIR)/$(DOC_VER)
+DOC_PORT = 7563
 
 
 ## Misc variables
@@ -66,3 +67,7 @@ gh-pages-update: _gh-pages-assert-repo
 
 gh-pages-push: _gh-pages-assert-repo
 	cd $(REPO_DIR) && git push -u origin gh-pages
+
+gh-pages-serve:
+	bash -c 'sleep 0.1s; python -m webbrowser http://localhost:$(DOC_PORT)' &
+	cd $(REPO_DIR) && python -m SimpleHTTPServer $(DOC_PORT)

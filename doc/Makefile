@@ -14,7 +14,7 @@ ALLSPHINXOPTS   = -d $(BUILDDIR)/doctrees $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) sou
 # the i18n builder cannot share the environment and doctrees with the others
 I18NSPHINXOPTS  = $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) source
 
-.PHONY: help clean source html dirhtml singlehtml pickle \
+.PHONY: help clean html dirhtml singlehtml pickle \
 	json htmlhelp qthelp devhelp epub latex latexpdf \
 	text man changes linkcheck doctest gettext \
 	_gh-pages-assert-repo gh-pages-update gh-pages-push \
@@ -45,11 +45,7 @@ help:
 clean:
 	-rm -rf $(BUILDDIR)/*/*
 
-source: source/index.rst releases
-source/index.rst: ../README.rst source/tail.rest
-	sed -r 's% <http://tkf.github.com/emacs-jedi#[[:alnum:]]+>%%' $^ > $@
-
-html: source
+html:
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."

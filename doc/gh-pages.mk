@@ -11,7 +11,8 @@
 ## Configuration
 REPO_URL = git@github.com:tkf/emacs-jedi.git
 REPO_DIR = gh-pages
-DOC_VER = latest  # can be "master", "v1.0", etc.
+# $(DOC_VER) can be "stable", "v1.0", etc.:
+DOC_VER = latest
 DOC_DIR = $(REPO_DIR)/$(DOC_VER)
 
 
@@ -48,6 +49,7 @@ gh-pages-pull: _gh-pages-assert-repo
 gh-pages-update: _gh-pages-assert-repo
 	$(MAKE) clean html
 	@echo "Clean $(DOC_DIR)"
+	test ! -d $(DOC_DIR)/.git
 	rm -rf $(DOC_DIR)
 	mkdir -p $(DOC_DIR)
 

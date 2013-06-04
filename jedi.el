@@ -226,8 +226,12 @@ This can be set to `jedi:create-flat-imenu-index'.
 Default is `jedi:create-nested-imenu-index'."
   :group 'jedi)
 
+(make-obsolete-variable 'jedi:setup-keys nil "0.1.3")
 (defcustom jedi:setup-keys nil
   "Setup recommended keybinds.
+
+.. warning:: Use of this value is obsolete now.
+   As of 0.1.3, jedi.el has default keybinds.
 
 .. admonition:: Default keybinds
 

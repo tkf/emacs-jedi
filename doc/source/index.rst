@@ -4,7 +4,7 @@
 
 .. sidebar:: Links:
 
-   * `Documentation <http://tkf.github.com/emacs-jedi/>`_ (at GitHub Pages)
+   * `Documentation <http://tkf.github.io/emacs-jedi/>`_ (at GitHub Pages) [#]_
 
      * `Configuration`_
      * `Command`_
@@ -13,6 +13,10 @@
    * `Repository <https://github.com/tkf/emacs-jedi>`_ (at GitHub)
    * `Issue tracker <https://github.com/tkf/emacs-jedi/issues>`_ (at GitHub)
    * `Travis CI <https://travis-ci.org/#!/tkf/emacs-jedi>`_ |build-status|
+
+   .. [#] There are
+     `released version <http://tkf.github.io/emacs-jedi/released>`_  and
+     `developmental version <http://tkf.github.io/emacs-jedi/latest>`_.
 
 
 What is it?
@@ -318,6 +322,13 @@ investigate the problem by yourself.  Here is some checklist.
    If you find other command using the keybind, you can
    change it by using :el:symbol:`jedi:key-show-doc`, etc.
    See: :el:symbol:`jedi:setup-keys`.
+
+#. Make sure you are reading right version of document.  If you
+   are using developmental version (installed via el-get, MELPA
+   or manually from github), you should read `developmental version
+   <http://tkf.github.io/emacs-jedi/latest>`_.  If you installed
+   from Marmalade, you should read `released version
+   <http://tkf.github.io/emacs-jedi/released>`_.
 
 #. If you have trouble setting keybinds, make sure that
    ``(require 'jedi)`` is *not* called anywhere before the line

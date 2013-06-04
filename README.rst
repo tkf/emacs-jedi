@@ -31,7 +31,6 @@ Install Jedi.el via el-get, Marmalade or MELPA (see install_ for
 more info) and add this to your Emacs configuration::
 
   (add-hook 'python-mode-hook 'jedi:setup)
-  (setq jedi:setup-keys t)                      ; optional
   (setq jedi:complete-on-dot t)                 ; optional
 
 If you install Jedi.el manually (BTW, you shouldn't!), you need to add
@@ -161,13 +160,6 @@ To do that, add the following in your Emacs configuration::
 If auto-completion is all you need, use `jedi:ac-setup` instead::
 
    (add-hook 'python-mode-hook 'jedi:ac-setup)
-
-To setup recommended keybinds for Jedi.el, add this to your Emacs
-configuration.  Note that you must set `jedi:setup-keys` *before*
-loading `jedi.el`.  See its docstring (``<f1> v jedi:setup-keys``) for
-more information.::
-
-   (setq jedi:setup-keys t)
 
 
 Extension

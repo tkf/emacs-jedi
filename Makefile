@@ -178,10 +178,10 @@ MAKE_GH_PAGES = $(MAKE) --directory doc --file gh-pages.mk
 gh-pages-latest:
 	$(MAKE_GH_PAGES)
 
-# Publish stable documentation.  This task can be run only when the
+# Publish released documentation.  This task can be run only when the
 # current revision has tag (i.e., released).
-gh-pages-stable:
+gh-pages-released:
 	# Make sure it's on tag
 	git describe --tags --dirty | grep -v -
 	# Run doc/gh-pages.mk
-	$(MAKE_GH_PAGES) DOC_VER=stable
+	$(MAKE_GH_PAGES) DOC_VER=released

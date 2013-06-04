@@ -11,7 +11,7 @@
 ## Configuration
 REPO_URL = git@github.com:tkf/emacs-jedi.git
 REPO_DIR = gh-pages
-# $(DOC_VER) can be "stable", "v1.0", etc.:
+# $(DOC_VER) can be "released", "v1.0", etc.:
 DOC_VER = latest
 DOC_DIR = $(REPO_DIR)/$(DOC_VER)
 DOC_PORT = 7563

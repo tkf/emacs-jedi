@@ -4,6 +4,5 @@ dist
 env
 elpa
 doc/build
-doc/source/index.rst
 doc/source/releases/*/*.txt
 jedi-port.log

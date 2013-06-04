@@ -1,0 +1,189 @@
+============================================
+ Jedi.el - Python auto-completion for Emacs
+============================================
+
+.. sidebar:: Links:
+
+   * `Documentation <http://tkf.github.com/emacs-jedi/>`_ (at GitHub Pages)
+
+     * `Configuration <http://tkf.github.com/emacs-jedi#configuration>`_
+     * `Command <http://tkf.github.com/emacs-jedi#command>`_
+     * `Troubleshooting <http://tkf.github.com/emacs-jedi#troubleshooting>`_
+
+   * `Repository <https://github.com/tkf/emacs-jedi>`_ (at GitHub)
+   * `Issue tracker <https://github.com/tkf/emacs-jedi/issues>`_ (at GitHub)
+   * `Travis CI <https://travis-ci.org/#!/tkf/emacs-jedi>`_ |build-status|
+
+
+What is it?
+===========
+
+Jedi.el is a Python auto-completion package for Emacs.
+It aims at helping your Python coding in a non-destructive way.
+It also helps you to find information about Python objects, such as
+docstring, function arguments and code location.
+
+
+Quick start
+===========
+
+Install Jedi.el via el-get, Marmalade or MELPA (see install_ for
+more info) and add this to your Emacs configuration::
+
+  (add-hook 'python-mode-hook 'jedi:setup)
+  (setq jedi:complete-on-dot t)                 ; optional
+
+If you install Jedi.el manually (BTW, you shouldn't!), you need to add
+more stuff to it.  See `manual install`_ section.
+
+
+Screenshots
+===========
+
+Jedi.el comes with a set of useful features.  Here is a list of screenshots
+to show some of them.
+
+.. figure:: http://farm9.staticflickr.com/8261/8804536872_8d266b88ed_o.png
+
+   Auto-completion and popup help.  This is the main feature of Jedi.el.
+   You don't need to type any special command.  Completions and help
+   popup as you type.
+
+.. figure:: http://farm3.staticflickr.com/2845/8793986161_e1c58607f0_o.png
+
+   Popup-style call signature help.
+   This is useful when you don't remember what argument to pass.
+
+.. figure:: http://farm8.staticflickr.com/7312/8794015799_989e2a7217_o.png
+
+   eldoc-style call signature help.
+   This is another style of showing arguments.
+   Use `jedi:tooltip-method` to configure which style to use.
+
+.. figure:: http://farm4.staticflickr.com/3784/8804246558_0b3c998050_o.png
+
+   Source code viewer (need jedi-direx_ extension).
+
+
+Requirements
+============
+
+Emacs
+-----
+- EPC_
+- deferred.el_ (> v0.3)
+- auto-complete_
+
+If your completion popup is broken when width of completion candidates
+is wide, try the newest version of popup.el_.
+
+.. _deferred.el: https://github.com/kiwanami/emacs-deferred
+.. _popup.el: https://github.com/auto-complete/popup-el
+
+Jedi.el is currently tested against Emacs 24.3-devel, 24.2 and 23.1.
+
+Python
+------
+- Jedi_ (>= 0.6.0)
+- python-epc_
+- argparse (for Python 2.6)
+
+Jedi.el is tested against Python 2.6, 2.7 and 3.2.
+
+Optional dependencies for automatic installation:
+-------------------------------------------------
+- virtualenv_
+- make
+
+.. _virtualenv: http://www.virtualenv.org
+
+
+Install
+=======
+
+el-get
+------
+
+The easiest way to install Jedi.el is to use el-get_:
+just do ``M-x el-get-install jedi``.
+You need to have virtualenv_ to automatically install Python module
+dependencies.  If your el-get does not have the recipes for Jedi.el
+yet, get them from `this pull request`_.
+
+.. _el-get: https://github.com/dimitri/el-get
+.. _this pull request: https://github.com/dimitri/el-get/pull/927
+
+
+package.el (Marmalade or MELPA)
+-------------------------------
+
+You can install Jedi.el using package.el interface from Marmalade_ or
+MELPA_.  As package.el does not support installing non-elisp packages,
+you need to install Python part manually (see the next section).
+
+.. _marmalade: http://marmalade-repo.org/packages/jedi
+.. _MELPA: http://melpa.milkbox.net
+
+Manual install
+--------------
+
+1. Install EPC_ and auto-complete_.
+2. Install Jedi.el.  Download the repository of Jedi.el and add it to
+   `load-path`.
+3. Install Jedi_ and python-epc_ by
+
+   - ``make requirements`` (no need for root privileges [#]_) or
+   - ``pip install -r requirements.txt`` if you want to determine
+     where to install Python modules.  You need root privileges (i.e.,
+     ``sudo``) to install it in system directory.
+
+4. Add ``(autoload 'jedi:setup "jedi" nil t)`` in your Emacs configuration.
+
+.. [#] You need virtualenv_ for ``make requirements``.  It installs
+   all requirements for Jedi EPC server in an isolated Python
+   environment in ``env/`` directory under the directory where jedi.el
+   locates.  Note that you don't need to worry about if you want to
+   use Jedi.el to complete modules in another virtualenv you made.
+   Jedi EPC server recognize the virtualenv it is in (i.e., the
+   environment variable ``VIRTUAL_ENV`` in your Emacs) and then add
+   modules in that environment to its ``sys.path``.
+
+
+Setup
+=====
+
+All you need to do is to call `jedi:setup` in python buffer.
+To do that, add the following in your Emacs configuration::
+
+   (add-hook 'python-mode-hook 'jedi:setup)
+
+
+Extension
+=========
+
+IPython integration
+-------------------
+
+Sometimes it is useful to find completion using Python interpreter.
+To do that in a seamless manner, you can use IPython and its Emacs
+binding EIN (Emacs IPython Notebook).  See ein:jedi-setup_ in the EIN
+manual.  Using this setup, you can run auto-completion command in
+Jedi.el and EIN simultaneously.
+
+.. _ein:jedi-setup:
+   http://tkf.github.com/emacs-ipython-notebook/#ein:jedi-setup
+
+
+.. Links
+.. _jedi: https://github.com/davidhalter/jedi
+.. _EPC: https://github.com/kiwanami/emacs-epc
+.. _Python binding: python-epc_
+.. _python-epc: https://github.com/tkf/python-epc
+.. _auto-complete: https://github.com/auto-complete/auto-complete
+.. _jedi-direx: https://github.com/tkf/emacs-jedi-direx
+
+.. Build status badge
+.. |build-status|
+   image:: https://secure.travis-ci.org/tkf/emacs-jedi.png?branch=master
+   :target: http://travis-ci.org/tkf/emacs-jedi
+   :alt: Build Status

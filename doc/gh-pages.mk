@@ -52,7 +52,6 @@ gh-pages-update: _gh-pages-assert-repo
 	@echo "Clean $(DOC_DIR)"
 	test ! -d $(DOC_DIR)/.git
 	rm -rf $(DOC_DIR)
-	mkdir -p $(DOC_DIR)
 
 	@echo "Copy files: $(BUILDDIR)/html -> $(DOC_DIR)"
 	cp -r $(BUILDDIR)/html $(DOC_DIR)

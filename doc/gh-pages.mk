@@ -1,13 +1,30 @@
+## Usage
+
+# Usage 1:
+# * Put this file in Sphinx's directory (where you find Makefile).
+# * Add "include *.mk" to Sphinx's Makefile.
+
+# Usage 2:
+# * Run make like this:  make -f gh-pages.mk [TARGET]
+
+
+## Configuration
 REPO_URL = git@github.com:tkf/emacs-jedi.git
 REPO_DIR = gh-pages
 DOC_VER = latest  # can be "master", "v1.0", etc.
 DOC_DIR = $(REPO_DIR)/$(DOC_VER)
+
+
+## Misc variables
 
 # To use this file from --file option, let's define variables in
 # Sphinx's Makefile, if they are not defined:
 ifndef BUILDDIR
 BUILDDIR = build
 endif
+
+
+## Targets
 
 .PHONY: _gh-pages-assert-repo gh-pages-update gh-pages-push \
 	gh-pages-clone gh-pages-pull gh-pages-all

@@ -1,29 +1,39 @@
 REPO_URL = git@github.com:tkf/emacs-jedi.git
+REPO_DIR = gh-pages
+DOC_VER = latest  # can be "master", "v1.0", etc.
+DOC_DIR = $(REPO_DIR)/$(DOC_VER)
 
 .PHONY: _gh-pages-assert-repo gh-pages-update gh-pages-push \
 	gh-pages-clone gh-pages-pull
 
-# Check if build/html is really a git repository.  Otherwise,
+# Check if $(REPO_DIR) is really a git repository.  Otherwise,
 # committing files in there is pretty dangerous as it might goes into
-# Jedi's master branch.
+# REPO's master branch.
 _gh-pages-assert-repo:
-	test -d build/html/.git
+	test -d $(REPO_DIR)/.git
 
 gh-pages-clone:
-	rm -rf build/html
-	git clone --branch gh-pages $(REPO_URL) build/html
+	rm -rf $(REPO_DIR)
+	git clone --branch gh-pages $(REPO_URL) $(REPO_DIR)
 
 gh-pages-pull: _gh-pages-assert-repo
-	cd build/html && git pull
+	cd $(REPO_DIR) && git pull
 
 gh-pages-update: _gh-pages-assert-repo clean html
+	@echo "Clean $(DOC_DIR)"
+	rm -rf $(DOC_DIR)
+	mkdir -p $(DOC_DIR)
+
+	@echo "Copy files: $(BUILDDIR)/html -> $(DOC_DIR)"
+	cp -r $(BUILDDIR)/html $(DOC_DIR)
+
 	@echo "Update gh-pages"
-	cd build/html/ && \
+	cd $(DOC_DIR) && \
 		git add . && \
-		if [ -n "$$(git ls-files --deleted)" ]; then \
-			git ls-files --deleted | xargs git rm; \
+		if [ -n "$$(git ls-files --deleted .)" ]; then \
+			git ls-files --deleted . | xargs git rm; \
 		fi && \
-		git commit -m "Update"
+		git commit -m "Update $(DOC_VER)"
 
 gh-pages-push: _gh-pages-assert-repo
-	cd build/html && git push -u origin gh-pages
+	cd $(REPO_DIR) && git push -u origin gh-pages

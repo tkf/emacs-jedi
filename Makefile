@@ -169,3 +169,19 @@ test-install: dist/${PACKAGE}-${VERSION}.tar
 test-install-requirement: test-install
 	${MAKE} --directory ${TEST_PACKAGE_DIR}/${PACKAGE}-${VERSION} \
 		requirements
+
+
+
+### GH pages
+MAKE_GH_PAGES = $(MAKE) --directory doc --file gh-pages.mk
+
+gh-pages-latest:
+	$(MAKE_GH_PAGES)
+
+# Publish stable documentation.  This task can be run only when the
+# current revision has tag (i.e., released).
+gh-pages-stable:
+	# Make sure it's on tag
+	git describe --tags --dirty | grep -v -
+	# Run doc/gh-pages.mk
+	$(MAKE_GH_PAGES) DOC_VER=stable

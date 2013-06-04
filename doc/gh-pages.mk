@@ -29,7 +29,8 @@ endif
 ## Targets
 
 .PHONY: _gh-pages-assert-repo gh-pages-update gh-pages-push \
-	gh-pages-clone gh-pages-pull gh-pages-all
+	gh-pages-clone gh-pages-pull gh-pages-all \
+	gh-pages-root gh-pages-root-commit
 
 .NOTPARALLEL: gh-pages-all
 gh-pages-all: gh-pages-pull gh-pages-update gh-pages-push
@@ -67,6 +68,24 @@ gh-pages-update: _gh-pages-assert-repo
 gh-pages-push: _gh-pages-assert-repo
 	cd $(REPO_DIR) && git push -u origin gh-pages
 
+
+## Root
+
+gh-pages-root-commit: gh-pages-root
+	cd $(REPO_DIR) && \
+		git add *.* .nojekyll .gitignore && \
+		git commit -m "Update root page."
+
+gh-pages-root: $(REPO_DIR)/index.html $(REPO_DIR)/.nojekyll
+
+$(REPO_DIR)/index.html: gh-pages-index.html
+	cp $< $@
+
+$(REPO_DIR)/.nojekyll:
+	touch $@
+
+
+## Misc
 gh-pages-serve:
 	bash -c 'sleep 0.1s; python -m webbrowser http://localhost:$(DOC_PORT)' &
 	cd $(REPO_DIR) && python -m SimpleHTTPServer $(DOC_PORT)

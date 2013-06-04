@@ -250,7 +250,7 @@ texinfo_documents = [
 # -- Options for EL domain -----------------------------------------------------
 
 elisp_packages = {
-    'jedi': 'jedi:',
+    'jedi': 'jedi',
     'helm': 'helm-',
     'anything': 'anything-',
 }

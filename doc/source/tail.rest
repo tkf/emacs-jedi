@@ -27,6 +27,9 @@ Configuration
 Keybinds
 --------
 
+.. el:keymap:: jedi-mode-map
+.. el:variable:: jedi:use-shortcuts
+
 .. el:variable:: jedi:setup-keys
 .. el:variable:: jedi:key-complete
    :value: (kbd "<C-tab>")

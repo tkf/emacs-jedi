@@ -347,6 +347,21 @@ toolitp when inside of function call.
     (remove-hook 'kill-buffer-hook 'jedi:server-pool--gc-when-idle t)
     (jedi:server-pool--gc-when-idle)))
 
+;; Define keybinds.
+;; See: https://github.com/tkf/emacs-jedi/issues/47
+(let ((map jedi-mode-map))
+  (define-key map (kbd "<C-tab>") 'jedi:complete)
+  (define-key map (kbd "C-c ?") 'jedi:show-doc)
+  (define-key map (kbd "C-c .") 'jedi:goto-definition)
+  (define-key map (kbd "C-c ,") 'jedi:goto-definition-pop-marker)
+  (let ((command (cond
+                  ((featurep 'helm) 'helm-jedi-related-names)
+                  ((featurep 'anything) 'anything-jedi-related-names)
+                  ((locate-library "helm") 'helm-jedi-related-names)
+                  ((locate-library "anything") 'anything-jedi-related-names))))
+    (when command
+      (define-key map (kbd "C-c /") command))))
+
 (when jedi:setup-keys
   (let ((map jedi-mode-map))
     (define-key map jedi:key-complete        'jedi:complete)

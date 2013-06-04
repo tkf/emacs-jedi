@@ -600,7 +600,13 @@ See: https://github.com/tkf/emacs-jedi/issues/54"
 
 ;;;###autoload
 (defun jedi:ac-setup ()
-  "Add Jedi AC sources to `ac-sources'."
+  "Add Jedi AC sources to `ac-sources'.
+
+If auto-completion is all you need, you can call this function instead
+of `jedi:setup', like this::
+
+   (add-hook 'python-mode-hook 'jedi:ac-setup)
+"
   (interactive)
   (add-to-list 'ac-sources 'ac-source-jedi-direct))
 

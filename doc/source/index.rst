@@ -348,6 +348,20 @@ auto-complete_ module to start completion automatically.  As Jedi.el
 always calls Python function asynchronously (thanks to EPC_), it will
 not block your Emacs while your are editing.
 
+  .. figure:: img/how-it-works.*
+
+     How Jedi.el works.  Jedi.el calls Python methods in jedi_ through
+     EPC_ protocol.  Emacs side implementation of EPC is `epc.el <EPC>`_
+     and Python side is python-epc_.  Message through socket is encoded
+     using S-expression based protocol.  See `EPC README file <EPC>`_
+     for more details.
+
+EPC_ is built on top of asynchronous library called deferred.el_.
+One of the design goal for Jedi.el is to **never block user**.
+This is extremely important thing to have in mind because you use
+Emacs to edit something, not to wait some random lisp program to finish.
+EPC_ and deferred.el_ are perfect libraries to achieve this goal.
+
 
 Changelog
 =========

@@ -31,14 +31,25 @@ docstring, function arguments and code location.
 Quick start
 ===========
 
-Install Jedi.el via el-get, Marmalade or MELPA (see install_ for
-more info) and add this to your Emacs configuration::
+(1) **Install** Jedi.el via el-get, Marmalade or MELPA (see install_ for
+    more info).
 
-  (add-hook 'python-mode-hook 'jedi:setup)
-  (setq jedi:complete-on-dot t)                 ; optional
+(2) **Configure** Emacs using this::
 
-If you install Jedi.el manually (BTW, you shouldn't!), you need to add
-more stuff to it.  See `manual install`_ section.
+      (add-hook 'python-mode-hook 'jedi:setup)
+      (setq jedi:complete-on-dot t)                 ; optional
+
+    If you install Jedi.el manually (BTW, you shouldn't!), you need to add
+    more stuff to it.  See `manual install`_ section.
+
+(3) (NOTE: el-get user can skip this step)
+    **Setup Python requirements** in virtualenv by doing this in your shell::
+
+      cd PATH/TO/JEDI
+      make requirements
+
+    Typically, ``PATH/TO/JEDI/`` is something like ``~/.emacs.d/elpa/jedi-*/``.
+    If you prefer not using virtualenv, see install_ for more information.
 
 
 Screenshots

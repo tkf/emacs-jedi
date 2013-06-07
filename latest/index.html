@@ -74,14 +74,28 @@ docstring, function arguments and code location.</p>
 </div>
 <div class="section" id="quick-start">
 <h2>Quick start<a class="headerlink" href="#quick-start" title="Permalink to this headline">¶</a></h2>
-<p>Install Jedi.el via el-get, Marmalade or MELPA (see <a class="reference internal" href="#install">install</a> for
-more info) and add this to your Emacs configuration:</p>
+<ol class="arabic">
+<li><p class="first"><strong>Install</strong> Jedi.el via el-get, Marmalade or MELPA (see <a class="reference internal" href="#install">install</a> for
+more info).</p>
+</li>
+<li><p class="first"><strong>Configure</strong> Emacs using this:</p>
 <div class="highlight-cl"><div class="highlight"><pre><span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;python-mode-hook</span> <span class="ss">&#39;jedi:setup</span><span class="p">)</span>
 <span class="p">(</span><span class="k">setq</span> <span class="nv">jedi:complete-on-dot</span> <span class="no">t</span><span class="p">)</span>                 <span class="c1">; optional</span>
 </pre></div>
 </div>
 <p>If you install Jedi.el manually (BTW, you shouldn&#8217;t!), you need to add
 more stuff to it.  See <a class="reference internal" href="#manual-install">manual install</a> section.</p>
+</li>
+<li><p class="first">(NOTE: el-get user can skip this step)
+<strong>Setup Python requirements</strong> in virtualenv by doing this in your shell:</p>
+<div class="highlight-cl"><div class="highlight"><pre><span class="nv">cd</span> <span class="nv">PATH/TO/JEDI</span>
+<span class="nv">make</span> <span class="nv">requirements</span>
+</pre></div>
+</div>
+<p>Typically, <tt class="docutils literal"><span class="pre">PATH/TO/JEDI/</span></tt> is something like <tt class="docutils literal"><span class="pre">~/.emacs.d/elpa/jedi-*/</span></tt>.
+If you prefer not using virtualenv, see <a class="reference internal" href="#install">install</a> for more information.</p>
+</li>
+</ol>
 </div>
 <div class="section" id="screenshots">
 <h2>Screenshots<a class="headerlink" href="#screenshots" title="Permalink to this headline">¶</a></h2>

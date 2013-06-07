@@ -738,6 +738,20 @@ communicate with Python process.  It also uses excellent Emacs
 <a class="reference external" href="https://github.com/auto-complete/auto-complete">auto-complete</a> module to start completion automatically.  As Jedi.el
 always calls Python function asynchronously (thanks to <a class="reference external" href="https://github.com/kiwanami/emacs-epc">EPC</a>), it will
 not block your Emacs while your are editing.</p>
+<blockquote>
+<div><div class="figure">
+<img src="_images/how-it-works.svg" /><p class="caption">How Jedi.el works.  Jedi.el calls Python methods in <a class="reference external" href="https://github.com/davidhalter/jedi">jedi</a> through
+<a class="reference external" href="https://github.com/kiwanami/emacs-epc">EPC</a> protocol.  Emacs side implementation of EPC is <a class="reference external" href="EPC">epc.el</a>
+and Python side is <a class="reference external" href="https://github.com/tkf/python-epc">python-epc</a>.  Message through socket is encoded
+using S-expression based protocol.  See <a class="reference external" href="EPC">EPC README file</a>
+for more details.</p>
+</div>
+</div></blockquote>
+<p><a class="reference external" href="https://github.com/kiwanami/emacs-epc">EPC</a> is built on top of asynchronous library called <a class="reference external" href="https://github.com/kiwanami/emacs-deferred">deferred.el</a>.
+One of the design goal for Jedi.el is to <strong>never block user</strong>.
+This is extremely important thing to have in mind because you use
+Emacs to edit something, not to wait some random lisp program to finish.
+<a class="reference external" href="https://github.com/kiwanami/emacs-epc">EPC</a> and <a class="reference external" href="https://github.com/kiwanami/emacs-deferred">deferred.el</a> are perfect libraries to achieve this goal.</p>
 </div>
 <div class="section" id="changelog">
 <h2>Changelog<a class="headerlink" href="#changelog" title="Permalink to this headline">¶</a></h2>

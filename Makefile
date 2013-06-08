@@ -9,7 +9,7 @@ JEDI_DEV_URL = https://github.com/davidhalter/jedi/archive/dev.zip
 
 PYTHON ?= python
 CARTON ?= carton
-EMACS ?= emacs
+export EMACS ?= emacs
 
 VIRTUAL_EMACS = ${CARTON} exec ${EMACS}
 

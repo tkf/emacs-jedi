@@ -41,9 +41,10 @@ doc: elpa
 ensure-git:
 	test -d .git  # Running task that can be run only in git repository
 
-elpa:
+elpa: Carton
 	mkdir -p elpa
 	${CARTON} install 2> elpa/install.log
+	touch $@
 
 clean-elpa:
 	rm -rf elpa

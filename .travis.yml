@@ -32,13 +32,6 @@ before_install:
         --retry-delay 10
         https://raw.github.com/rejeep/carton/master/go | sh
 
-  # Use old carton, until virtualenv-emacs is ready
-  # See: https://github.com/tkf/emacs-jedi/issues/55
-  - if [ "$EMACS" = "emacs" ]; then (
-        cd ~/.carton;
-        git checkout v0.1.0
-    ) fi
-
   - if [ "$EMACS" = "emacs24" ]; then
         sudo add-apt-repository -y ppa:cassou/emacs &&
         sudo apt-get update -qq &&

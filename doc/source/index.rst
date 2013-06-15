@@ -340,6 +340,29 @@ investigate the problem by yourself.  Here is some checklist.
    from Marmalade, you should read `released version
    <http://tkf.github.io/emacs-jedi/released>`_.
 
+
+FAQ
+===
+
+How to update Python dependencies
+---------------------------------
+
+.. note:: el-get user can just use ``M-x el-get-update RET jedi RET``
+   to update Emacs Lisp *and* Python dependencies.
+
+Simply run::
+
+  cd PATH/TO/JEDI
+  make requirements
+
+Or, if you install dependencies to somewhere else (i.e., you did not
+use the ``make`` command when you installed.), use ``pip`` directly.
+You may need ``sudo`` depending on the location you installed
+dependencies.::
+
+  pip install -r PATH/TO/requirements.txt
+
+
 How to get traceback
 --------------------
 

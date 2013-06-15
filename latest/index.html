@@ -757,10 +757,33 @@ or manually from github), you should read <a class="reference external" href="ht
 from Marmalade, you should read <a class="reference external" href="http://tkf.github.io/emacs-jedi/released">released version</a>.</p>
 </li>
 </ol>
+</div>
+<div class="section" id="faq">
+<h2>FAQ<a class="headerlink" href="#faq" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="how-to-update-python-dependencies">
+<h3>How to update Python dependencies<a class="headerlink" href="#how-to-update-python-dependencies" title="Permalink to this headline">¶</a></h3>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">el-get user can just use <tt class="docutils literal"><span class="pre">M-x</span> <span class="pre">el-get-update</span> <span class="pre">RET</span> <span class="pre">jedi</span> <span class="pre">RET</span></tt>
+to update Emacs Lisp <em>and</em> Python dependencies.</p>
+</div>
+<p>Simply run:</p>
+<div class="highlight-cl"><div class="highlight"><pre><span class="nv">cd</span> <span class="nv">PATH/TO/JEDI</span>
+<span class="nv">make</span> <span class="nv">requirements</span>
+</pre></div>
+</div>
+<p>Or, if you install dependencies to somewhere else (i.e., you did not
+use the <tt class="docutils literal"><span class="pre">make</span></tt> command when you installed.), use <tt class="docutils literal"><span class="pre">pip</span></tt> directly.
+You may need <tt class="docutils literal"><span class="pre">sudo</span></tt> depending on the location you installed
+dependencies.:</p>
+<div class="highlight-cl"><div class="highlight"><pre><span class="nv">pip</span> <span class="nv">install</span> <span class="nv">-r</span> <span class="nv">PATH/TO/requirements.txt</span>
+</pre></div>
+</div>
+</div>
 <div class="section" id="how-to-get-traceback">
 <h3>How to get traceback<a class="headerlink" href="#how-to-get-traceback" title="Permalink to this headline">¶</a></h3>
 <p>You need to toggle on traceback logging for EPC server and then
-see the traceback in the buffer opened by <a class="reference internal" href="#jedi:pop-to-epc-buffer" title="jedi:pop-to-epc-buffer"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:pop-to-epc-buffer</span></tt></a>
+run <a class="reference internal" href="#jedi:pop-to-epc-buffer" title="jedi:pop-to-epc-buffer"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:pop-to-epc-buffer</span></tt></a> when you get an error.
 To start traceback logging, there are several options.</p>
 <ol class="arabic">
 <li><p class="first">If server-client communication works (i.e., some completion or

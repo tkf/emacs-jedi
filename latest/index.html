@@ -7,7 +7,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Jedi.el - Python auto-completion for Emacs &mdash; Emacs Jedi 0.1.3alpha1 documentation</title>
+    <title>Jedi.el - Python auto-completion for Emacs &mdash; Emacs Jedi 0.1.3alpha2 documentation</title>
     
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.1.3alpha1',
+        VERSION:     '0.1.3alpha2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,7 +24,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="Emacs Jedi 0.1.3alpha1 documentation" href="#" /> 
+    <link rel="top" title="Emacs Jedi 0.1.3alpha2 documentation" href="#" /> 
   </head>
   <body>
     <div class="related">
@@ -33,7 +33,7 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
-        <li><a href="#">Emacs Jedi 0.1.3alpha1 documentation</a> &raquo;</li> 
+        <li><a href="#">Emacs Jedi 0.1.3alpha2 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -646,6 +646,27 @@ INDEX-th result.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="jedi:pop-to-epc-buffer">
+<em class="property">function </em><tt class="descname">jedi:pop-to-epc-buffer</tt><a class="headerlink" href="#jedi:pop-to-epc-buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open the buffer associated with EPC server process.
+Use this command to see the output (e.g., traceback) of the server process.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="jedi:toggle-log-traceback">
+<em class="property">function </em><tt class="descname">jedi:toggle-log-traceback</tt><a class="headerlink" href="#jedi:toggle-log-traceback" title="Permalink to this definition">¶</a></dt>
+<dd><p>Toggle on/off traceback logging for EPC server for the current buffer.
+When there is an error during traceback logging is enabled, traceback
+is printed in the EPC buffer.  You can use <a class="reference internal" href="#jedi:pop-to-epc-buffer" title="jedi:pop-to-epc-buffer"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:pop-to-epc-buffer</span></tt></a> to
+open that buffer.</p>
+<p>You can also pass <tt class="docutils literal"><span class="pre">--log-traceback</span></tt> option to jediepcserver.py
+to start server with traceback logging turned on.  This is useful when
+there is a problem in communication (thus this command does not work).
+You can use <a class="reference internal" href="#jedi:start-dedicated-server" title="jedi:start-dedicated-server"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:start-dedicated-server</span></tt></a> to restart EPC server for the
+current buffer with specific arguments.</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="jedi:toggle-debug-server">
 <em class="property">function </em><tt class="descname">jedi:toggle-debug-server</tt><a class="headerlink" href="#jedi:toggle-debug-server" title="Permalink to this definition">¶</a></dt>
 <dd><p>Setup <a class="reference internal" href="#jedi:server-command" title="jedi:server-command"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:server-command</span></tt></a> and <a class="reference internal" href="#jedi:server-args" title="jedi:server-args"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:server-args</span></tt></a> to debug
@@ -729,6 +750,28 @@ or manually from github), you should read <a class="reference external" href="ht
 from Marmalade, you should read <a class="reference external" href="http://tkf.github.io/emacs-jedi/released">released version</a>.</p>
 </li>
 </ol>
+<div class="section" id="how-to-get-traceback">
+<h3>How to get traceback<a class="headerlink" href="#how-to-get-traceback" title="Permalink to this headline">¶</a></h3>
+<p>You need to toggle on traceback logging for EPC server and then
+see the traceback in the buffer opened by <a class="reference internal" href="#jedi:pop-to-epc-buffer" title="jedi:pop-to-epc-buffer"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:pop-to-epc-buffer</span></tt></a>
+To start traceback logging, there are several options.</p>
+<ol class="arabic">
+<li><p class="first">If server-client communication works (i.e., some completion or
+command work), use <a class="reference internal" href="#jedi:toggle-log-traceback" title="jedi:toggle-log-traceback"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:toggle-log-traceback</span></tt></a>.</p>
+</li>
+<li><p class="first">Alternatively, you can start server with <tt class="docutils literal"><span class="pre">--log-traceback</span></tt> option
+by <a class="reference internal" href="#jedi:start-dedicated-server" title="jedi:start-dedicated-server"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:start-dedicated-server</span></tt></a>.  Run command by
+<tt class="docutils literal"><span class="pre">M-x</span> <span class="pre">jedi:start-dedicated-server</span> <span class="pre">RET</span></tt> and append <tt class="docutils literal"><span class="pre">--log-traceback</span></tt>
+to the default command.</p>
+</li>
+<li><p class="first">You can use <a class="reference internal" href="#jedi:server-args" title="jedi:server-args"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:server-args</span></tt></a> to turn on logging always.
+This could be useful when you don&#8217;t know when the error occurs.:</p>
+<div class="highlight-cl"><div class="highlight"><pre><span class="p">(</span><span class="k">setq</span> <span class="nv">jedi:server-args</span> <span class="s">&quot;--log-traceback&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
 </div>
 <div class="section" id="how-it-works">
 <h2>How it works<a class="headerlink" href="#how-it-works" title="Permalink to this headline">¶</a></h2>
@@ -759,6 +802,8 @@ Emacs to edit something, not to wait some random lisp program to finish.
 <h3>v0.1.3 (WIP)<a class="headerlink" href="#v0-1-3-wip" title="Permalink to this headline">¶</a></h3>
 <p>Highlights:</p>
 <ul class="simple">
+<li>Add <a class="reference internal" href="#jedi:toggle-log-traceback" title="jedi:toggle-log-traceback"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:toggle-log-traceback</span></tt></a> and
+<a class="reference internal" href="#jedi:pop-to-epc-buffer" title="jedi:pop-to-epc-buffer"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:pop-to-epc-buffer</span></tt></a>.</li>
 <li>Add default keybind and a simple way to setup recommended keybinds.
 See issue <a class="reference external" href="https://github.com/tkf/emacs-jedi/issues/47">#47</a> for the reason and discussion behind this change.</li>
 <li>Now <a class="reference internal" href="#jedi:ac-setup" title="jedi:ac-setup"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:ac-setup</span></tt></a> auto-magically enables auto-complete-mode.
@@ -886,7 +931,7 @@ davidhalter/jedi</a></td></tr>
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
-        <li><a href="#">Emacs Jedi 0.1.3alpha1 documentation</a> &raquo;</li> 
+        <li><a href="#">Emacs Jedi 0.1.3alpha2 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

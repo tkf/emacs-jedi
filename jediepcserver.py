@@ -198,7 +198,8 @@ def get_jedi_version():
 
 def jedi_epc_server(address='localhost', port=0, port_file=sys.stdout,
                     sys_path=[], virtual_env=[],
-                    debugger=None, log=None, log_level=None):
+                    debugger=None, log=None, log_level=None,
+                    log_traceback=None):
     add_virtualenv_path()
     for p in virtual_env:
         add_virtualenv_path(p)
@@ -224,8 +225,12 @@ def jedi_epc_server(address='localhost', port=0, port_file=sys.stdout,
     if port_file is not sys.stdout:
         port_file.close()
 
+    # This is not supported Python-EPC API, but I am using this for
+    # backward compatibility for Python-EPC < 0.0.4.  In the future,
+    # it should be passed to the constructor.
+    server.log_traceback = bool(log_traceback)
+
     if log:
-        server.log_traceback = True
         handler = logging.FileHandler(filename=log, mode='w')
         if log_level:
             log_level = getattr(logging, log_level.upper())
@@ -288,6 +293,9 @@ def main(args=None):
         '--log-level',
         choices=['CRITICAL', 'ERROR', 'WARN', 'INFO', 'DEBUG'],
         help='logging level for log file.')
+    parser.add_argument(
+        '--log-traceback', action='store_true', default=False,
+        help='Include traceback in logging output.')
     parser.add_argument(
         '--pdb', dest='debugger', const='pdb', action='store_const',
         help='start pdb when error occurs.')

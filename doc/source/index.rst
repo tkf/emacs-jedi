@@ -265,6 +265,8 @@ Command
 .. el:function:: anything-jedi-related-names
 
 .. el:package:: jedi
+.. el:function:: jedi:pop-to-epc-buffer
+.. el:function:: jedi:toggle-log-traceback
 .. el:function:: jedi:toggle-debug-server
 
 
@@ -337,6 +339,26 @@ investigate the problem by yourself.  Here is some checklist.
    from Marmalade, you should read `released version
    <http://tkf.github.io/emacs-jedi/released>`_.
 
+How to get traceback
+--------------------
+
+You need to toggle on traceback logging for EPC server and then
+see the traceback in the buffer opened by :el:symbol:`jedi:pop-to-epc-buffer`
+To start traceback logging, there are several options.
+
+1. If server-client communication works (i.e., some completion or
+   command work), use :el:symbol:`jedi:toggle-log-traceback`.
+
+2. Alternatively, you can start server with ``--log-traceback`` option
+   by :el:symbol:`jedi:start-dedicated-server`.  Run command by
+   ``M-x jedi:start-dedicated-server RET`` and append ``--log-traceback``
+   to the default command.
+
+3. You can use :el:symbol:`jedi:server-args` to turn on logging always.
+   This could be useful when you don't know when the error occurs.::
+
+     (setq jedi:server-args "--log-traceback")
+
 
 How it works
 ============
@@ -371,6 +393,8 @@ v0.1.3 (WIP)
 
 Highlights:
 
+- Add :el:symbol:`jedi:toggle-log-traceback` and
+  :el:symbol:`jedi:pop-to-epc-buffer`.
 - Add default keybind and a simple way to setup recommended keybinds.
   See issue `#47`_ for the reason and discussion behind this change.
 - Now :el:symbol:`jedi:ac-setup` auto-magically enables auto-complete-mode.

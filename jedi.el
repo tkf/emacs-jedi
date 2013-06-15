@@ -985,7 +985,9 @@ See also `jedi:imenu-create-index-function'."
   "Request version of Python modules and return a deferred object."
   (epc:call-deferred (jedi:get-epc) 'get_jedi_version nil))
 
-(defun jedi:show-jedi-version ()
+(defun jedi:show-version-info ()
+  "Show version info of Python modules used by the server.
+Paste the result of this function in bug report."
   (interactive)
   (deferred:nextc (jedi:get-jedi-version-request)
     (lambda (reply)
@@ -995,6 +997,9 @@ See also `jedi:imenu-create-index-function'."
           (erase-buffer)
           (pp reply)
           (display-buffer standard-output))))))
+
+(define-obsolete-function-alias
+  'jedi:show-jedi-version 'jedi:show-version-info "0.1.3")
 
 (defun jedi:print-jedi-version ()
   (pp (epc:sync (jedi:get-epc) (jedi:get-jedi-version-request))))

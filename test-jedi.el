@@ -93,6 +93,11 @@
       (should (integerp column))
       (should (stringp module_path)))))
 
+(ert-deftest jedi:show-version-info ()
+  (kill-buffer (get-buffer-create "*jedi:version*"))
+  (jedi-testing:sync (jedi:show-version-info))
+  (should (get-buffer "*jedi:version*")))
+
 
 ;;; Server pool
 

@@ -995,6 +995,7 @@ Paste the result of this function in bug report."
         (with-current-buffer standard-output
           (emacs-lisp-mode)
           (erase-buffer)
+          (pp `(:emacs-version ,emacs-version :jedi-version ,jedi:version))
           (pp reply)
           (display-buffer standard-output))))))
 

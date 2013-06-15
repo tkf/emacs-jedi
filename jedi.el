@@ -1049,6 +1049,11 @@ what jedi can do."
 
 ;;; Debugging
 
+(defun jedi:pop-to-epc-buffer ()
+  "Open the buffer associated with EPC server process.
+Use this command to see the output (e.g., traceback) of the server process."
+  (interactive)
+  (pop-to-buffer (process-buffer (epc:manager-server-process jedi:epc))))
 
 (defvar jedi:server-command--backup nil)
 (defvar jedi:server-args--backup nil)

@@ -367,7 +367,7 @@ How to get traceback
 --------------------
 
 You need to toggle on traceback logging for EPC server and then
-see the traceback in the buffer opened by :el:symbol:`jedi:pop-to-epc-buffer`
+run :el:symbol:`jedi:pop-to-epc-buffer` when you get an error.
 To start traceback logging, there are several options.
 
 1. If server-client communication works (i.e., some completion or

@@ -268,6 +268,7 @@ Command
 .. el:function:: jedi:pop-to-epc-buffer
 .. el:function:: jedi:toggle-log-traceback
 .. el:function:: jedi:toggle-debug-server
+.. el:function:: jedi:show-version-info
 
 
 Troubleshooting

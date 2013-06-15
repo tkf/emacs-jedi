@@ -219,6 +219,11 @@ def jedi_epc_server(address='localhost', port=0, port_file=sys.stdout,
     server.register_function(defined_names)
     server.register_function(get_jedi_version)
 
+    @server.register_function
+    def toggle_log_traceback():
+        server.log_traceback = not server.log_traceback
+        return server.log_traceback
+
     port_file.write(str(server.server_address[1]))  # needed for Emacs client
     port_file.write("\n")
     port_file.flush()

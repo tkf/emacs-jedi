@@ -1055,6 +1055,24 @@ Use this command to see the output (e.g., traceback) of the server process."
   (interactive)
   (pop-to-buffer (process-buffer (epc:manager-server-process jedi:epc))))
 
+(defun jedi:toggle-log-traceback ()
+  "Toggle on/off traceback logging for EPC server for the current buffer.
+When there is an error during traceback logging is enabled, traceback
+is printed in the EPC buffer.  You can use `jedi:pop-to-epc-buffer' to
+open that buffer.
+
+You can also pass ``--log-traceback`` option to jediepcserver.py
+to start server with traceback logging turned on.  This is useful when
+there is a problem in communication (thus this command does not work).
+You can use `jedi:start-dedicated-server' to restart EPC server for the
+current buffer with specific arguments."
+  (interactive)
+  (deferred:$
+    (epc:call-deferred (jedi:get-epc) 'toggle_log_traceback nil)
+    (deferred:nextc it
+      (lambda (flag)
+        (message "Traceback logging is %s" (if flag "enabled" "disabled"))))))
+
 (defvar jedi:server-command--backup nil)
 (defvar jedi:server-args--backup nil)
 

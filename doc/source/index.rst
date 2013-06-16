@@ -381,7 +381,7 @@ To start traceback logging, there are several options.
 3. You can use :el:symbol:`jedi:server-args` to turn on logging always.
    This could be useful when you don't know when the error occurs.::
 
-     (setq jedi:server-args "--log-traceback")
+     (setq jedi:server-args '("--log-traceback"))
 
 
 How it works

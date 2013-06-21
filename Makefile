@@ -4,12 +4,14 @@ VIRTUALENV_SYSTEM_SITE_PACKAGES ?= true
 VIRTUALENV = \
 	VIRTUALENV_SYSTEM_SITE_PACKAGES=$(VIRTUALENV_SYSTEM_SITE_PACKAGES) \
 		virtualenv --python=$(PYTHON)
-PIP_INSTALL = $(ENV)/bin/pip install --use-mirrors
+PIP_INSTALL = $(ENV)/$(BINDIR)/pip install --use-mirrors
 JEDI_DEV_URL = https://github.com/davidhalter/jedi/archive/dev.zip
 
 PYTHON ?= python
 CARTON ?= carton
 export EMACS ?= emacs
+
+BINDIR ?= bin
 
 VIRTUAL_EMACS = ${CARTON} exec ${EMACS}
 
@@ -55,8 +57,8 @@ requirements: env
 install-jedi-dev:
 	${PIP_INSTALL} --upgrade ${JEDI_DEV_URL}
 
-env: $(ENV)/bin/activate
-$(ENV)/bin/activate:
+env: $(ENV)/$(BINDIR)/activate
+$(ENV)/$(BINDIR)/activate:
 	$(VIRTUALENV) $(ENV)
 
 clean-env:
@@ -69,7 +71,7 @@ print-deps: elpa requirements
 	@echo "----------------------- Dependencies -----------------------"
 	$(EMACS) --version
 	${VIRTUAL_EMACS} -Q -batch -l jedi.el -f jedi:print-jedi-version
-	ls -d $(ENV)/lib/python*/site-packages/*egg-info
+	ls -d $(ENV)/*/python*/site-packages/*egg-info
 	@echo "------------------------------------------------------------"
 
 before-test: requirements

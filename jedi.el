@@ -3,7 +3,7 @@
 ;; Copyright (C) 2012 Takafumi Arakaki
 
 ;; Author: Takafumi Arakaki <aka.tkf at gmail.com>
-;; Package-Requires: ((epc "0.1.0") (auto-complete "1.4"))
+;; Package-Requires: ((epc "0.1.0") (auto-complete "1.4") (python-environment "0"))
 ;; Version: 0.1.3alpha2
 
 ;; This file is NOT part of GNU Emacs.
@@ -34,6 +34,7 @@
 
 (require 'epc)
 (require 'auto-complete)
+(require 'python-environment)
 (declare-function pos-tip-show "pos-tip")
 
 
@@ -58,6 +59,10 @@
 
 
 ;;; Configuration variables
+
+(defcustom jedi:environment-root (expand-file-name "env" jedi:source-dir)
+  "Path to virtualenv.  If it is nil, `python-environment-root' is used."
+  :group 'jedi)
 
 (defcustom jedi:server-command
   (list (let ((py (expand-file-name "env/bin/python" jedi:source-dir)))
@@ -1056,6 +1061,21 @@ what jedi can do."
     (add-hook 'hack-local-variables-hook
               #'jedi:import-python-el-settings-setup nil t))
   (jedi-mode 1))
+
+
+;;; Virtualenv setup
+(defvar jedi:make-env--command
+  '("pip" "install" "jedi>=0.6.0" "epc>=0.0.4" "argparse"))
+
+(defun jedi:make-env ()
+  "Make virtualenv at ``env`` directory and install Python dependencies."
+  (interactive)
+  (python-environment-run jedi:make-env--command
+                          jedi:environment-root))
+
+(defun jedi:make-env-block ()
+  (python-environment-run-block jedi:make-env--command
+                                jedi:environment-root))
 
 
 ;;; Debugging

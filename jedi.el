@@ -64,10 +64,13 @@
   "Path to virtualenv.  If it is nil, `python-environment-root' is used."
   :group 'jedi)
 
+(defun jedi:-env-server-command ()
+  (let ((py (python-environment-bin "python" jedi:environment-root)))
+    (when py (list py jedi:server-script))))
+
 (defcustom jedi:server-command
-  (list (let ((py (expand-file-name "env/bin/python" jedi:source-dir)))
-          (if (file-exists-p py) py "python"))
-        jedi:server-script)
+  (or (jedi:-env-server-command)
+      (list "python" jedi:server-script))
   "Command used to run Jedi server.
 
 If you setup Jedi requirements using ``make requirements`` command,
@@ -1070,12 +1073,18 @@ what jedi can do."
 (defun jedi:make-env ()
   "Make virtualenv at ``env`` directory and install Python dependencies."
   (interactive)
-  (python-environment-run jedi:make-env--command
-                          jedi:environment-root))
+  (deferred:$
+    (python-environment-run jedi:make-env--command
+                            jedi:environment-root)
+    (deferred:watch it
+      (lambda (_)
+        (setq-default jedi:server-command (jedi:-env-server-command))))))
 
 (defun jedi:make-env-block ()
-  (python-environment-run-block jedi:make-env--command
-                                jedi:environment-root))
+  (prog1
+      (python-environment-run-block jedi:make-env--command
+                                    jedi:environment-root)
+    (setq-default jedi:server-command (jedi:-env-server-command))))
 
 
 ;;; Debugging

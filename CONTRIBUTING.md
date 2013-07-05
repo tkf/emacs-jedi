@@ -3,7 +3,7 @@
 
 ## Can I ask question in the issue tracker?
 
-It is OK ask question in the issue tracker, but if the question is
+It is OK to ask question in the issue tracker, but if the question is
 not too specific to Jedi.el, consider asking question in other place
 such as [stackoverflow](http://stackoverflow.com).  For example,
 please do not ask "How to install Jedi.el using package.el?" in the

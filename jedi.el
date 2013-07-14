@@ -230,8 +230,9 @@ Default is `jedi:create-nested-imenu-index'."
 (defcustom jedi:setup-keys nil
   "Setup recommended keybinds.
 
-.. warning:: Use of this value is obsolete now.
-   As of 0.1.3, jedi.el has default keybinds.
+.. warning:: Use of this value is obsolete now.  As of 0.1.3,
+   jedi.el has default keybinds, which are different than these. See also
+   `jedi-mode'.
 
 .. admonition:: Default keybinds
 

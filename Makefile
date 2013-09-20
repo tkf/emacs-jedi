@@ -8,12 +8,12 @@ PIP_INSTALL = $(ENV)/$(BINDIR)/pip install --use-mirrors
 JEDI_DEV_URL = https://github.com/davidhalter/jedi/archive/dev.zip
 
 PYTHON ?= python
-CARTON ?= carton
+CASK ?= cask
 export EMACS ?= emacs
 
 BINDIR ?= bin
 
-VIRTUAL_EMACS = ${CARTON} exec ${EMACS}
+VIRTUAL_EMACS = ${CASK} exec ${EMACS}
 
 .PHONY : test test-1 tryout clean-elpa requirements env clean-env clean \
 	print-deps travis-ci doc
@@ -43,9 +43,9 @@ doc: elpa
 ensure-git:
 	test -d .git  # Running task that can be run only in git repository
 
-elpa: Carton
+elpa: Cask
 	mkdir -p elpa
-	${CARTON} install 2> elpa/install.log
+	${CASK} install 2> elpa/install.log
 	touch $@
 
 clean-elpa:

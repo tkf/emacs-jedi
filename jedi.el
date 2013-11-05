@@ -566,10 +566,10 @@ See: https://github.com/tkf/emacs-jedi/issues/54"
 ;; Calling `auto-complete' or `ac-update-greedy' instead of `ac-start'
 ;; here did not work.
 
-(defun jedi:dot-complete ()
+(defun jedi:dot-complete (arg)
   "Insert dot and complete code at point."
-  (interactive)
-  (insert ".")
+  (interactive "P")
+  (self-insert-command (prefix-numeric-value arg))
   (unless (or (ac-cursor-on-diable-face-p)
               ;; don't complete if the dot is immediately after int literal
               (looking-back "\\(\\`\\|[^._[:alnum:]]\\)[0-9]+\\."))

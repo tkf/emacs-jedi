@@ -257,7 +257,10 @@ def jedi_epc_server(address='localhost', port=0, port_file=sys.stdout,
 def import_jedi():
     global jedi
     import jedi
-    import jedi.parser
+    try:
+        import jedi.parsing
+    except ImportError:
+        import jedi.parser
     import jedi.evaluate
     import jedi.api
     return jedi

@@ -257,10 +257,7 @@ def jedi_epc_server(address='localhost', port=0, port_file=sys.stdout,
 def import_jedi():
     global jedi
     import jedi
-    import jedi.parsing
-    import jedi.evaluate
     import jedi.api
-    return jedi
 
 
 def add_virtualenv_path(venv=os.getenv('VIRTUAL_ENV')):

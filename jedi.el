@@ -243,7 +243,7 @@ Default is `jedi:create-nested-imenu-index'."
        Goto the definition of the object at point. (`jedi:goto-definition')
 
    ``C-c d`` : = `jedi:key-show-doc'
-       Goto the definition of the object at point. (`jedi:show-doc')
+       Show the documentation of the object at point. (`jedi:show-doc')
 
    ``C-c r`` : = `jedi:key-related-names'
        Find related names of the object at point.

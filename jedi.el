@@ -562,7 +562,7 @@ See: https://github.com/tkf/emacs-jedi/issues/54"
     (deferred:nextc (jedi:complete-request)
       (lambda ()
         (let ((ac-expand-on-auto-complete expand))
-          (ac-start))))))
+          (ac-start :triggered 'command))))))
 ;; Calling `auto-complete' or `ac-update-greedy' instead of `ac-start'
 ;; here did not work.
 

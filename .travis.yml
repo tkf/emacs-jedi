@@ -9,7 +9,7 @@ env:
     - EMACS=emacs24
     - EMACS=emacs-snapshot
   global:
-    - CARTON=$HOME/.carton/bin/carton
+    - CASK=$HOME/.cask/bin/cask
     # Turn on --use-mirrors option everywhere (even in tox):
     - PIP_USE_MIRRORS=t
     # Use Python version of the one used for running tox
@@ -30,7 +30,7 @@ before_install:
         --max-time 10
         --retry 10
         --retry-delay 10
-        https://raw.github.com/rejeep/carton/master/go | sh
+        https://raw.github.com/cask/cask/master/go | sh
 
   - if [ "$EMACS" = "emacs24" ]; then
         sudo add-apt-repository -y ppa:cassou/emacs &&

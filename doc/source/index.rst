@@ -278,7 +278,7 @@ Before posting question or bug report in the `issue tracker`_, please
 investigate the problem by yourself.  Here is some checklist.
 
 #. You can try Jedi.el without installing it, by running
-   ``make tryout`` if you have carton_ installed.  This will
+   ``make tryout`` if you have cask_ installed.  This will
    install requirements for Jedi.el separated from your local setup in
    ``.emacs.d``.  You can also check the configuration file
    tryout-jedi.el_ to see a minimum working configuration.  This is
@@ -290,23 +290,20 @@ investigate the problem by yourself.  Here is some checklist.
    tasks, checking ``elpa/install.log`` may help you finding the
    problem.
 
-   .. _carton: https://github.com/rejeep/carton
+   .. _cask: https://github.com/cask/cask
    .. _tryout-jedi.el:
       https://github.com/tkf/emacs-jedi/blob/master/tryout-jedi.el
 
-   If you install carton_ in a different place or you don't add it to
+   If you install cask_ in a different place or you don't add it to
    the ``$PATH``, you can call ``make`` like this:
-   ``make CARTON=PATH/TO/bin/carton tryout``.
-   Typically, ``PATH/TO/bin/carton`` is ``~/.carton/bin/carton``.
+   ``make CASK=PATH/TO/bin/cask tryout``.
+   Typically, ``PATH/TO/bin/cask`` is ``~/.cask/bin/cask``.
 
-   If you are too lazy to go to carton_ site to checkout how to
+   If you are too lazy to go to cask_ site to checkout how to
    install it, here is what you need to do::
 
-     curl -fsSkL https://raw.github.com/rejeep/carton/master/go | sh
-     make CARTON=$HOME/.carton/bin/carton tryout
-
-   Note that this carton_ is different from `the one for Perl
-   <https://github.com/miyagawa/carton>`_.
+     curl -fsSkL https://raw.github.com/cask/cask/master/go | python
+     make CASK=$HOME/.cask/bin/cask tryout
 
 #. To make sure that jedi.el is running correctly, you can
    do ``M-x jedi:show-jedi-version``.  It will show the versions

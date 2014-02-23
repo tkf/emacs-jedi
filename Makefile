@@ -50,7 +50,7 @@ ensure-git:
 elpa: ${ELPA_DIR}
 ${ELPA_DIR}: Cask
 	mkdir -p $@
-	${CASK} install 2>&1 | tee $@/install.log
+	${CASK} install
 	touch $@
 
 

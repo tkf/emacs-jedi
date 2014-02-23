@@ -52,6 +52,17 @@ ${ELPA_DIR}: Cask
 	mkdir -p $@
 	${CASK} install 2>&1 | tee $@/install.log
 	touch $@
+	${MAKE} --silent check-install-log
+
+check-install-log:
+	if grep --quiet ${CHECK_INSTALL_LOG_ARGS} ${ELPA_DIR}/install.log; \
+		then \
+			echo "Failed to install Emacs Lisp dependencies"; \
+			exit 1; \
+		fi
+
+CHECK_INSTALL_LOG_ARGS = \
+'Dependency .* failed to install: Trying to parse HTTP response code in odd buffer:'
 
 
 clean-elpa:

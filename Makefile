@@ -13,16 +13,20 @@ export EMACS ?= emacs
 
 BINDIR ?= bin
 
+ELPA_DIR = \
+	.cask/$(shell ${EMACS} -Q --batch --eval '(princ emacs-version)')/elpa
+# See: cask-elpa-dir
+
 VIRTUAL_EMACS = ${CASK} exec ${EMACS}
 
 .PHONY : test test-1 tryout clean-elpa requirements env clean-env clean \
 	print-deps travis-ci doc
 
-test: elpa requirements
+TEST_DEPS = elpa requirements
+test: ${TEST_DEPS}
 	${MAKE} test-1
 
 test-1:
-	rm -f elpa/mocker-*/*elc  # workaround a bug in mocker.el
 	${VIRTUAL_EMACS} -Q -batch \
 		-L . -l test-jedi.el -f ert-run-tests-batch-and-exit
 	tox
@@ -43,13 +47,15 @@ doc: elpa
 ensure-git:
 	test -d .git  # Running task that can be run only in git repository
 
-elpa: Cask
-	mkdir -p elpa
-	${CASK} install 2> elpa/install.log
+elpa: ${ELPA_DIR}
+${ELPA_DIR}: Cask
+	mkdir -p $@
+	${CASK} install
 	touch $@
 
+
 clean-elpa:
-	rm -rf elpa
+	rm -rf ${ELPA_DIR}
 
 requirements: env
 	${PIP_INSTALL} --requirement requirements.txt
@@ -66,6 +72,7 @@ clean-env:
 
 clean-el: clean-elpa clean-elc
 clean: clean-env clean-el
+	rm -rf .cask
 
 print-deps: elpa requirements
 	@echo "----------------------- Dependencies -----------------------"
@@ -74,7 +81,7 @@ print-deps: elpa requirements
 	ls -d $(ENV)/*/python*/site-packages/*egg-info
 	@echo "------------------------------------------------------------"
 
-before-test: requirements
+before-test: ${TEST_DEPS}
 	tox --notest
 
 travis-ci: print-deps test
@@ -97,7 +104,7 @@ JOBS := $(addprefix job-,${EMACS_LIST})
 .PHONY: ${JOBS}
 
 ${JOBS}: job-%:
-	${MAKE} EMACS=$* clean-el elpa
+	${MAKE} EMACS=$* clean-elc elpa
 	${MAKE} EMACS=$* ${MET_MAKEFLAGS} test-1
 
 test-all: requirements ${JOBS}

@@ -2,7 +2,7 @@ MANIFEST
 .tox
 dist
 env
-elpa
+.cask
 doc/build
 doc/gh-pages
 doc/source/releases/*/*.txt

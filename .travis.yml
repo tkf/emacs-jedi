@@ -20,7 +20,8 @@ matrix:
   allow_failures:
     # Allow failures with EMACS=emacs
     - env: EMACS=emacs
-    - env: EMACS=emacs-snapshot
+    - env: EMACS=emacs-snapshot EMACS_PPA=ppa:ubuntu-elisp/ppa
+    - env: EMACS=emacs-snapshot EMACS_PPA=ppa:cassou/emacs
 before_install:
   - pip install -q virtualenv tox
   - pip install -q --requirement requirements.txt

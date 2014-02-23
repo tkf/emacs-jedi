@@ -102,7 +102,7 @@ JOBS := $(addprefix job-,${EMACS_LIST})
 .PHONY: ${JOBS}
 
 ${JOBS}: job-%:
-	${MAKE} EMACS=$* clean-el elpa
+	${MAKE} EMACS=$* clean-elc elpa
 	${MAKE} EMACS=$* ${MET_MAKEFLAGS} test-1
 
 test-all: requirements ${JOBS}

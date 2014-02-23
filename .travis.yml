@@ -38,7 +38,7 @@ before_install:
 
   - if [ "$EMACS" = 'emacs-snapshot' ]; then
       sudo apt-get install -qq
-          emacs-snapshot-el emacs-snapshot-gtk emacs-snapshot;
+          emacs-snapshot-el emacs-snapshot;
     fi
   - curl -fsSkL
         --max-time 10

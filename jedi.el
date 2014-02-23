@@ -572,7 +572,9 @@ See: https://github.com/tkf/emacs-jedi/issues/54"
   "Insert dot and complete code at point."
   (interactive)
   (insert ".")
-  (unless (ac-cursor-on-diable-face-p)
+  (unless (or (ac-cursor-on-diable-face-p)
+              ;; don't complete if the dot is immediately after int literal
+              (looking-back "\\(\\`\\|[^._[:alnum:]]\\)[0-9]+\\."))
     (jedi:complete :expand nil)))
 
 

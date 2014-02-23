@@ -71,6 +71,7 @@ clean-env:
 
 clean-el: clean-elpa clean-elc
 clean: clean-env clean-el
+	rm -rf .cask
 
 print-deps: elpa requirements
 	@echo "----------------------- Dependencies -----------------------"

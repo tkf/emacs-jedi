@@ -22,7 +22,8 @@ VIRTUAL_EMACS = ${CASK} exec ${EMACS}
 .PHONY : test test-1 tryout clean-elpa requirements env clean-env clean \
 	print-deps travis-ci doc
 
-test: elpa requirements
+TEST_DEPS = elpa requirements
+test: ${TEST_DEPS}
 	${MAKE} test-1
 
 test-1:
@@ -80,7 +81,7 @@ print-deps: elpa requirements
 	ls -d $(ENV)/*/python*/site-packages/*egg-info
 	@echo "------------------------------------------------------------"
 
-before-test: requirements
+before-test: ${TEST_DEPS}
 	tox --notest
 
 travis-ci: print-deps test

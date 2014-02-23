@@ -13,6 +13,10 @@ export EMACS ?= emacs
 
 BINDIR ?= bin
 
+ELPA_DIR = \
+	.cask/$(shell ${EMACS} -Q --batch --eval '(princ emacs-version)')/elpa
+# See: cask-elpa-dir
+
 VIRTUAL_EMACS = ${CASK} exec ${EMACS}
 
 .PHONY : test test-1 tryout clean-elpa requirements env clean-env clean \
@@ -22,7 +26,6 @@ test: elpa requirements
 	${MAKE} test-1
 
 test-1:
-	rm -f elpa/mocker-*/*elc  # workaround a bug in mocker.el
 	${VIRTUAL_EMACS} -Q -batch \
 		-L . -l test-jedi.el -f ert-run-tests-batch-and-exit
 	tox
@@ -43,13 +46,15 @@ doc: elpa
 ensure-git:
 	test -d .git  # Running task that can be run only in git repository
 
-elpa: Cask
-	mkdir -p elpa
-	${CASK} install 2> elpa/install.log
+elpa: ${ELPA_DIR}
+${ELPA_DIR}: Cask
+	mkdir -p $@
+	${CASK} install 2> $@/install.log
 	touch $@
 
+
 clean-elpa:
-	rm -rf elpa
+	rm -rf ${ELPA_DIR}
 
 requirements: env
 	${PIP_INSTALL} --requirement requirements.txt

@@ -1,5 +1,6 @@
 (source gnu)
 (source melpa)
+(source marmalade)
 
 (package "jedi" "0" "A Python auto-completion for Emacs")
 

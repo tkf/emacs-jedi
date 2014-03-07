@@ -50,8 +50,8 @@ ensure-git:
 
 elpa: ${ELPA_DIR}
 ${ELPA_DIR}: Cask
-	mkdir -p $@
 	${CASK} install
+	test -d $@
 	touch $@
 
 
@@ -71,6 +71,7 @@ install-jedi-dev:
 env: $(ENV)/$(BINDIR)/activate
 $(ENV)/$(BINDIR)/activate: elpa
 	${VIRTUAL_EMACS} -batch -l jedi.el -f "jedi:make-env-block"
+	test -f $@
 
 clean-env:
 	rm -rf $(ENV)

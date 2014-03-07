@@ -28,19 +28,19 @@ test: ${TEST_DEPS}
 	${MAKE} test-1
 
 test-1:
-	${VIRTUAL_EMACS} -Q -batch \
+	${VIRTUAL_EMACS} -batch \
 		-L . -l test-jedi.el -f ert-run-tests-batch-and-exit
 	tox
 
 compile: elpa clean-elc
-	${VIRTUAL_EMACS} -Q -batch \
+	${VIRTUAL_EMACS} -batch \
 		-L . -f batch-byte-compile *.el
 
 clean-elc:
 	rm -rf *.elc
 
 tryout: compile env
-	${VIRTUAL_EMACS} -Q -L . -l tryout-jedi.el
+	${VIRTUAL_EMACS} -L . -l tryout-jedi.el
 
 doc: elpa
 	make -C doc html
@@ -70,7 +70,7 @@ install-jedi-dev:
 
 env: $(ENV)/$(BINDIR)/activate
 $(ENV)/$(BINDIR)/activate: elpa
-	${VIRTUAL_EMACS} -Q -batch -l jedi.el -f "jedi:make-env-block"
+	${VIRTUAL_EMACS} -batch -l jedi.el -f "jedi:make-env-block"
 
 clean-env:
 	rm -rf $(ENV)
@@ -82,7 +82,7 @@ clean: clean-env clean-el
 print-deps: elpa env
 	@echo "----------------------- Dependencies -----------------------"
 	$(EMACS) --version
-	${VIRTUAL_EMACS} -Q -batch -l jedi.el -f jedi:print-jedi-version
+	${VIRTUAL_EMACS} -batch -l jedi.el -f jedi:print-jedi-version
 	ls -d $(ENV)/*/python*/site-packages/*egg-info
 	@echo "------------------------------------------------------------"
 

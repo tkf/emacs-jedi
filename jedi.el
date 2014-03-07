@@ -416,7 +416,15 @@ connection."
 (defun jedi:epc--start-epc (server-prog server-args)
   "Same as `epc:start-epc', but set query-on-exit flag for
 associated processes to nil."
-  (let ((mngr (epc:start-epc server-prog server-args)))
+  (let ((mngr (condition-case err
+                  (epc:start-epc server-prog server-args)
+                ((debug error)
+                 (error "\
+You got the following error.  Running \"M-x jedi:make-env\" may solve \
+the problem especially if you haven't run the command yet and if the server \
+complains about module imports.
+---
+%s" err)))))
     (set-process-query-on-exit-flag (epc:connection-process
                                      (epc:manager-connection mngr))
                                     nil)

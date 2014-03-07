@@ -1068,7 +1068,10 @@ what jedi can do."
 
 ;;; Virtualenv setup
 (defvar jedi:make-env--command
-  '("pip" "install" "jedi>=0.6.0" "epc>=0.0.4" "argparse"))
+  '("pip" "install"
+    "jedi>=0.7.0"
+    "epc>=0.0.4"
+    "argparse"))
 
 (defun jedi:make-env ()
   "Make virtualenv at ``env`` directory and install Python dependencies."

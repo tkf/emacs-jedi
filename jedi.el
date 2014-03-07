@@ -60,7 +60,7 @@
 
 ;;; Configuration variables
 
-(defcustom jedi:environment-root (expand-file-name "env" jedi:source-dir)
+(defcustom jedi:environment-root nil
   "Path to virtualenv.  If it is nil, `python-environment-root' is used."
   :group 'jedi)
 

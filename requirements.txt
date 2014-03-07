@@ -1,3 +1,0 @@
-jedi>=0.7.0
-epc>=0.0.4
-argparse

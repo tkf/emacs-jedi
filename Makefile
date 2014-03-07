@@ -124,7 +124,7 @@ test-all: env ${JOBS}
 PACKAGE = jedi
 VERSION = $(shell grep ';; Version:' jedi.el | sed 's/^.* \([0-9].*\)$$/\1/')
 DIST_FILES = jedi-pkg.el jedi.el jediepcserver.py \
-	requirements.txt Makefile tryout-jedi.el
+	Makefile tryout-jedi.el
 
 .PHONY: dist ${PACKAGE}-${VERSION}.tar.gz ${PACKAGE}-${VERSION} \
 	clean-dist clean-dist-all

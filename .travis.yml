@@ -24,7 +24,6 @@ matrix:
     - env: EMACS=emacs-snapshot EMACS_PPA=ppa:cassou/emacs
 before_install:
   - pip install -q virtualenv tox
-  - pip install -q --requirement requirements.txt
 
   - if [ -n "$EMACS_PPA" ]; then
       sudo add-apt-repository -y "$EMACS_PPA";

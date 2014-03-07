@@ -17,12 +17,13 @@ ELPA_DIR = \
 	.cask/$(shell ${EMACS} -Q --batch --eval '(princ emacs-version)')/elpa
 # See: cask-elpa-dir
 
-VIRTUAL_EMACS = ${CASK} exec ${EMACS}
+VIRTUAL_EMACS = ${CASK} exec ${EMACS} -Q \
+--eval "(setq jedi:environment-root \"$(PWD)/$(ENV)\")"
 
 .PHONY : test test-1 tryout clean-elpa requirements env clean-env clean \
 	print-deps travis-ci doc
 
-TEST_DEPS = elpa requirements
+TEST_DEPS = elpa env
 test: ${TEST_DEPS}
 	${MAKE} test-1
 
@@ -38,7 +39,7 @@ compile: elpa clean-elc
 clean-elc:
 	rm -rf *.elc
 
-tryout: compile requirements
+tryout: compile env
 	${VIRTUAL_EMACS} -Q -L . -l tryout-jedi.el
 
 doc: elpa
@@ -57,7 +58,12 @@ ${ELPA_DIR}: Cask
 clean-elpa:
 	rm -rf ${ELPA_DIR}
 
-requirements: env
+requirements:
+	@echo "**************************************************************"
+	@echo "    ERROR: \"make requirements\" is obsolete!"
+	@echo "    Please run \"M-x jedi:make-env\" inside of your Emacs."
+	@echo "**************************************************************"
+	@exit 1
 
 install-jedi-dev:
 	${PIP_INSTALL} --upgrade ${JEDI_DEV_URL}
@@ -73,7 +79,7 @@ clean-el: clean-elpa clean-elc
 clean: clean-env clean-el
 	rm -rf .cask
 
-print-deps: elpa requirements
+print-deps: elpa env
 	@echo "----------------------- Dependencies -----------------------"
 	$(EMACS) --version
 	${VIRTUAL_EMACS} -Q -batch -l jedi.el -f jedi:print-jedi-version
@@ -106,7 +112,7 @@ ${JOBS}: job-%:
 	${MAKE} EMACS=$* clean-elc elpa
 	${MAKE} EMACS=$* ${MET_MAKEFLAGS} test-1
 
-test-all: requirements ${JOBS}
+test-all: env ${JOBS}
 
 
 

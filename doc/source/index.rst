@@ -433,6 +433,10 @@ Changelog
 v0.2.0 (WIP)
 ------------
 
+Since there is a backward incompatible change in installation method,
+the version is bumped from 0.1.x to 0.2.x (I am not using any
+versioning rule, though).
+
 - Python modules are installed via python-environment.el_ now.  No
   need to run ``make requirements`` outside of Emacs.
 - In fact, ``make requirements`` is obsolete now.  Running this
@@ -441,8 +445,11 @@ v0.2.0 (WIP)
 .. _python-environment.el: https://github.com/tkf/emacs-python-environment
 
 
-v0.1.3 (WIP)
-------------
+v0.1.3 (never released)
+-----------------------
+
+(This version is not released.  All changes below are available in
+v0.2.0.)
 
 Highlights:
 

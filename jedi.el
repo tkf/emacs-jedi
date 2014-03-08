@@ -1104,6 +1104,16 @@ need command line program ``virtualenv``.  If you have the command in
 an unusual location, use `python-environment-virtualenv' to specify the
 location.
 
+.. NOTE:: Jedi.el is installed in a virtual environment but it
+   does not mean Jedi.el cannot recognize the modules in virtual
+   environment you are using for your Python development.  Jedi
+   EPC server recognize the virtualenv it is in (i.e., the
+   environment variable ``VIRTUAL_ENV`` in your Emacs) and then
+   add modules in that environment to its ``sys.path``.  You can
+   also add ``--virtual-env PATH/TO/ENV`` to `jedi:server-args'
+   to include modules of virtual environment even you launch
+   Emacs outside of the virtual environment.
+
 .. NOTE:: It is highly recommended to use this command to install
    Python modules for Jedi.el.  You still can install Python
    modules used by Jedi.el manually.  However, you are then

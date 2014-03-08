@@ -32,7 +32,11 @@ Quick start
 ===========
 
 (1) **Install** Jedi.el via el-get, Marmalade or MELPA (see install_ for
-    more info).
+    more info), i.e., either
+
+    - ``M-x el-get-install RET jedi RET`` or
+    - ``M-x package-install RET jedi RET`` or
+    - (manually install...)
 
 (2) **Configure** Emacs using this::
 
@@ -42,14 +46,11 @@ Quick start
     If you install Jedi.el manually (BTW, you shouldn't!), you need to add
     more stuff to it.  See `manual install`_ section.
 
-(3) (NOTE: el-get user can skip this step)
-    **Setup Python requirements** in virtualenv by doing this in your shell::
+(3) **Setup Python requirements** by running
 
-      cd PATH/TO/JEDI
-      make requirements
+    - ``M-x jedi:make-env`` in Emacs
 
-    Typically, ``PATH/TO/JEDI/`` is something like ``~/.emacs.d/elpa/jedi-*/``.
-    If you prefer not using virtualenv, see install_ for more information.
+    (see also :el:symbol:`jedi:make-env`).
 
 
 Screenshots
@@ -88,6 +89,7 @@ Emacs
 - EPC_
 - deferred.el_ (> v0.3)
 - auto-complete_
+- python-environment.el_
 
 If your completion popup is broken when width of completion candidates
 is wide, try the newest version of popup.el_.
@@ -97,6 +99,13 @@ is wide, try the newest version of popup.el_.
 
 Jedi.el is currently tested against Emacs 24.3-devel, 24.2 and 23.1.
 
+Command line program
+--------------------
+
+- virtualenv_
+
+.. _virtualenv: http://www.virtualenv.org
+
 Python
 ------
 - Jedi_ (>= 0.6.0)
@@ -105,13 +114,6 @@ Python
 
 Jedi.el is tested against Python 2.6, 2.7 and 3.2.
 
-Optional dependencies for automatic installation:
--------------------------------------------------
-- virtualenv_
-- make
-
-.. _virtualenv: http://www.virtualenv.org
-
 
 Install
 =======
@@ -119,24 +121,32 @@ Install
 el-get
 ------
 
-The easiest way to install Jedi.el is to use el-get_:
-just do ``M-x el-get-install jedi``.
-You need to have virtualenv_ to automatically install Python module
-dependencies.  If your el-get does not have the recipes for Jedi.el
-yet, get them from `this pull request`_.
+If you have el-get_ installed, Jedi.el can be installed by these Emacs
+command:
+
+- ``M-x el-get-install RET jedi RET``
+- ``M-x jedi:make-env RET`` (see also :ref:`pyinstall`)
+
+Note that Python packages are *not* installed automatically anymore
+(there is `a plan <https://github.com/tkf/emacs-jedi/issues/134>`_ to
+fix it).
 
 .. _el-get: https://github.com/dimitri/el-get
-.. _this pull request: https://github.com/dimitri/el-get/pull/927
 
 
 package.el (Marmalade or MELPA)
 -------------------------------
 
-You can install Jedi.el using package.el interface from Marmalade_ or
-MELPA_.  As package.el does not support installing non-elisp packages,
-you need to install Python part manually (see the next section).
+You can install Jedi.el using package.el interface.
+You need to add Marmalade_ or MELPA_ to :el:symbol:`package-archives`.
 
-.. _marmalade: http://marmalade-repo.org/packages/jedi
+After you setup :el:symbol:`package-archives` properly, Jedi.el can be
+installed by these Emacs command:
+
+- ``M-x package-install RET jedi RET``
+- ``M-x jedi:make-env RET`` (see also :ref:`pyinstall`)
+
+.. _Marmalade: http://marmalade-repo.org
 .. _MELPA: http://melpa.milkbox.net
 
 Manual install
@@ -145,23 +155,37 @@ Manual install
 1. Install EPC_ and auto-complete_.
 2. Install Jedi.el.  Download the repository of Jedi.el and add it to
    `load-path`.
-3. Install Jedi_ and python-epc_ by
+3. Add ``(autoload 'jedi:setup "jedi" nil t)`` in your Emacs configuration.
+4. Run ``M-x jedi:make-env RET`` (see also :ref:`pyinstall`)
 
-   - ``make requirements`` (no need for root privileges [#]_) or
-   - ``pip install -r requirements.txt`` if you want to determine
-     where to install Python modules.  You need root privileges (i.e.,
-     ``sudo``) to install it in system directory.
+.. _pyinstall:
 
-4. Add ``(autoload 'jedi:setup "jedi" nil t)`` in your Emacs configuration.
+Python package installation
+---------------------------
 
-.. [#] You need virtualenv_ for ``make requirements``.  It installs
-   all requirements for Jedi EPC server in an isolated Python
-   environment in ``env/`` directory under the directory where jedi.el
-   locates.  Note that you don't need to worry about if you want to
-   use Jedi.el to complete modules in another virtualenv you made.
-   Jedi EPC server recognize the virtualenv it is in (i.e., the
-   environment variable ``VIRTUAL_ENV`` in your Emacs) and then add
-   modules in that environment to its ``sys.path``.
+As of Jedi.el v0.2.0, Python package installation is done by running
+Emacs command :el:symbol:`jedi:make-env`, i.e., typing
+``M-x jedi:make-env RET`` in Emacs.  The same command can be used to
+update Python packages used by Jedi.el.  So, running this command
+after updating Jedi.el each time is recommended.
+
+You can configure the location of the Python packages installed by
+:el:symbol:`jedi:make-env` by changing the following variables:
+
+- :el:symbol:`jedi:environment-root`
+- :el:symbol:`python-environment-directory`
+- :el:symbol:`python-environment-default-root-name`
+
+If you want to install Python packages manually, rather than using
+:el:symbol:`jedi:make-env`, see `Manually install Python packages`_
+below.
+
+Manually install Python packages
+--------------------------------
+
+If you want to install Python packages manually, make sure that
+:el:symbol:`jedi:server-command` points to the executable that can
+import required Python modules.
 
 
 Setup
@@ -216,6 +240,7 @@ Configuration
 .. el:variable:: jedi:complete-on-dot
 .. el:variable:: jedi:server-command
    :value: '("python" "JEDI:SOURCE-DIR/jediepcserver.py")
+.. el:variable:: jedi:environment-root
 .. el:variable:: jedi:server-args
 .. el:variable:: jedi:get-in-function-call-timeout
 .. el:variable:: jedi:get-in-function-call-delay
@@ -265,6 +290,7 @@ Command
 .. el:function:: anything-jedi-related-names
 
 .. el:package:: jedi
+.. el:function:: jedi:make-env
 .. el:function:: jedi:pop-to-epc-buffer
 .. el:function:: jedi:toggle-log-traceback
 .. el:function:: jedi:toggle-debug-server
@@ -344,20 +370,17 @@ FAQ
 How to update Python dependencies
 ---------------------------------
 
-.. note:: el-get user can just use ``M-x el-get-update RET jedi RET``
-   to update Emacs Lisp *and* Python dependencies.
+Simply run Emacs command ``M-x jedi:make-env``.
+See also :el:symbol:`jedi:make-env`.
 
-Simply run::
+.. warning:: The following command does not work as of version 0.2.0
+   anymore::
 
-  cd PATH/TO/JEDI
-  make requirements
+     make requirements
+     pip install -r PATH/TO/requirements.txt
 
-Or, if you install dependencies to somewhere else (i.e., you did not
-use the ``make`` command when you installed.), use ``pip`` directly.
-You may need ``sudo`` depending on the location you installed
-dependencies.::
-
-  pip install -r PATH/TO/requirements.txt
+.. warning:: (For el-get user) ``M-x el-get-update RET jedi RET``
+   will *not* update Python dependencies anymore.
 
 
 How to get traceback
@@ -409,6 +432,17 @@ EPC_ and deferred.el_ are perfect libraries to achieve this goal.
 Changelog
 =========
 
+v0.2.0 (WIP)
+------------
+
+- Python modules are installed via python-environment.el_ now.  No
+  need to run ``make requirements`` outside of Emacs.
+- In fact, ``make requirements`` is obsolete now.  Running this
+  command print some error message for help and exit with an error.
+
+.. _python-environment.el: https://github.com/tkf/emacs-python-environment
+
+
 v0.1.3 (WIP)
 ------------
 
@@ -438,7 +472,9 @@ v0.1.2 (2013-05-26)
 
 Highlights:
 
-- Package is available from Marmalade_.
+
+- Package is available from `Marmalade
+  <http://marmalade-repo.org/packages/jedi>`_.
 - Add imenu support (see :el:symbol:`jedi:install-imenu` and
   :el:symbol:`jedi:imenu-create-index-function`).
   Currently it is not on by default as it needs developmental version

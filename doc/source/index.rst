@@ -12,7 +12,7 @@
 
    * `Repository <https://github.com/tkf/emacs-jedi>`_ (at GitHub)
    * `Issue tracker <https://github.com/tkf/emacs-jedi/issues>`_ (at GitHub)
-   * `Travis CI <https://travis-ci.org/#!/tkf/emacs-jedi>`_ |build-status|
+   * `Travis CI <https://travis-ci.org/tkf/emacs-jedi>`_ |build-status|
 
    .. [#] There are
      `released version <http://tkf.github.io/emacs-jedi/released>`_  and

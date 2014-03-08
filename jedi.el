@@ -4,7 +4,7 @@
 
 ;; Author: Takafumi Arakaki <aka.tkf at gmail.com>
 ;; Package-Requires: ((epc "0.1.0") (auto-complete "1.4") (python-environment "0"))
-;; Version: 0.1.3alpha2
+;; Version: 0.2.0alpha1
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -43,7 +43,7 @@
   :group 'completion
   :prefix "jedi:")
 
-(defconst jedi:version "0.1.3alpha2")
+(defconst jedi:version "0.2.0alpha1")
 
 (defvar jedi:source-dir (if load-file-name
                             (file-name-directory load-file-name)

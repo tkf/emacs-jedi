@@ -228,8 +228,6 @@ Jedi.el and EIN simultaneously.
    :alt: Build Status
 
 
-.. ^- put some space after README.rst
-
 Configuration
 =============
 

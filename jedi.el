@@ -413,18 +413,25 @@ connection."
          ;; Same as `process-live-p' in Emacs >= 24:
          (memq (process-status proc) '(run open listen connect stop)))))
 
+(defmacro jedi:-with-run-on-error (body &rest run-on-error)
+  (declare (indent 1))
+  `(let ((something-happened t))
+     (unwind-protect
+         (prog1 ,body
+           (setq something-happened nil))
+       (when something-happened
+         ,@run-on-error))))
+
 (defun jedi:epc--start-epc (server-prog server-args)
   "Same as `epc:start-epc', but set query-on-exit flag for
 associated processes to nil."
-  (let ((mngr (condition-case err
+  (let ((mngr (jedi:-with-run-on-error
                   (epc:start-epc server-prog server-args)
-                ((debug error)
-                 (error "\
-You got the following error.  Running \"M-x jedi:make-env\" may solve \
-the problem especially if you haven't run the command yet and if the server \
-complains about module imports.
----
-%s" err)))))
+                (display-warning 'jedi "\
+Failed to start Jedi EPC server.
+*** You may need to run \"M-x jedi:make-env\". ***
+This could solve the problem especially if you haven't run the command yet
+and if the server complains about module imports." :error))))
     (set-process-query-on-exit-flag (epc:connection-process
                                      (epc:manager-connection mngr))
                                     nil)

@@ -48,9 +48,9 @@ Quick start
 
 (3) **Setup Python requirements** by running
 
-    - ``M-x jedi:make-env`` in Emacs
+    - ``M-x jedi:install-server`` in Emacs
 
-    (see also :el:symbol:`jedi:make-env`).
+    (see also :el:symbol:`jedi:install-server`).
 
 
 Screenshots
@@ -125,7 +125,7 @@ If you have el-get_ installed, Jedi.el can be installed by these Emacs
 command:
 
 - ``M-x el-get-install RET jedi RET``
-- ``M-x jedi:make-env RET`` (see also :ref:`pyinstall`)
+- ``M-x jedi:install-server RET`` (see also :ref:`pyinstall`)
 
 Note that Python packages are *not* installed automatically anymore
 (there is `a plan <https://github.com/tkf/emacs-jedi/issues/134>`_ to
@@ -144,7 +144,7 @@ After you setup :el:symbol:`package-archives` properly, Jedi.el can be
 installed by these Emacs command:
 
 - ``M-x package-install RET jedi RET``
-- ``M-x jedi:make-env RET`` (see also :ref:`pyinstall`)
+- ``M-x jedi:install-server RET`` (see also :ref:`pyinstall`)
 
 .. _Marmalade: http://marmalade-repo.org
 .. _MELPA: http://melpa.milkbox.net
@@ -156,7 +156,7 @@ Manual install
 2. Install Jedi.el.  Download the repository of Jedi.el and add it to
    `load-path`.
 3. Add ``(autoload 'jedi:setup "jedi" nil t)`` in your Emacs configuration.
-4. Run ``M-x jedi:make-env RET`` (see also :ref:`pyinstall`)
+4. Run ``M-x jedi:install-server RET`` (see also :ref:`pyinstall`)
 
 .. _pyinstall:
 
@@ -164,20 +164,20 @@ Python package installation
 ---------------------------
 
 As of Jedi.el v0.2.0, Python package installation is done by running
-Emacs command :el:symbol:`jedi:make-env`, i.e., typing
-``M-x jedi:make-env RET`` in Emacs.  The same command can be used to
+Emacs command :el:symbol:`jedi:install-server`, i.e., typing
+``M-x jedi:install-server RET`` in Emacs.  The same command can be used to
 update Python packages used by Jedi.el.  So, running this command
 after updating Jedi.el each time is recommended.
 
 You can configure the location of the Python packages installed by
-:el:symbol:`jedi:make-env` by changing the following variables:
+:el:symbol:`jedi:install-server` by changing the following variables:
 
 - :el:symbol:`jedi:environment-root`
 - :el:symbol:`python-environment-directory`
 - :el:symbol:`python-environment-default-root-name`
 
 If you want to install Python packages manually, rather than using
-:el:symbol:`jedi:make-env`, see `Manually install Python packages`_
+:el:symbol:`jedi:install-server`, see `Manually install Python packages`_
 below.
 
 Manually install Python packages
@@ -288,7 +288,7 @@ Command
 .. el:function:: anything-jedi-related-names
 
 .. el:package:: jedi
-.. el:function:: jedi:make-env
+.. el:function:: jedi:install-server
 .. el:function:: jedi:pop-to-epc-buffer
 .. el:function:: jedi:toggle-log-traceback
 .. el:function:: jedi:toggle-debug-server
@@ -368,8 +368,8 @@ FAQ
 How to update Python dependencies
 ---------------------------------
 
-Simply run Emacs command ``M-x jedi:make-env``.
-See also :el:symbol:`jedi:make-env`.
+Simply run Emacs command ``M-x jedi:install-server``.
+See also :el:symbol:`jedi:install-server`.
 
 .. warning:: The following command does not work as of version 0.2.0
    anymore::

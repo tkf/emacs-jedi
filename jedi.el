@@ -434,7 +434,7 @@ associated processes to nil."
                   (epc:start-epc server-prog server-args)
                 (display-warning 'jedi "\
 Failed to start Jedi EPC server.
-*** You may need to run \"M-x jedi:make-env\". ***
+*** You may need to run \"M-x jedi:install-server\". ***
 This could solve the problem especially if you haven't run the command yet
 and if the server complains about module imports." :error))))
     (set-process-query-on-exit-flag (epc:connection-process
@@ -1087,14 +1087,14 @@ what jedi can do."
 
 
 ;;; Virtualenv setup
-(defvar jedi:make-env--command
+(defvar jedi:install-server--command
   '("pip" "install"
     "jedi>=0.7.0"
     "epc>=0.0.4"
     "argparse"))
 
 ;;;###autoload
-(defun jedi:make-env ()
+(defun jedi:install-server ()
   "Install Jedi.el dependencies in ``~/.emacs.d/python-environments/default``.
 This is the default location.  You can modify the location by changing
 `jedi:environment-root' and/or `python-environment-directory'.  More
@@ -1120,17 +1120,17 @@ location.
    responsible for keeping Jedi.el and Python modules compatible."
   (interactive)
   (deferred:$
-    (python-environment-run jedi:make-env--command
+    (python-environment-run jedi:install-server--command
                             jedi:environment-root)
     (deferred:watch it
       (lambda (_)
         (setq-default jedi:server-command (jedi:-env-server-command))))))
 
 ;;;###autoload
-(defun jedi:make-env-block ()
-  "Blocking version `jedi:make-env'."
+(defun jedi:install-server-block ()
+  "Blocking version `jedi:install-server'."
   (prog1
-      (python-environment-run-block jedi:make-env--command
+      (python-environment-run-block jedi:install-server--command
                                     jedi:environment-root)
     (setq-default jedi:server-command (jedi:-env-server-command))))
 

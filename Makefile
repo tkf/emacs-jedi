@@ -61,7 +61,7 @@ clean-elpa:
 requirements:
 	@echo "**************************************************************"
 	@echo "    ERROR: \"make requirements\" is obsolete!"
-	@echo "    Please run \"M-x jedi:make-env\" inside of your Emacs."
+	@echo "    Please run \"M-x jedi:install-server\" inside of your Emacs."
 	@echo "**************************************************************"
 	@exit 1
 
@@ -70,7 +70,7 @@ install-jedi-dev:
 
 env: $(ENV)/$(BINDIR)/activate
 $(ENV)/$(BINDIR)/activate: elpa
-	${VIRTUAL_EMACS} -batch -l jedi.el -f "jedi:make-env-block"
+	${VIRTUAL_EMACS} -batch -l jedi.el -f "jedi:install-server-block"
 	test -f $@
 
 clean-env:

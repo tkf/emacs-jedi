@@ -1081,6 +1081,7 @@ what jedi can do."
     "epc>=0.0.4"
     "argparse"))
 
+;;;###autoload
 (defun jedi:make-env ()
   "Make virtualenv at ``env`` directory and install Python dependencies."
   (interactive)
@@ -1091,6 +1092,7 @@ what jedi can do."
       (lambda (_)
         (setq-default jedi:server-command (jedi:-env-server-command))))))
 
+;;;###autoload
 (defun jedi:make-env-block ()
   (prog1
       (python-environment-run-block jedi:make-env--command

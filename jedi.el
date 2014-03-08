@@ -61,7 +61,12 @@
 ;;; Configuration variables
 
 (defcustom jedi:environment-root nil
-  "Path to virtualenv.  If it is nil, `python-environment-root' is used."
+  "Name of Python environment to use.
+If it is nil, `python-environment-default-root-name' is used.
+
+You can specify a full path instead of a name (relative path).
+In that case, `python-environment-directory' is ignored and
+Python virtual environment is created at the specified path."
   :group 'jedi)
 
 (defun jedi:-env-server-command ()
@@ -1090,7 +1095,19 @@ what jedi can do."
 
 ;;;###autoload
 (defun jedi:make-env ()
-  "Make virtualenv at ``env`` directory and install Python dependencies."
+  "Install Jedi.el dependencies in ``~/.emacs.d/python-environments/default``.
+This is the default location.  You can modify the location by changing
+`jedi:environment-root' and/or `python-environment-directory'.  More
+specifically, Jedi.el will install Python modules under the directory
+``PYTHON-ENVIRONMENT-DIRECTORY/JEDI:ENVIRONMENT-ROOT``.  Note that you
+need command line program ``virtualenv``.  If you have the command in
+an unusual location, use `python-environment-virtualenv' to specify the
+location.
+
+.. NOTE:: It is highly recommended to use this command to install
+   Python modules for Jedi.el.  You still can install Python
+   modules used by Jedi.el manually.  However, you are then
+   responsible for keeping Jedi.el and Python modules compatible."
   (interactive)
   (deferred:$
     (python-environment-run jedi:make-env--command
@@ -1101,6 +1118,7 @@ what jedi can do."
 
 ;;;###autoload
 (defun jedi:make-env-block ()
+  "Blocking version `jedi:make-env'."
   (prog1
       (python-environment-run-block jedi:make-env--command
                                     jedi:environment-root)

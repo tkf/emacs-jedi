@@ -91,7 +91,7 @@ before-test: ${TEST_DEPS}
 	tox --notest
 
 travis-ci: print-deps test
-	test ! -d ~/.emacs.d/python-environments
+	test ! -d ~/.emacs.d/.python-environments
 
 
 

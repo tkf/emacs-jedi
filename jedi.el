@@ -1095,7 +1095,7 @@ what jedi can do."
 
 ;;;###autoload
 (defun jedi:install-server ()
-  "Install Jedi.el dependencies in ``~/.emacs.d/python-environments/default``.
+  "Install Jedi.el dependencies in ``~/.emacs.d/.python-environments/default``.
 This is the default location.  You can modify the location by changing
 `jedi:environment-root' and/or `python-environment-directory'.  More
 specifically, Jedi.el will install Python modules under the directory

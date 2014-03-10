@@ -17,29 +17,30 @@ ELPA_DIR = \
 	.cask/$(shell ${EMACS} -Q --batch --eval '(princ emacs-version)')/elpa
 # See: cask-elpa-dir
 
-VIRTUAL_EMACS = ${CASK} exec ${EMACS}
+VIRTUAL_EMACS = ${CASK} exec ${EMACS} -Q \
+--eval "(setq jedi:environment-root \"$(PWD)/$(ENV)\")"
 
 .PHONY : test test-1 tryout clean-elpa requirements env clean-env clean \
 	print-deps travis-ci doc
 
-TEST_DEPS = elpa requirements
+TEST_DEPS = elpa env
 test: ${TEST_DEPS}
 	${MAKE} test-1
 
 test-1:
-	${VIRTUAL_EMACS} -Q -batch \
+	${VIRTUAL_EMACS} -batch \
 		-L . -l test-jedi.el -f ert-run-tests-batch-and-exit
 	tox
 
 compile: elpa clean-elc
-	${VIRTUAL_EMACS} -Q -batch \
+	${VIRTUAL_EMACS} -batch \
 		-L . -f batch-byte-compile *.el
 
 clean-elc:
 	rm -rf *.elc
 
-tryout: compile requirements
-	${VIRTUAL_EMACS} -Q -L . -l tryout-jedi.el
+tryout: compile env
+	${VIRTUAL_EMACS} -L . -l tryout-jedi.el
 
 doc: elpa
 	make -C doc html
@@ -49,23 +50,30 @@ ensure-git:
 
 elpa: ${ELPA_DIR}
 ${ELPA_DIR}: Cask
-	mkdir -p $@
 	${CASK} install
+	test -d $@
 	touch $@
 
 
 clean-elpa:
 	rm -rf ${ELPA_DIR}
 
-requirements: env
-	${PIP_INSTALL} --requirement requirements.txt
+requirements:
+	@echo "**************************************************************"
+	@echo "    ERROR: \"make requirements\" is obsolete!"
+	@echo "    Please run \"M-x jedi:install-server\" inside of your Emacs."
+	@echo "    * If you are using el-get, please update it first."
+	@echo "      See also: https://github.com/dimitri/el-get/pull/1603"
+	@echo "**************************************************************"
+	@exit 1
 
 install-jedi-dev:
 	${PIP_INSTALL} --upgrade ${JEDI_DEV_URL}
 
 env: $(ENV)/$(BINDIR)/activate
-$(ENV)/$(BINDIR)/activate:
-	$(VIRTUALENV) $(ENV)
+$(ENV)/$(BINDIR)/activate: elpa
+	${VIRTUAL_EMACS} -batch -l jedi.el -f "jedi:install-server-block"
+	test -f $@
 
 clean-env:
 	rm -rf $(ENV)
@@ -74,10 +82,10 @@ clean-el: clean-elpa clean-elc
 clean: clean-env clean-el
 	rm -rf .cask
 
-print-deps: elpa requirements
+print-deps: elpa env
 	@echo "----------------------- Dependencies -----------------------"
 	$(EMACS) --version
-	${VIRTUAL_EMACS} -Q -batch -l jedi.el -f jedi:print-jedi-version
+	${VIRTUAL_EMACS} -batch -l jedi.el -f jedi:print-jedi-version
 	ls -d $(ENV)/*/python*/site-packages/*egg-info
 	@echo "------------------------------------------------------------"
 
@@ -85,6 +93,7 @@ before-test: ${TEST_DEPS}
 	tox --notest
 
 travis-ci: print-deps test
+	test ! -d ~/.emacs.d/.python-environments
 
 
 
@@ -107,7 +116,7 @@ ${JOBS}: job-%:
 	${MAKE} EMACS=$* clean-elc elpa
 	${MAKE} EMACS=$* ${MET_MAKEFLAGS} test-1
 
-test-all: requirements ${JOBS}
+test-all: env ${JOBS}
 
 
 
@@ -119,7 +128,7 @@ test-all: requirements ${JOBS}
 PACKAGE = jedi
 VERSION = $(shell grep ';; Version:' jedi.el | sed 's/^.* \([0-9].*\)$$/\1/')
 DIST_FILES = jedi-pkg.el jedi.el jediepcserver.py \
-	requirements.txt Makefile tryout-jedi.el
+	Makefile tryout-jedi.el
 
 .PHONY: dist ${PACKAGE}-${VERSION}.tar.gz ${PACKAGE}-${VERSION} \
 	clean-dist clean-dist-all

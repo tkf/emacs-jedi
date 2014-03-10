@@ -8,4 +8,5 @@
  (depends-on "ert")
  (depends-on "epc")
  (depends-on "auto-complete")
+ (depends-on "python-environment")
  (depends-on "mocker"))

@@ -62,6 +62,8 @@ requirements:
 	@echo "**************************************************************"
 	@echo "    ERROR: \"make requirements\" is obsolete!"
 	@echo "    Please run \"M-x jedi:install-server\" inside of your Emacs."
+	@echo "    * If you are using el-get, please update it first."
+	@echo "      See also: https://github.com/dimitri/el-get/pull/1603"
 	@echo "**************************************************************"
 	@exit 1
 

@@ -3,8 +3,8 @@
 ;; Copyright (C) 2012 Takafumi Arakaki
 
 ;; Author: Takafumi Arakaki <aka.tkf at gmail.com>
-;; Package-Requires: ((epc "0.1.0") (auto-complete "1.4"))
-;; Version: 0.1.3alpha2
+;; Package-Requires: ((epc "0.1.0") (auto-complete "1.4") (python-environment "0"))
+;; Version: 0.2.0alpha1
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -34,6 +34,7 @@
 
 (require 'epc)
 (require 'auto-complete)
+(require 'python-environment)
 (declare-function pos-tip-show "pos-tip")
 
 
@@ -42,7 +43,7 @@
   :group 'completion
   :prefix "jedi:")
 
-(defconst jedi:version "0.1.3alpha2")
+(defconst jedi:version "0.2.0alpha1")
 
 (defvar jedi:source-dir (if load-file-name
                             (file-name-directory load-file-name)
@@ -59,10 +60,22 @@
 
 ;;; Configuration variables
 
+(defcustom jedi:environment-root nil
+  "Name of Python environment to use.
+If it is nil, `python-environment-default-root-name' is used.
+
+You can specify a full path instead of a name (relative path).
+In that case, `python-environment-directory' is ignored and
+Python virtual environment is created at the specified path."
+  :group 'jedi)
+
+(defun jedi:-env-server-command ()
+  (let ((py (python-environment-bin "python" jedi:environment-root)))
+    (when py (list py jedi:server-script))))
+
 (defcustom jedi:server-command
-  (list (let ((py (expand-file-name "env/bin/python" jedi:source-dir)))
-          (if (file-exists-p py) py "python"))
-        jedi:server-script)
+  (or (jedi:-env-server-command)
+      (list "python" jedi:server-script))
   "Command used to run Jedi server.
 
 If you setup Jedi requirements using ``make requirements`` command,
@@ -405,10 +418,25 @@ connection."
          ;; Same as `process-live-p' in Emacs >= 24:
          (memq (process-status proc) '(run open listen connect stop)))))
 
+(defmacro jedi:-with-run-on-error (body &rest run-on-error)
+  (declare (indent 1))
+  `(let ((something-happened t))
+     (unwind-protect
+         (prog1 ,body
+           (setq something-happened nil))
+       (when something-happened
+         ,@run-on-error))))
+
 (defun jedi:epc--start-epc (server-prog server-args)
   "Same as `epc:start-epc', but set query-on-exit flag for
 associated processes to nil."
-  (let ((mngr (epc:start-epc server-prog server-args)))
+  (let ((mngr (jedi:-with-run-on-error
+                  (epc:start-epc server-prog server-args)
+                (display-warning 'jedi "\
+Failed to start Jedi EPC server.
+*** You may need to run \"M-x jedi:install-server\". ***
+This could solve the problem especially if you haven't run the command yet
+and if the server complains about module imports." :error))))
     (set-process-query-on-exit-flag (epc:connection-process
                                      (epc:manager-connection mngr))
                                     nil)
@@ -1056,6 +1084,55 @@ what jedi can do."
     (add-hook 'hack-local-variables-hook
               #'jedi:import-python-el-settings-setup nil t))
   (jedi-mode 1))
+
+
+;;; Virtualenv setup
+(defvar jedi:install-server--command
+  '("pip" "install"
+    "jedi>=0.7.0"
+    "epc>=0.0.4"
+    "argparse"))
+
+;;;###autoload
+(defun jedi:install-server ()
+  "Install Jedi.el dependencies in ``~/.emacs.d/.python-environments/default``.
+This is the default location.  You can modify the location by changing
+`jedi:environment-root' and/or `python-environment-directory'.  More
+specifically, Jedi.el will install Python modules under the directory
+``PYTHON-ENVIRONMENT-DIRECTORY/JEDI:ENVIRONMENT-ROOT``.  Note that you
+need command line program ``virtualenv``.  If you have the command in
+an unusual location, use `python-environment-virtualenv' to specify the
+location.
+
+.. NOTE:: Jedi.el is installed in a virtual environment but it
+   does not mean Jedi.el cannot recognize the modules in virtual
+   environment you are using for your Python development.  Jedi
+   EPC server recognize the virtualenv it is in (i.e., the
+   environment variable ``VIRTUAL_ENV`` in your Emacs) and then
+   add modules in that environment to its ``sys.path``.  You can
+   also add ``--virtual-env PATH/TO/ENV`` to `jedi:server-args'
+   to include modules of virtual environment even you launch
+   Emacs outside of the virtual environment.
+
+.. NOTE:: It is highly recommended to use this command to install
+   Python modules for Jedi.el.  You still can install Python
+   modules used by Jedi.el manually.  However, you are then
+   responsible for keeping Jedi.el and Python modules compatible."
+  (interactive)
+  (deferred:$
+    (python-environment-run jedi:install-server--command
+                            jedi:environment-root)
+    (deferred:watch it
+      (lambda (_)
+        (setq-default jedi:server-command (jedi:-env-server-command))))))
+
+;;;###autoload
+(defun jedi:install-server-block ()
+  "Blocking version `jedi:install-server'."
+  (prog1
+      (python-environment-run-block jedi:install-server--command
+                                    jedi:environment-root)
+    (setq-default jedi:server-command (jedi:-env-server-command))))
 
 
 ;;; Debugging

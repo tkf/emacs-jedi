@@ -2,7 +2,7 @@
  Jedi.el - Python auto-completion for Emacs
 ============================================
 
-.. sidebar:: Links:
+.. admonition:: Links:
 
    * `Documentation <http://tkf.github.io/emacs-jedi/released>`_
      (`developmental version <http://tkf.github.io/emacs-jedi/latest>`_)

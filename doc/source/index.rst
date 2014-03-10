@@ -239,6 +239,7 @@ Configuration
 .. el:variable:: jedi:server-command
    :value: '("python" "JEDI:SOURCE-DIR/jediepcserver.py")
 .. el:variable:: jedi:environment-root
+.. el:variable:: jedi:environment-virtualenv
 .. el:variable:: jedi:server-args
 .. el:variable:: jedi:get-in-function-call-timeout
 .. el:variable:: jedi:get-in-function-call-delay
@@ -379,6 +380,51 @@ See also :el:symbol:`jedi:install-server`.
 
 .. warning:: (For el-get user) ``M-x el-get-update RET jedi RET``
    will *not* update Python dependencies anymore.
+
+
+How to use Python 3 (or any other specific version of Python)
+-------------------------------------------------------------
+
+Using Python 3 as default Python, only in Jedi.el
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Set :el:symbol:`jedi:environment-virtualenv` and
+:el:symbol:`jedi:environment-virtualenv`, like this::
+
+   (setq jedi:environment-root "jedi")  ; or any other name you like
+   (setq jedi:environment-virtualenv
+         (append python-environment-virtualenv
+                 '("--python" "/PATH/TO/python3")))
+
+Or you can just set, for example, ``virtualenv3`` if it is run by
+Python 3::
+
+   (setq jedi:environment-virtualenv
+         (list "virtualenv3" "--system-site-packages"))
+
+.. note:: ``--system-site-packages`` is the default option in
+   :el:symbol:`python-environment-virtualenv` so you need it if you
+   want to the default behavior.  As to why it is the default, see the
+   discussion here: `tkf/emacs-python-environment#3
+   <https://github.com/tkf/emacs-python-environment/issues/3>`_.
+
+.. note:: In principle, you can modify
+   :el:symbol:`python-environment-virtualenv` and do not touch
+   :el:symbol:`jedi:environment-virtualenv` *and*
+   :el:symbol:`jedi:environment-root`.  However, it changes default
+   environment to use Python 3 so make sure all other Python packages
+   you need are compatible with Python 3.
+
+
+Automatically use appropriate Python version
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This can be done by making :el:symbol:`jedi:server-command`,
+:el:symbol:`jedi:environment-root` and
+:el:symbol:`jedi:environment-virtualenv` buffer local using
+:el:symbol:`make-local-variable` and set them appropriately.  See
+:el:symbol:`jedi:server-command` for more info.  You might need to use
+:el:symbol:`python-environment-bin`.
 
 
 How to get traceback

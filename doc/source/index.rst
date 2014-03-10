@@ -239,6 +239,7 @@ Configuration
 .. el:variable:: jedi:server-command
    :value: '("python" "JEDI:SOURCE-DIR/jediepcserver.py")
 .. el:variable:: jedi:environment-root
+.. el:variable:: jedi:environment-virtualenv
 .. el:variable:: jedi:server-args
 .. el:variable:: jedi:get-in-function-call-timeout
 .. el:variable:: jedi:get-in-function-call-delay

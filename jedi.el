@@ -86,10 +86,10 @@ to make this setting work."
       (list "python" jedi:server-script))
   "Command used to run Jedi server.
 
-If you setup Jedi requirements using ``make requirements`` command,
+If you setup Jedi requirements using `jedi:install-server' command,
 `jedi:server-command' should be automatically set to::
 
-    '(\"JEDI:SOURCE-DIR/env/bin/python\"
+    '(\"~/.emacs.d/.python-environments/default/bin/python\"
       \"JEDI:SOURCE-DIR/jediepcserver.py\")
 
 Otherwise, it should be set to::
@@ -101,6 +101,10 @@ If you want to use your favorite Python executable, set
 
     (setq jedi:server-command
           (list \"YOUR-FAVORITE-PYTHON\" jedi:server-script))
+
+Note that this method is not recommended anymore.  If you want to
+use a specific version of Python, setup
+`jedi:environment-virtualenv' variable appropriately.
 
 If you want to pass some arguments to the Jedi server command,
 use `jedi:server-command'."

@@ -112,7 +112,7 @@ Python
 - python-epc_
 - argparse (for Python 2.6)
 
-Jedi.el is tested against Python 2.6, 2.7 and 3.2.
+Jedi.el is tested against Python 2.6, 2.7, 3.2 and 3.3.
 
 
 Install

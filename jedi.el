@@ -69,6 +69,14 @@ In that case, `python-environment-directory' is ignored and
 Python virtual environment is created at the specified path."
   :group 'jedi)
 
+(defcustom jedi:environment-virtualenv nil
+  "``vittualenv`` command to use.  A list of string.
+If it is nil, `python-environment-virtualenv' is used instead.
+
+You must set non-`nil' value to `jedi:environment-root' in order
+to make this setting work."
+  :group 'jedi)
+
 (defun jedi:-env-server-command ()
   (let ((py (python-environment-bin "python" jedi:environment-root)))
     (when py (list py jedi:server-script))))
@@ -1121,7 +1129,8 @@ location.
   (interactive)
   (deferred:$
     (python-environment-run jedi:install-server--command
-                            jedi:environment-root)
+                            jedi:environment-root
+                            jedi:environment-virtualenv)
     (deferred:watch it
       (lambda (_)
         (setq-default jedi:server-command (jedi:-env-server-command))))))
@@ -1131,7 +1140,8 @@ location.
   "Blocking version `jedi:install-server'."
   (prog1
       (python-environment-run-block jedi:install-server--command
-                                    jedi:environment-root)
+                                    jedi:environment-root
+                                    jedi:environment-virtualenv)
     (setq-default jedi:server-command (jedi:-env-server-command))))
 
 

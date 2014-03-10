@@ -7,7 +7,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Jedi.el - Python auto-completion for Emacs &mdash; Emacs Jedi 0.1.3alpha2 documentation</title>
+    <title>Jedi.el - Python auto-completion for Emacs &mdash; Emacs Jedi 0.2.0alpha1 documentation</title>
     
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.1.3alpha2',
+        VERSION:     '0.2.0alpha1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,7 +24,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="Emacs Jedi 0.1.3alpha2 documentation" href="#" /> 
+    <link rel="top" title="Emacs Jedi 0.2.0alpha1 documentation" href="#" /> 
   </head>
   <body>
     <div class="related">
@@ -33,7 +33,7 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
-        <li><a href="#">Emacs Jedi 0.1.3alpha2 documentation</a> &raquo;</li> 
+        <li><a href="#">Emacs Jedi 0.2.0alpha1 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -54,7 +54,7 @@
 </li>
 <li><a class="reference external" href="https://github.com/tkf/emacs-jedi">Repository</a> (at GitHub)</li>
 <li><a class="reference external" href="https://github.com/tkf/emacs-jedi/issues">Issue tracker</a> (at GitHub)</li>
-<li><a class="reference external" href="https://travis-ci.org/#!/tkf/emacs-jedi">Travis CI</a> <a class="reference external" href="http://travis-ci.org/tkf/emacs-jedi"><img alt="Build Status" src="https://secure.travis-ci.org/tkf/emacs-jedi.png?branch=master" /></a></li>
+<li><a class="reference external" href="https://travis-ci.org/tkf/emacs-jedi">Travis CI</a> <a class="reference external" href="http://travis-ci.org/tkf/emacs-jedi"><img alt="Build Status" src="https://secure.travis-ci.org/tkf/emacs-jedi.png?branch=master" /></a></li>
 </ul>
 <table class="last docutils footnote" frame="void" id="id2" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
@@ -76,7 +76,12 @@ docstring, function arguments and code location.</p>
 <h2>Quick start<a class="headerlink" href="#quick-start" title="Permalink to this headline">¶</a></h2>
 <ol class="arabic">
 <li><p class="first"><strong>Install</strong> Jedi.el via el-get, Marmalade or MELPA (see <a class="reference internal" href="#install">install</a> for
-more info).</p>
+more info), i.e., either</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">M-x</span> <span class="pre">el-get-install</span> <span class="pre">RET</span> <span class="pre">jedi</span> <span class="pre">RET</span></tt> or</li>
+<li><tt class="docutils literal"><span class="pre">M-x</span> <span class="pre">package-install</span> <span class="pre">RET</span> <span class="pre">jedi</span> <span class="pre">RET</span></tt> or</li>
+<li>(manually install...)</li>
+</ul>
 </li>
 <li><p class="first"><strong>Configure</strong> Emacs using this:</p>
 <div class="highlight-cl"><div class="highlight"><pre><span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;python-mode-hook</span> <span class="ss">&#39;jedi:setup</span><span class="p">)</span>
@@ -86,14 +91,11 @@ more info).</p>
 <p>If you install Jedi.el manually (BTW, you shouldn&#8217;t!), you need to add
 more stuff to it.  See <a class="reference internal" href="#manual-install">manual install</a> section.</p>
 </li>
-<li><p class="first">(NOTE: el-get user can skip this step)
-<strong>Setup Python requirements</strong> in virtualenv by doing this in your shell:</p>
-<div class="highlight-cl"><div class="highlight"><pre><span class="nv">cd</span> <span class="nv">PATH/TO/JEDI</span>
-<span class="nv">make</span> <span class="nv">requirements</span>
-</pre></div>
-</div>
-<p>Typically, <tt class="docutils literal"><span class="pre">PATH/TO/JEDI/</span></tt> is something like <tt class="docutils literal"><span class="pre">~/.emacs.d/elpa/jedi-*/</span></tt>.
-If you prefer not using virtualenv, see <a class="reference internal" href="#install">install</a> for more information.</p>
+<li><p class="first"><strong>Setup Python requirements</strong> by running</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">M-x</span> <span class="pre">jedi:install-server</span></tt> in Emacs</li>
+</ul>
+<p>(see also <a class="reference internal" href="#jedi:install-server" title="jedi:install-server"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:install-server</span></tt></a>).</p>
 </li>
 </ol>
 </div>
@@ -131,10 +133,17 @@ Use <cite>jedi:tooltip-method</cite> to configure which style to use.</p>
 <li><a class="reference external" href="https://github.com/kiwanami/emacs-epc">EPC</a></li>
 <li><a class="reference external" href="https://github.com/kiwanami/emacs-deferred">deferred.el</a> (&gt; v0.3)</li>
 <li><a class="reference external" href="https://github.com/auto-complete/auto-complete">auto-complete</a></li>
+<li><a class="reference external" href="https://github.com/tkf/emacs-python-environment">python-environment.el</a></li>
 </ul>
 <p>If your completion popup is broken when width of completion candidates
 is wide, try the newest version of <a class="reference external" href="https://github.com/auto-complete/popup-el">popup.el</a>.</p>
 <p>Jedi.el is currently tested against Emacs 24.3-devel, 24.2 and 23.1.</p>
+</div>
+<div class="section" id="command-line-program">
+<h3>Command line program<a class="headerlink" href="#command-line-program" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><a class="reference external" href="http://www.virtualenv.org">virtualenv</a></li>
+</ul>
 </div>
 <div class="section" id="python">
 <h3>Python<a class="headerlink" href="#python" title="Permalink to this headline">¶</a></h3>
@@ -143,31 +152,33 @@ is wide, try the newest version of <a class="reference external" href="https://g
 <li><a class="reference external" href="https://github.com/tkf/python-epc">python-epc</a></li>
 <li>argparse (for Python 2.6)</li>
 </ul>
-<p>Jedi.el is tested against Python 2.6, 2.7 and 3.2.</p>
-</div>
-<div class="section" id="optional-dependencies-for-automatic-installation">
-<h3>Optional dependencies for automatic installation:<a class="headerlink" href="#optional-dependencies-for-automatic-installation" title="Permalink to this headline">¶</a></h3>
-<ul class="simple">
-<li><a class="reference external" href="http://www.virtualenv.org">virtualenv</a></li>
-<li>make</li>
-</ul>
+<p>Jedi.el is tested against Python 2.6, 2.7, 3.2 and 3.3.</p>
 </div>
 </div>
 <div class="section" id="install">
 <h2>Install<a class="headerlink" href="#install" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="el-get">
 <h3>el-get<a class="headerlink" href="#el-get" title="Permalink to this headline">¶</a></h3>
-<p>The easiest way to install Jedi.el is to use <a class="reference external" href="https://github.com/dimitri/el-get">el-get</a>:
-just do <tt class="docutils literal"><span class="pre">M-x</span> <span class="pre">el-get-install</span> <span class="pre">jedi</span></tt>.
-You need to have <a class="reference external" href="http://www.virtualenv.org">virtualenv</a> to automatically install Python module
-dependencies.  If your el-get does not have the recipes for Jedi.el
-yet, get them from <a class="reference external" href="https://github.com/dimitri/el-get/pull/927">this pull request</a>.</p>
+<p>If you have <a class="reference external" href="https://github.com/dimitri/el-get">el-get</a> installed, Jedi.el can be installed by these Emacs
+command:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">M-x</span> <span class="pre">el-get-install</span> <span class="pre">RET</span> <span class="pre">jedi</span> <span class="pre">RET</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">M-x</span> <span class="pre">jedi:install-server</span> <span class="pre">RET</span></tt> (see also <a class="reference internal" href="#pyinstall"><em>Python package installation</em></a>)</li>
+</ul>
+<p>Note that Python packages are <em>not</em> installed automatically anymore
+(there is <a class="reference external" href="https://github.com/tkf/emacs-jedi/issues/134">a plan</a> to
+fix it).</p>
 </div>
 <div class="section" id="package-el-marmalade-or-melpa">
 <h3>package.el (Marmalade or MELPA)<a class="headerlink" href="#package-el-marmalade-or-melpa" title="Permalink to this headline">¶</a></h3>
-<p>You can install Jedi.el using package.el interface from <a class="reference external" href="http://marmalade-repo.org/packages/jedi">Marmalade</a> or
-<a class="reference external" href="http://melpa.milkbox.net">MELPA</a>.  As package.el does not support installing non-elisp packages,
-you need to install Python part manually (see the next section).</p>
+<p>You can install Jedi.el using package.el interface.
+You need to add <a class="reference external" href="http://marmalade-repo.org">Marmalade</a> or <a class="reference external" href="http://melpa.milkbox.net">MELPA</a> to <tt class="xref el el-symbol docutils literal"><span class="pre">package-archives</span></tt>.</p>
+<p>After you setup <tt class="xref el el-symbol docutils literal"><span class="pre">package-archives</span></tt> properly, Jedi.el can be
+installed by these Emacs command:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">M-x</span> <span class="pre">package-install</span> <span class="pre">RET</span> <span class="pre">jedi</span> <span class="pre">RET</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">M-x</span> <span class="pre">jedi:install-server</span> <span class="pre">RET</span></tt> (see also <a class="reference internal" href="#pyinstall"><em>Python package installation</em></a>)</li>
+</ul>
 </div>
 <div class="section" id="manual-install">
 <h3>Manual install<a class="headerlink" href="#manual-install" title="Permalink to this headline">¶</a></h3>
@@ -175,28 +186,33 @@ you need to install Python part manually (see the next section).</p>
 <li>Install <a class="reference external" href="https://github.com/kiwanami/emacs-epc">EPC</a> and <a class="reference external" href="https://github.com/auto-complete/auto-complete">auto-complete</a>.</li>
 <li>Install Jedi.el.  Download the repository of Jedi.el and add it to
 <cite>load-path</cite>.</li>
-<li>Install <a class="reference external" href="https://github.com/davidhalter/jedi">Jedi</a> and <a class="reference external" href="https://github.com/tkf/python-epc">python-epc</a> by<ul>
-<li><tt class="docutils literal"><span class="pre">make</span> <span class="pre">requirements</span></tt> (no need for root privileges <a class="footnote-reference" href="#id5" id="id4">[2]</a>) or</li>
-<li><tt class="docutils literal"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-r</span> <span class="pre">requirements.txt</span></tt> if you want to determine
-where to install Python modules.  You need root privileges (i.e.,
-<tt class="docutils literal"><span class="pre">sudo</span></tt>) to install it in system directory.</li>
-</ul>
-</li>
 <li>Add <tt class="docutils literal"><span class="pre">(autoload</span> <span class="pre">'jedi:setup</span> <span class="pre">&quot;jedi&quot;</span> <span class="pre">nil</span> <span class="pre">t)</span></tt> in your Emacs configuration.</li>
+<li>Run <tt class="docutils literal"><span class="pre">M-x</span> <span class="pre">jedi:install-server</span> <span class="pre">RET</span></tt> (see also <a class="reference internal" href="#pyinstall"><em>Python package installation</em></a>)</li>
 </ol>
-<table class="docutils footnote" frame="void" id="id5" rules="none">
-<colgroup><col class="label" /><col /></colgroup>
-<tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id4">[2]</a></td><td>You need <a class="reference external" href="http://www.virtualenv.org">virtualenv</a> for <tt class="docutils literal"><span class="pre">make</span> <span class="pre">requirements</span></tt>.  It installs
-all requirements for Jedi EPC server in an isolated Python
-environment in <tt class="docutils literal"><span class="pre">env/</span></tt> directory under the directory where jedi.el
-locates.  Note that you don&#8217;t need to worry about if you want to
-use Jedi.el to complete modules in another virtualenv you made.
-Jedi EPC server recognize the virtualenv it is in (i.e., the
-environment variable <tt class="docutils literal"><span class="pre">VIRTUAL_ENV</span></tt> in your Emacs) and then add
-modules in that environment to its <tt class="docutils literal"><span class="pre">sys.path</span></tt>.</td></tr>
-</tbody>
-</table>
+</div>
+<div class="section" id="python-package-installation">
+<span id="pyinstall"></span><h3>Python package installation<a class="headerlink" href="#python-package-installation" title="Permalink to this headline">¶</a></h3>
+<p>As of Jedi.el v0.2.0, Python package installation is done by running
+Emacs command <a class="reference internal" href="#jedi:install-server" title="jedi:install-server"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:install-server</span></tt></a>, i.e., typing
+<tt class="docutils literal"><span class="pre">M-x</span> <span class="pre">jedi:install-server</span> <span class="pre">RET</span></tt> in Emacs.  The same command can be used to
+update Python packages used by Jedi.el.  So, running this command
+after updating Jedi.el each time is recommended.</p>
+<p>You can configure the location of the Python packages installed by
+<a class="reference internal" href="#jedi:install-server" title="jedi:install-server"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:install-server</span></tt></a> by changing the following variables:</p>
+<ul class="simple">
+<li><a class="reference internal" href="#jedi:environment-root" title="jedi:environment-root"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:environment-root</span></tt></a></li>
+<li><tt class="xref el el-symbol docutils literal"><span class="pre">python-environment-directory</span></tt></li>
+<li><tt class="xref el el-symbol docutils literal"><span class="pre">python-environment-default-root-name</span></tt></li>
+</ul>
+<p>If you want to install Python packages manually, rather than using
+<a class="reference internal" href="#jedi:install-server" title="jedi:install-server"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:install-server</span></tt></a>, see <a class="reference internal" href="#manually-install-python-packages">Manually install Python packages</a>
+below.</p>
+</div>
+<div class="section" id="manually-install-python-packages">
+<h3>Manually install Python packages<a class="headerlink" href="#manually-install-python-packages" title="Permalink to this headline">¶</a></h3>
+<p>If you want to install Python packages manually, make sure that
+<a class="reference internal" href="#jedi:server-command" title="jedi:server-command"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:server-command</span></tt></a> points to the executable that can
+import required Python modules.</p>
 </div>
 </div>
 <div class="section" id="setup">
@@ -261,9 +277,9 @@ To make this option work, you need to use <a class="reference internal" href="#j
 <dt id="jedi:server-command">
 <em class="property">variable </em><big>(</big><tt class="descname">jedi:server-command </tt><em>'(&quot;python&quot; &quot;JEDI:SOURCE-DIR/jediepcserver.py&quot;)</em><big>)</big><a class="headerlink" href="#jedi:server-command" title="Permalink to this definition">¶</a></dt>
 <dd><p>Command used to run Jedi server.</p>
-<p>If you setup Jedi requirements using <tt class="docutils literal"><span class="pre">make</span> <span class="pre">requirements</span></tt> command,
+<p>If you setup Jedi requirements using <a class="reference internal" href="#jedi:install-server" title="jedi:install-server"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:install-server</span></tt></a> command,
 <a class="reference internal" href="#jedi:server-command" title="jedi:server-command"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:server-command</span></tt></a> should be automatically set to:</p>
-<div class="highlight-cl"><div class="highlight"><pre><span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;JEDI:SOURCE-DIR/env/bin/python&quot;</span>
+<div class="highlight-cl"><div class="highlight"><pre><span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;~/.emacs.d/.python-environments/default/bin/python&quot;</span>
   <span class="s">&quot;JEDI:SOURCE-DIR/jediepcserver.py&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -277,8 +293,30 @@ To make this option work, you need to use <a class="reference internal" href="#j
       <span class="p">(</span><span class="nb">list</span> <span class="s">&quot;YOUR-FAVORITE-PYTHON&quot;</span> <span class="nv">jedi:server-script</span><span class="p">))</span>
 </pre></div>
 </div>
+<p>Note that this method is not recommended anymore.  If you want to
+use a specific version of Python, setup
+<a class="reference internal" href="#jedi:environment-virtualenv" title="jedi:environment-virtualenv"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:environment-virtualenv</span></tt></a> variable appropriately.</p>
 <p>If you want to pass some arguments to the Jedi server command,
 use <a class="reference internal" href="#jedi:server-command" title="jedi:server-command"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:server-command</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="variable">
+<dt id="jedi:environment-root">
+<em class="property">variable </em><big>(</big><tt class="descname">jedi:environment-root </tt><em>nil</em><big>)</big><a class="headerlink" href="#jedi:environment-root" title="Permalink to this definition">¶</a></dt>
+<dd><p>Name of Python environment to use.
+If it is nil, <tt class="xref el el-symbol docutils literal"><span class="pre">python-environment-default-root-name</span></tt> is used.</p>
+<p>You can specify a full path instead of a name (relative path).
+In that case, <tt class="xref el el-symbol docutils literal"><span class="pre">python-environment-directory</span></tt> is ignored and
+Python virtual environment is created at the specified path.</p>
+</dd></dl>
+
+<dl class="variable">
+<dt id="jedi:environment-virtualenv">
+<em class="property">variable </em><big>(</big><tt class="descname">jedi:environment-virtualenv </tt><em>nil</em><big>)</big><a class="headerlink" href="#jedi:environment-virtualenv" title="Permalink to this definition">¶</a></dt>
+<dd><p><tt class="docutils literal"><span class="pre">vittualenv</span></tt> command to use.  A list of string.
+If it is nil, <tt class="xref el el-symbol docutils literal"><span class="pre">python-environment-virtualenv</span></tt> is used instead.</p>
+<p>You must set non-<tt class="xref el el-symbol docutils literal"><span class="pre">nil</span></tt> value to <a class="reference internal" href="#jedi:environment-root" title="jedi:environment-root"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:environment-root</span></tt></a> in order
+to make this setting work.</p>
 </dd></dl>
 
 <dl class="variable">
@@ -484,8 +522,9 @@ INDEX-th result.</p>
 <dd><p>Setup recommended keybinds.</p>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
-<p class="last">Use of this value is obsolete now.
-As of 0.1.3, jedi.el has default keybinds.</p>
+<p class="last">Use of this value is obsolete now.  As of 0.1.3,
+jedi.el has default keybinds, which are different than these. See also
+<tt class="xref el el-symbol docutils literal"><span class="pre">jedi-mode</span></tt>.</p>
 </div>
 <div class="admonition-default-keybinds admonition">
 <p class="first admonition-title">Default keybinds</p>
@@ -495,7 +534,7 @@ As of 0.1.3, jedi.el has default keybinds.</p>
 <dt><tt class="docutils literal"><span class="pre">C-.</span></tt> <span class="classifier-delimiter">:</span> <span class="classifier">= <a class="reference internal" href="#jedi:key-goto-definition" title="jedi:key-goto-definition"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:key-goto-definition</span></tt></a></span></dt>
 <dd>Goto the definition of the object at point. (<a class="reference internal" href="#jedi:goto-definition" title="jedi:goto-definition"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:goto-definition</span></tt></a>)</dd>
 <dt><tt class="docutils literal"><span class="pre">C-c</span> <span class="pre">d</span></tt> <span class="classifier-delimiter">:</span> <span class="classifier">= <a class="reference internal" href="#jedi:key-show-doc" title="jedi:key-show-doc"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:key-show-doc</span></tt></a></span></dt>
-<dd>Goto the definition of the object at point. (<a class="reference internal" href="#jedi:show-doc" title="jedi:show-doc"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:show-doc</span></tt></a>)</dd>
+<dd>Show the documentation of the object at point. (<a class="reference internal" href="#jedi:show-doc" title="jedi:show-doc"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:show-doc</span></tt></a>)</dd>
 <dt><tt class="docutils literal"><span class="pre">C-c</span> <span class="pre">r</span></tt> <span class="classifier-delimiter">:</span> <span class="classifier">= <a class="reference internal" href="#jedi:key-related-names" title="jedi:key-related-names"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:key-related-names</span></tt></a></span></dt>
 <dd>Find related names of the object at point.
 (<a class="reference internal" href="#helm-jedi-related-names" title="helm-jedi-related-names"><tt class="xref el el-symbol docutils literal"><span class="pre">helm-jedi-related-names</span></tt></a> / <a class="reference internal" href="#anything-jedi-related-names" title="anything-jedi-related-names"><tt class="xref el el-symbol docutils literal"><span class="pre">anything-jedi-related-names</span></tt></a>)</dd>
@@ -646,6 +685,38 @@ INDEX-th result.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="jedi:install-server">
+<em class="property">function </em><tt class="descname">jedi:install-server</tt><a class="headerlink" href="#jedi:install-server" title="Permalink to this definition">¶</a></dt>
+<dd><p>Install Jedi.el dependencies in <tt class="docutils literal"><span class="pre">~/.emacs.d/.python-environments/default</span></tt>.
+This is the default location.  You can modify the location by changing
+<a class="reference internal" href="#jedi:environment-root" title="jedi:environment-root"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:environment-root</span></tt></a> and/or <tt class="xref el el-symbol docutils literal"><span class="pre">python-environment-directory</span></tt>.  More
+specifically, Jedi.el will install Python modules under the directory
+<tt class="docutils literal"><span class="pre">PYTHON-ENVIRONMENT-DIRECTORY/JEDI:ENVIRONMENT-ROOT</span></tt>.  Note that you
+need command line program <tt class="docutils literal"><span class="pre">virtualenv</span></tt>.  If you have the command in
+an unusual location, use <tt class="xref el el-symbol docutils literal"><span class="pre">python-environment-virtualenv</span></tt> to specify the
+location.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Jedi.el is installed in a virtual environment but it
+does not mean Jedi.el cannot recognize the modules in virtual
+environment you are using for your Python development.  Jedi
+EPC server recognize the virtualenv it is in (i.e., the
+environment variable <tt class="docutils literal"><span class="pre">VIRTUAL_ENV</span></tt> in your Emacs) and then
+add modules in that environment to its <tt class="docutils literal"><span class="pre">sys.path</span></tt>.  You can
+also add <tt class="docutils literal"><span class="pre">--virtual-env</span> <span class="pre">PATH/TO/ENV</span></tt> to <a class="reference internal" href="#jedi:server-args" title="jedi:server-args"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:server-args</span></tt></a>
+to include modules of virtual environment even you launch
+Emacs outside of the virtual environment.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">It is highly recommended to use this command to install
+Python modules for Jedi.el.  You still can install Python
+modules used by Jedi.el manually.  However, you are then
+responsible for keeping Jedi.el and Python modules compatible.</p>
+</div>
+</dd></dl>
+
+<dl class="function">
 <dt id="jedi:pop-to-epc-buffer">
 <em class="property">function </em><tt class="descname">jedi:pop-to-epc-buffer</tt><a class="headerlink" href="#jedi:pop-to-epc-buffer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Open the buffer associated with EPC server process.
@@ -707,7 +778,7 @@ Paste the result of this function in bug report.</p>
 investigate the problem by yourself.  Here is some checklist.</p>
 <ol class="arabic">
 <li><p class="first">You can try Jedi.el without installing it, by running
-<tt class="docutils literal"><span class="pre">make</span> <span class="pre">tryout</span></tt> if you have <a class="reference external" href="https://github.com/rejeep/carton">carton</a> installed.  This will
+<tt class="docutils literal"><span class="pre">make</span> <span class="pre">tryout</span></tt> if you have <a class="reference external" href="https://github.com/cask/cask">cask</a> installed.  This will
 install requirements for Jedi.el separated from your local setup in
 <tt class="docutils literal"><span class="pre">.emacs.d</span></tt>.  You can also check the configuration file
 <a class="reference external" href="https://github.com/tkf/emacs-jedi/blob/master/tryout-jedi.el">tryout-jedi.el</a> to see a minimum working configuration.  This is
@@ -717,16 +788,15 @@ trouble setting up Jedi.el, compare your configuration file and
 <p>If you get some error during <tt class="docutils literal"><span class="pre">make</span> <span class="pre">tryout</span></tt> or any other <tt class="docutils literal"><span class="pre">make</span></tt>
 tasks, checking <tt class="docutils literal"><span class="pre">elpa/install.log</span></tt> may help you finding the
 problem.</p>
-<p>If you install <a class="reference external" href="https://github.com/rejeep/carton">carton</a> in a different place or you don&#8217;t add it to
+<p>If you install <a class="reference external" href="https://github.com/cask/cask">cask</a> in a different place or you don&#8217;t add it to
 the <tt class="docutils literal"><span class="pre">$PATH</span></tt>, you can call <tt class="docutils literal"><span class="pre">make</span></tt> like this:
-<tt class="docutils literal"><span class="pre">make</span> <span class="pre">CARTON=PATH/TO/bin/carton</span> <span class="pre">tryout</span></tt>.
-Typically, <tt class="docutils literal"><span class="pre">PATH/TO/bin/carton</span></tt> is <tt class="docutils literal"><span class="pre">~/.carton/bin/carton</span></tt>.</p>
-<p>If you are too lazy to go to <a class="reference external" href="https://github.com/rejeep/carton">carton</a> site to checkout how to
+<tt class="docutils literal"><span class="pre">make</span> <span class="pre">CASK=PATH/TO/bin/cask</span> <span class="pre">tryout</span></tt>.
+Typically, <tt class="docutils literal"><span class="pre">PATH/TO/bin/cask</span></tt> is <tt class="docutils literal"><span class="pre">~/.cask/bin/cask</span></tt>.</p>
+<p>If you are too lazy to go to <a class="reference external" href="https://github.com/cask/cask">cask</a> site to checkout how to
 install it, here is what you need to do:</p>
-<div class="highlight-cl"><pre>curl -fsSkL https://raw.github.com/rejeep/carton/master/go | sh
-make CARTON=$HOME/.carton/bin/carton tryout</pre>
+<div class="highlight-cl"><pre>curl -fsSkL https://raw.github.com/cask/cask/master/go | python
+make CASK=$HOME/.cask/bin/cask tryout</pre>
 </div>
-<p>Note that this <a class="reference external" href="https://github.com/rejeep/carton">carton</a> is different from <a class="reference external" href="https://github.com/miyagawa/carton">the one for Perl</a>.</p>
 </li>
 <li><p class="first">To make sure that jedi.el is running correctly, you can
 do <tt class="docutils literal"><span class="pre">M-x</span> <span class="pre">jedi:show-jedi-version</span></tt>.  It will show the versions
@@ -762,22 +832,66 @@ from Marmalade, you should read <a class="reference external" href="http://tkf.g
 <h2>FAQ<a class="headerlink" href="#faq" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="how-to-update-python-dependencies">
 <h3>How to update Python dependencies<a class="headerlink" href="#how-to-update-python-dependencies" title="Permalink to this headline">¶</a></h3>
+<p>Simply run Emacs command <tt class="docutils literal"><span class="pre">M-x</span> <span class="pre">jedi:install-server</span></tt>.
+See also <a class="reference internal" href="#jedi:install-server" title="jedi:install-server"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:install-server</span></tt></a>.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p>The following command does not work as of version 0.2.0
+anymore:</p>
+<div class="last highlight-cl"><div class="highlight"><pre><span class="nv">make</span> <span class="nv">requirements</span>
+<span class="nv">pip</span> <span class="nv">install</span> <span class="nv">-r</span> <span class="nv">PATH/TO/requirements.txt</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">(For el-get user) <tt class="docutils literal"><span class="pre">M-x</span> <span class="pre">el-get-update</span> <span class="pre">RET</span> <span class="pre">jedi</span> <span class="pre">RET</span></tt>
+will <em>not</em> update Python dependencies anymore.</p>
+</div>
+</div>
+<div class="section" id="how-to-use-python-3-or-any-other-specific-version-of-python">
+<h3>How to use Python 3 (or any other specific version of Python)<a class="headerlink" href="#how-to-use-python-3-or-any-other-specific-version-of-python" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="using-python-3-as-default-python-only-in-jedi-el">
+<h4>Using Python 3 as default Python, only in Jedi.el<a class="headerlink" href="#using-python-3-as-default-python-only-in-jedi-el" title="Permalink to this headline">¶</a></h4>
+<p>Set <a class="reference internal" href="#jedi:environment-virtualenv" title="jedi:environment-virtualenv"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:environment-virtualenv</span></tt></a> and
+<a class="reference internal" href="#jedi:environment-virtualenv" title="jedi:environment-virtualenv"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:environment-virtualenv</span></tt></a>, like this:</p>
+<div class="highlight-cl"><div class="highlight"><pre><span class="p">(</span><span class="k">setq</span> <span class="nv">jedi:environment-root</span> <span class="s">&quot;jedi&quot;</span><span class="p">)</span>  <span class="c1">; or any other name you like</span>
+<span class="p">(</span><span class="k">setq</span> <span class="nv">jedi:environment-virtualenv</span>
+      <span class="p">(</span><span class="nb">append</span> <span class="nv">python-environment-virtualenv</span>
+              <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;--python&quot;</span> <span class="s">&quot;/PATH/TO/python3&quot;</span><span class="p">)))</span>
+</pre></div>
+</div>
+<p>Or you can just set, for example, <tt class="docutils literal"><span class="pre">virtualenv3</span></tt> if it is run by
+Python 3:</p>
+<div class="highlight-cl"><div class="highlight"><pre><span class="p">(</span><span class="k">setq</span> <span class="nv">jedi:environment-virtualenv</span>
+      <span class="p">(</span><span class="nb">list</span> <span class="s">&quot;virtualenv3&quot;</span> <span class="s">&quot;--system-site-packages&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">el-get user can just use <tt class="docutils literal"><span class="pre">M-x</span> <span class="pre">el-get-update</span> <span class="pre">RET</span> <span class="pre">jedi</span> <span class="pre">RET</span></tt>
-to update Emacs Lisp <em>and</em> Python dependencies.</p>
+<p class="last"><tt class="docutils literal"><span class="pre">--system-site-packages</span></tt> is the default option in
+<tt class="xref el el-symbol docutils literal"><span class="pre">python-environment-virtualenv</span></tt> so you need it if you
+want to the default behavior.  As to why it is the default, see the
+discussion here: <a class="reference external" href="https://github.com/tkf/emacs-python-environment/issues/3">tkf/emacs-python-environment#3</a>.</p>
 </div>
-<p>Simply run:</p>
-<div class="highlight-cl"><div class="highlight"><pre><span class="nv">cd</span> <span class="nv">PATH/TO/JEDI</span>
-<span class="nv">make</span> <span class="nv">requirements</span>
-</pre></div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">In principle, you can modify
+<tt class="xref el el-symbol docutils literal"><span class="pre">python-environment-virtualenv</span></tt> and do not touch
+<a class="reference internal" href="#jedi:environment-virtualenv" title="jedi:environment-virtualenv"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:environment-virtualenv</span></tt></a> <em>and</em>
+<a class="reference internal" href="#jedi:environment-root" title="jedi:environment-root"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:environment-root</span></tt></a>.  However, it changes default
+environment to use Python 3 so make sure all other Python packages
+you need are compatible with Python 3.</p>
 </div>
-<p>Or, if you install dependencies to somewhere else (i.e., you did not
-use the <tt class="docutils literal"><span class="pre">make</span></tt> command when you installed.), use <tt class="docutils literal"><span class="pre">pip</span></tt> directly.
-You may need <tt class="docutils literal"><span class="pre">sudo</span></tt> depending on the location you installed
-dependencies.:</p>
-<div class="highlight-cl"><div class="highlight"><pre><span class="nv">pip</span> <span class="nv">install</span> <span class="nv">-r</span> <span class="nv">PATH/TO/requirements.txt</span>
-</pre></div>
+</div>
+<div class="section" id="automatically-use-appropriate-python-version">
+<h4>Automatically use appropriate Python version<a class="headerlink" href="#automatically-use-appropriate-python-version" title="Permalink to this headline">¶</a></h4>
+<p>This can be done by making <a class="reference internal" href="#jedi:server-command" title="jedi:server-command"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:server-command</span></tt></a>,
+<a class="reference internal" href="#jedi:environment-root" title="jedi:environment-root"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:environment-root</span></tt></a> and
+<a class="reference internal" href="#jedi:environment-virtualenv" title="jedi:environment-virtualenv"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:environment-virtualenv</span></tt></a> buffer local using
+<tt class="xref el el-symbol docutils literal"><span class="pre">make-local-variable</span></tt> and set them appropriately.  See
+<a class="reference internal" href="#jedi:server-command" title="jedi:server-command"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:server-command</span></tt></a> for more info.  You might need to use
+<tt class="xref el el-symbol docutils literal"><span class="pre">python-environment-bin</span></tt>.</p>
 </div>
 </div>
 <div class="section" id="how-to-get-traceback">
@@ -828,8 +942,22 @@ Emacs to edit something, not to wait some random lisp program to finish.
 </div>
 <div class="section" id="changelog">
 <h2>Changelog<a class="headerlink" href="#changelog" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="v0-1-3-wip">
-<h3>v0.1.3 (WIP)<a class="headerlink" href="#v0-1-3-wip" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="v0-2-0-wip">
+<h3>v0.2.0 (WIP)<a class="headerlink" href="#v0-2-0-wip" title="Permalink to this headline">¶</a></h3>
+<p>Since there is a backward incompatible change in installation method,
+the version is bumped from 0.1.x to 0.2.x (I am not using any
+versioning rule, though).</p>
+<ul class="simple">
+<li>Python modules are installed via <a class="reference external" href="https://github.com/tkf/emacs-python-environment">python-environment.el</a> now.  No
+need to run <tt class="docutils literal"><span class="pre">make</span> <span class="pre">requirements</span></tt> outside of Emacs.</li>
+<li>In fact, <tt class="docutils literal"><span class="pre">make</span> <span class="pre">requirements</span></tt> is obsolete now.  Running this
+command print some error message for help and exit with an error.</li>
+</ul>
+</div>
+<div class="section" id="v0-1-3-never-released">
+<h3>v0.1.3 (never released)<a class="headerlink" href="#v0-1-3-never-released" title="Permalink to this headline">¶</a></h3>
+<p>(This version is not released.  All changes below are available in
+v0.2.0.)</p>
 <p>Highlights:</p>
 <ul class="simple">
 <li>Add <a class="reference internal" href="#jedi:toggle-log-traceback" title="jedi:toggle-log-traceback"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:toggle-log-traceback</span></tt></a> and
@@ -852,7 +980,7 @@ using it before installing jedi.el.  See:
 <h3>v0.1.2 (2013-05-26)<a class="headerlink" href="#v0-1-2-2013-05-26" title="Permalink to this headline">¶</a></h3>
 <p>Highlights:</p>
 <ul class="simple">
-<li>Package is available from <a class="reference external" href="http://marmalade-repo.org/packages/jedi">Marmalade</a>.</li>
+<li>Jedi.el is <a class="reference external" href="http://marmalade-repo.org/packages/jedi">available from Marmalade</a>.</li>
 <li>Add imenu support (see <a class="reference internal" href="#jedi:install-imenu" title="jedi:install-imenu"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:install-imenu</span></tt></a> and
 <a class="reference internal" href="#jedi:imenu-create-index-function" title="jedi:imenu-create-index-function"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:imenu-create-index-function</span></tt></a>).
 Currently it is not on by default as it needs developmental version
@@ -898,7 +1026,7 @@ containing newlines (e.g., <tt class="docutils literal"><span class="pre">json._
 <div class="section" id="v0-1-1-2012-12-01">
 <h3>v0.1.1 (2012-12-01)<a class="headerlink" href="#v0-1-1-2012-12-01" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li>Add experimental &#8220;full-name&#8221; support <a class="footnote-reference" href="#fullname" id="id27">[3]</a>.</li>
+<li>Add experimental &#8220;full-name&#8221; support <a class="footnote-reference" href="#fullname" id="id24">[2]</a>.</li>
 <li><a class="reference external" href="https://github.com/tkf/emacs-jedi/pull/11">PR-11</a> fixes Makefile for BSD make (thanks, <a class="reference external" href="https://github.com/goro1080">&#64;goro1080</a>!).</li>
 <li>Fix <a class="reference external" href="https://github.com/tkf/emacs-jedi/issues/9">issue-9</a>: line number sent to the server was shifted when the cursor
 is at the beginning of line.</li>
@@ -920,7 +1048,7 @@ Jedi commands to <tt class="xref el el-symbol docutils literal"><span class="pre
 <table class="docutils footnote" frame="void" id="fullname" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id27">[3]</a></td><td><cite>jedi:get-full-name-*</cite> functions require developmental
+<tr><td class="label"><a class="fn-backref" href="#id24">[2]</a></td><td><cite>jedi:get-full-name-*</cite> functions require developmental
 version of <a class="reference external" href="https://github.com/davidhalter/jedi">Jedi</a>.
 See also: <a class="reference external" href="https://github.com/davidhalter/jedi/issues/61">Request: Definition.fullname · Issue #61 ·
 davidhalter/jedi</a></td></tr>
@@ -961,7 +1089,7 @@ davidhalter/jedi</a></td></tr>
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
-        <li><a href="#">Emacs Jedi 0.1.3alpha2 documentation</a> &raquo;</li> 
+        <li><a href="#">Emacs Jedi 0.2.0alpha1 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

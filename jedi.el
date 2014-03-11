@@ -70,7 +70,7 @@ Python virtual environment is created at the specified path."
   :group 'jedi)
 
 (defcustom jedi:environment-virtualenv nil
-  "``vittualenv`` command to use.  A list of string.
+  "``virtualenv`` command to use.  A list of string.
 If it is nil, `python-environment-virtualenv' is used instead.
 
 You must set non-`nil' value to `jedi:environment-root' in order

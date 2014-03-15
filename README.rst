@@ -25,9 +25,11 @@ It aims at helping your Python coding in a non-destructive way.
 It also helps you to find information about Python objects, such as
 docstring, function arguments and code location.
 
-For more info, see `documentation`_.
+For more info, read documentation.
 If you are using developmental version installed via el-get or MELPA, read
-the `developmental version`_.
+the `developmental version <http://tkf.github.io/emacs-jedi/latest>`_.
+If you are using released version installed via Marmalade, read
+the `released version <http://tkf.github.io/emacs-jedi/released>`_.
 
 
 .. figure:: http://farm9.staticflickr.com/8261/8804536872_8d266b88ed_o.png

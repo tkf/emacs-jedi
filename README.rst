@@ -4,13 +4,13 @@
 
 .. sidebar:: Links:
 
-   * `Documentation <http://tkf.github.io/emacs-jedi/released>`_
-     (`developmental version <http://tkf.github.io/emacs-jedi/latest>`_)
+   * `Documentation (dev) <http://tkf.github.io/emacs-jedi/latest>`_
+     (`released version <http://tkf.github.io/emacs-jedi/released>`_)
 
-     * `Screenshots <http://tkf.github.io/emacs-jedi/released#screenshots>`_
-     * `Configuration <http://tkf.github.io/emacs-jedi/released#configuration>`_
-     * `Command <http://tkf.github.io/emacs-jedi/released#command>`_
-     * `Troubleshooting <http://tkf.github.io/emacs-jedi/released#troubleshooting>`_
+     * `Screenshots <http://tkf.github.io/emacs-jedi/latest#screenshots>`_
+     * `Configuration <http://tkf.github.io/emacs-jedi/latest#configuration>`_
+     * `Command <http://tkf.github.io/emacs-jedi/latest#command>`_
+     * `Troubleshooting <http://tkf.github.io/emacs-jedi/latest#troubleshooting>`_
 
    * `Repository <https://github.com/tkf/emacs-jedi>`_ (at GitHub)
    * `Issue tracker <https://github.com/tkf/emacs-jedi/issues>`_ (at GitHub)
@@ -34,7 +34,7 @@ the `developmental version`_.
 
    Auto-completion using Jedi.el.
    See more screenshots
-   `here <http://tkf.github.io/emacs-jedi/released#screenshots>`_.
+   `here <http://tkf.github.io/emacs-jedi/latest#screenshots>`_.
 
 .. Build status badge
 .. |build-status|

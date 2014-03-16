@@ -208,9 +208,23 @@ below.
 Manually install Python packages
 --------------------------------
 
-If you want to install Python packages manually, make sure that
-:el:symbol:`jedi:server-command` points to the executable that can
-import required Python modules.
+Install jediepcserver.py script to wherever you want.  For example,
+you can use...
+
+- pip::
+
+    pip install -U PATH/TO/EMACS-JEDI/
+
+- setup.py directly::
+
+    cd PATH/TO/EMACS-JEDI/
+    python setup.py install
+
+Then find where your jediepcserver.py ends up.  Set the location by::
+
+    (setq jedi:server-command '("PATH/TO/jediepcserver.py"))
+
+See also :el:symbol:`jedi:server-command`.
 
 
 Setup
@@ -261,10 +275,10 @@ Configuration
 .. el:function:: jedi:setup
 .. el:function:: jedi:ac-setup
 .. el:variable:: jedi:complete-on-dot
-.. el:variable:: jedi:server-command
-   :value: '("python" "JEDI:SOURCE-DIR/jediepcserver.py")
 .. el:variable:: jedi:environment-root
 .. el:variable:: jedi:environment-virtualenv
+.. el:variable:: jedi:server-command
+   :value: '("~/.emacs.d/.python-environments/default/bin/jediepcserver.py")
 .. el:variable:: jedi:server-args
 .. el:variable:: jedi:get-in-function-call-timeout
 .. el:variable:: jedi:get-in-function-call-delay

@@ -463,7 +463,8 @@ associated processes to nil."
 Failed to start Jedi EPC server.
 *** You may need to run \"M-x jedi:install-server\". ***
 This could solve the problem especially if you haven't run the command yet
-and if the server complains about module imports." :error))))
+since Jedi.el installation or update and if the server complains about
+Python module imports." :error))))
     (set-process-query-on-exit-flag (epc:connection-process
                                      (epc:manager-connection mngr))
                                     nil)

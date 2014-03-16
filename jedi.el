@@ -1100,10 +1100,7 @@ what jedi can do."
 
 ;;; Virtualenv setup
 (defvar jedi:install-server--command
-  '("pip" "install"
-    "jedi>=0.7.0"
-    "epc>=0.0.4"
-    "argparse"))
+  `("pip" "install" ,(convert-standard-filename jedi:source-dir)))
 
 ;;;###autoload
 (defun jedi:install-server ()

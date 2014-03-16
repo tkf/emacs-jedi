@@ -71,7 +71,7 @@ install-jedi-dev:
 	${PIP_INSTALL} --upgrade ${JEDI_DEV_URL}
 
 env: $(ENV)/$(BINDIR)/activate
-$(ENV)/$(BINDIR)/activate: ${ELPA_DIR} jedi.el
+$(ENV)/$(BINDIR)/activate: ${ELPA_DIR} jedi.el setup.py
 	${VIRTUAL_EMACS} -batch -l jedi.el -f "jedi:install-server-block"
 	test -f $@
 	touch $@

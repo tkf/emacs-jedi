@@ -87,12 +87,14 @@ to make this setting work."
 
 .. NOTE::
 
-   If you used `jedi:install-server' to install (recommended),
-   you don't need to mess around with jediepcserver.py.  Jedi.el
-   handles everything automatically.
+   If you used `jedi:install-server' (recommended) to install
+   Python server jediepcserver.py, you don't need to mess around
+   with jediepcserver.py.  Jedi.el handles everything
+   automatically.
 
-If you setup Jedi requirements using `jedi:install-server' command,
-`jedi:server-command' should be automatically set to::
+If you install Python server jediepcserver.py using
+`jedi:install-server' command, `jedi:server-command' should be
+automatically set to::
 
     '(\"~/.emacs.d/.python-environments/default/bin/jediepcserver.py\")
 

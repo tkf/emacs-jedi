@@ -46,7 +46,7 @@ Quick start
     If you install Jedi.el manually (BTW, you shouldn't!), you need to add
     more stuff to it.  See `manual install`_ section.
 
-(3) **Setup Python requirements** by running
+(3) **Install Python server** (jediepcserver.py) by running
 
     - ``M-x jedi:install-server`` in Emacs
 
@@ -185,10 +185,10 @@ Manual install
 
 .. _pyinstall:
 
-Python package installation
----------------------------
+Python server (jediepcserver.py) installation
+---------------------------------------------
 
-As of Jedi.el v0.2.0, Python package installation is done by running
+As of Jedi.el v0.2.0, jediepcserver.py installation is done by running
 Emacs command :el:symbol:`jedi:install-server`, i.e., typing
 ``M-x jedi:install-server RET`` in Emacs.  The same command can be used to
 update Python packages used by Jedi.el.  So, running this command
@@ -202,11 +202,12 @@ You can configure the location of the Python packages installed by
 - :el:symbol:`python-environment-default-root-name`
 
 If you want to install Python packages manually, rather than using
-:el:symbol:`jedi:install-server`, see `Manually install Python packages`_
-below.
+:el:symbol:`jedi:install-server`, see :ref:`manual-pyinstall` below.
 
-Manually install Python packages
---------------------------------
+.. _manual-pyinstall:
+
+Manually install Python server (jediepcserver.py)
+-------------------------------------------------
 
 Install jediepcserver.py script to wherever you want.  For example,
 you can use...

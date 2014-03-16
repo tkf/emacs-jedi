@@ -78,8 +78,7 @@ to make this setting work."
   :group 'jedi)
 
 (defun jedi:-env-server-command ()
-  (let ((py (python-environment-bin "python" jedi:environment-root)))
-    (when py (list py jedi:server-script))))
+  (list (python-environment-bin "jediepcserver.py" jedi:environment-root)))
 
 (defcustom jedi:server-command
   (or (jedi:-env-server-command)
@@ -89,8 +88,7 @@ to make this setting work."
 If you setup Jedi requirements using `jedi:install-server' command,
 `jedi:server-command' should be automatically set to::
 
-    '(\"~/.emacs.d/.python-environments/default/bin/python\"
-      \"JEDI:SOURCE-DIR/jediepcserver.py\")
+    '(\"~/.emacs.d/.python-environments/default/bin/jediepcserver.py\")
 
 Otherwise, it should be set to::
 
@@ -1100,7 +1098,7 @@ what jedi can do."
 
 ;;; Virtualenv setup
 (defvar jedi:install-server--command
-  `("pip" "install" ,(convert-standard-filename jedi:source-dir)))
+  `("pip" "install" "--upgrade" ,(convert-standard-filename jedi:source-dir)))
 
 ;;;###autoload
 (defun jedi:install-server ()

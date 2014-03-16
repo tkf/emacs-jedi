@@ -85,27 +85,41 @@ to make this setting work."
       (list "python" jedi:server-script))
   "Command used to run Jedi server.
 
+.. NOTE::
+
+   If you used `jedi:install-server' to install (recommended),
+   you don't need to mess around with jediepcserver.py.  Jedi.el
+   handles everything automatically.
+
 If you setup Jedi requirements using `jedi:install-server' command,
 `jedi:server-command' should be automatically set to::
 
     '(\"~/.emacs.d/.python-environments/default/bin/jediepcserver.py\")
 
-Otherwise, it should be set to::
+Otherwise, it is set to::
 
     '(\"python\" \"JEDI:SOURCE-DIR/jediepcserver.py\")
 
-If you want to use your favorite Python executable, set
-`jedi:server-command' using::
+.. NOTE:: If you installed jediepcserver.py manually, then you
+   have to set `jedi:server-command' appropriately.
 
-    (setq jedi:server-command
-          (list \"YOUR-FAVORITE-PYTHON\" jedi:server-script))
+   If you can run ``jediepcserver.py --help`` in your shell, then
+   you can simply set::
 
-Note that this method is not recommended anymore.  If you want to
-use a specific version of Python, setup
-`jedi:environment-virtualenv' variable appropriately.
+       (setq jedi:server-command '(\"jediepcserver.py\"))
+
+   Otherwise, you need to find where you installed
+   jediepcserver.py then set the path directly::
+
+       (setq jedi:server-command '(\"PATH/TO/jediepcserver.py\"))
+
+If you want to use a specific version of Python, setup
+`jedi:environment-virtualenv' variable appropriately and
+reinstall jediepcserver.py.
 
 If you want to pass some arguments to the Jedi server command,
-use `jedi:server-command'."
+use `jedi:server-args' instead of appending them
+`jedi:server-command'."
   :group 'jedi)
 
 (defcustom jedi:server-args nil
@@ -118,8 +132,9 @@ server, do something like this::
           '(\"--sys-path\" \"MY/SPECIAL/PATH\"
             \"--sys-path\" \"MY/OTHER/SPECIAL/PATH\"))
 
-If you want to include some virtualenv, do something like this.
-Note that actual `VIRTUAL_ENV' is treated automatically.  Also,
+If you want to include some virtualenv, do something like the
+following.  Note that actual environment variable ``VIRTUAL_ENV``
+is treated automatically so you don't need to pass it.  Also,
 you need to start Jedi EPC server with the same python version
 that you use for the virtualenv.::
 

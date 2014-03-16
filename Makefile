@@ -74,6 +74,7 @@ env: $(ENV)/$(BINDIR)/activate
 $(ENV)/$(BINDIR)/activate: ${ELPA_DIR} jedi.el
 	${VIRTUAL_EMACS} -batch -l jedi.el -f "jedi:install-server-block"
 	test -f $@
+	touch $@
 
 clean-env:
 	rm -rf $(ENV)

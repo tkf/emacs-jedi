@@ -505,6 +505,52 @@ This can be done by making :el:symbol:`jedi:server-command`,
 :el:symbol:`python-environment-bin`.
 
 
+How to setup proxy
+------------------
+
+:el:symbol:`jedi:install-server` runs `pip install`_.  So, you may
+want to set proxy for it.  In that case, set :envvar:`http_proxy` and
+:envvar:`https_proxy` [#]_.
+
+If you want to set it in ``~/.bashrc``, do something like the
+following.  Since Emacs [#]_ and other programs read this variable, it
+may be the best approach.::
+
+   export http_proxy=http://[user:passwd@]proxy.server:port
+   export https_proxy=https://[user:passwd@]proxy.server:port
+
+If you want to set it in Emacs setting, do something like this::
+
+  (setenv "http_proxy" "http://[user:passwd@]proxy.server:port")
+  (setenv "https_proxy" "https://[user:passwd@]proxy.server:port")
+
+If you want to setup proxy only for pip, you can use
+:envvar:`PIP_PROXY` instead of :envvar:`http_proxy` and
+:envvar:`https_proxy`.  This sets default value for `pip --proxy option`_
+(see also `pip > User Guide > Environment Variables`_).
+
+.. [#] See also:
+   http://stackoverflow.com/questions/14149422/using-pip-behind-a-proxy
+
+   (BTW, :envvar:`http_proxy` and :envvar:`https_proxy` are not
+   mentioned in pip manual.  If anybody know official information from
+   pip regarding :envvar:`http_proxy` and :envvar:`https_proxy`,
+   please add it here.)
+
+.. [#]
+   `Proxies - URL Programmer's Manual
+   <http://www.gnu.org/software/emacs/manual/html_node/url/Proxies.html>`_
+
+.. _`pip install`:
+  http://pip.readthedocs.org/en/latest/reference/pip_install.html
+
+.. _`pip --proxy option`:
+  http://pip.readthedocs.org/en/latest/reference/pip.html#cmdoption--proxy
+
+.. _`pip > User Guide > Environment Variables`:
+  http://pip.readthedocs.org/en/latest/user_guide.html#environment-variables
+
+
 How to get traceback
 --------------------
 

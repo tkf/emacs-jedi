@@ -264,9 +264,10 @@ def add_virtualenv_path(venv=os.getenv('VIRTUAL_ENV')):
     """Add virtualenv's site-packages to `sys.path`."""
     if not venv:
         return
+    import virtualenv
     venv = os.path.abspath(venv)
-    path = os.path.join(
-        venv, 'lib', 'python%d.%d' % sys.version_info[:2], 'site-packages')
+    home_dir, lib_dir, inc_dir, bin_dir = virtualenv.path_locations(venv)
+    path = os.path.join(lib_dir, 'site-packages')
     sys.path.insert(0, path)
     site.addsitedir(path)
 

@@ -138,6 +138,8 @@ Here is a minimal example to setup Jedi.el via el-get_:
 .. literalinclude:: jedi-el-get.el
    :language: cl
 
+See also: :ref:`minimal-tryout`.
+
 .. _el-get: https://github.com/dimitri/el-get
 
 
@@ -166,6 +168,8 @@ Here is a minimal example to setup Jedi.el via package.el + MELPA:
 
    .. literalinclude:: jedi-marmalade.el
       :language: cl
+
+See also: :ref:`minimal-tryout`.
 
 .. _Marmalade: http://marmalade-repo.org
 .. _MELPA: http://melpa.milkbox.net

@@ -387,6 +387,50 @@ investigate the problem by yourself.  Here is some checklist.
 FAQ
 ===
 
+How to quickly try Jedi.el without installing it
+------------------------------------------------
+
+There are two ways.  One for new users and one for Jedi.el developers.
+
+Use minimal example setting to try Jedi.el without installation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This is recommended if you are new to Jedi.el.
+
+1. Try Jedi.el without installation using package.el + MELPA
+
+   Here is how to try el-get setup without touching your
+   ``~/.emacs.d/``.  This version uses package.el and MELPA.  Once
+   emacs is launched, type ``M-x package-install RET jedi RET`` and
+   ``M-x jedi:install-server RET``:
+
+   .. literalinclude:: jedi-melpa.sh
+      :language: sh
+
+2. Try Jedi.el without installation using el-get
+
+   If you want to try el-get setup, do the following instead.  You may
+   remove ``--eval "(setq el-get-install-skip-emacswiki-recipes nil)"``
+   like the last commented line, but it will be very slow to start Emacs.
+   Once emacs is launched, type ``M-x el-get-install RET jedi RET`` and
+   ``M-x jedi:install-server RET``
+
+   .. literalinclude:: jedi-el-get.sh
+      :language: sh
+
+
+Use ``make tryout`` to try Jedi.el without installation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This is recommended if you want to develop Jedi.el.  If you have cask_
+command, then you just have to:
+
+.. sourcecode:: sh
+
+   cd PATH/TO/emacs-jedi
+   make tryout
+
+
 How to update Python dependencies
 ---------------------------------
 

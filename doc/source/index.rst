@@ -52,6 +52,8 @@ Quick start
 
     (see also :el:symbol:`jedi:install-server`).
 
+See install_ section for minimal examples.
+
 
 Screenshots
 ===========
@@ -131,6 +133,11 @@ Note that Python packages are *not* installed automatically anymore
 (there is `a plan <https://github.com/tkf/emacs-jedi/issues/134>`_ to
 fix it).
 
+Here is a minimal example to setup Jedi.el via el-get_:
+
+.. literalinclude:: jedi-el-get.el
+   :language: cl
+
 .. _el-get: https://github.com/dimitri/el-get
 
 
@@ -145,6 +152,20 @@ installed by these Emacs command:
 
 - ``M-x package-install RET jedi RET``
 - ``M-x jedi:install-server RET`` (see also :ref:`pyinstall`)
+
+Here is a minimal example to setup Jedi.el via package.el + MELPA:
+
+.. literalinclude:: jedi-melpa.el
+   :language: cl
+
+.. Un-comment the following once v0.2.0 is released in Marmalade:
+
+   Here is a minimal example to setup Jedi.el via package.el + Marmalade.
+   The only difference with the above MELPA case is the value of
+   :el:symbol:`package-archives`:
+
+   .. literalinclude:: jedi-marmalade.el
+      :language: cl
 
 .. _Marmalade: http://marmalade-repo.org
 .. _MELPA: http://melpa.milkbox.net

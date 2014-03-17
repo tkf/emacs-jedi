@@ -1,4 +1,3 @@
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -14,7 +13,7 @@
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
+        URL_ROOT:    './',
         VERSION:     '0.2.0alpha1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
@@ -98,6 +97,7 @@ more stuff to it.  See <a class="reference internal" href="#manual-install">manu
 <p>(see also <a class="reference internal" href="#jedi:install-server" title="jedi:install-server"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:install-server</span></tt></a>).</p>
 </li>
 </ol>
+<p>See <a class="reference internal" href="#install">install</a> section for minimal examples.</p>
 </div>
 <div class="section" id="screenshots">
 <h2>Screenshots<a class="headerlink" href="#screenshots" title="Permalink to this headline">¶</a></h2>
@@ -168,6 +168,32 @@ command:</p>
 <p>Note that Python packages are <em>not</em> installed automatically anymore
 (there is <a class="reference external" href="https://github.com/tkf/emacs-jedi/issues/134">a plan</a> to
 fix it).</p>
+<p>Here is a minimal example to setup Jedi.el via <a class="reference external" href="https://github.com/dimitri/el-get">el-get</a>:</p>
+<div class="highlight-cl"><div class="highlight"><pre><span class="c1">;; Standard el-get setup</span>
+<span class="c1">;; (See also: https://github.com/dimitri/el-get#basic-setup)</span>
+<span class="p">(</span><span class="nv">add-to-list</span> <span class="ss">&#39;load-path</span> <span class="s">&quot;~/.emacs.d/el-get/el-get&quot;</span><span class="p">)</span>
+
+<span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;el-get</span> <span class="no">nil</span> <span class="ss">&#39;noerror</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">with-current-buffer</span>
+      <span class="p">(</span><span class="nv">url-retrieve-synchronously</span>
+       <span class="s">&quot;https://raw.github.com/dimitri/el-get/master/el-get-install.el&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">goto-char</span> <span class="p">(</span><span class="nv">point-max</span><span class="p">))</span>
+    <span class="p">(</span><span class="nv">eval-print-last-sexp</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="nv">el-get</span> <span class="ss">&#39;sync</span><span class="p">)</span>
+
+
+<span class="c1">;; Standard Jedi.el setting</span>
+<span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;python-mode-hook</span> <span class="ss">&#39;jedi:setup</span><span class="p">)</span>
+<span class="p">(</span><span class="k">setq</span> <span class="nv">jedi:complete-on-dot</span> <span class="no">t</span><span class="p">)</span>
+
+<span class="c1">;; Type:</span>
+<span class="c1">;;     M-x el-get-install RET jedi RET</span>
+<span class="c1">;;     M-x jedi:install-server RET</span>
+<span class="c1">;; Then open Python file.</span>
+</pre></div>
+</div>
+<p>See also: <a class="reference internal" href="#minimal-tryout"><em>Use minimal example setting to try Jedi.el without installation</em></a>.</p>
 </div>
 <div class="section" id="package-el-marmalade-or-melpa">
 <h3>package.el (Marmalade or MELPA)<a class="headerlink" href="#package-el-marmalade-or-melpa" title="Permalink to this headline">¶</a></h3>
@@ -179,6 +205,26 @@ installed by these Emacs command:</p>
 <li><tt class="docutils literal"><span class="pre">M-x</span> <span class="pre">package-install</span> <span class="pre">RET</span> <span class="pre">jedi</span> <span class="pre">RET</span></tt></li>
 <li><tt class="docutils literal"><span class="pre">M-x</span> <span class="pre">jedi:install-server</span> <span class="pre">RET</span></tt> (see also <a class="reference internal" href="#pyinstall"><em>Python package installation</em></a>)</li>
 </ul>
+<p>Here is a minimal example to setup Jedi.el via package.el + MELPA:</p>
+<div class="highlight-cl"><div class="highlight"><pre><span class="c1">;; Standard package.el + MELPA setup</span>
+<span class="c1">;; (See also: https://github.com/milkypostman/melpa#usage)</span>
+<span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;package</span><span class="p">)</span>
+<span class="p">(</span><span class="nv">add-to-list</span> <span class="ss">&#39;package-archives</span>
+             <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;melpa&quot;</span> <span class="o">.</span> <span class="s">&quot;http://melpa.milkbox.net/packages/&quot;</span><span class="p">)</span> <span class="no">t</span><span class="p">)</span>
+<span class="p">(</span><span class="nv">package-initialize</span><span class="p">)</span>
+
+
+<span class="c1">;; Standard Jedi.el setting</span>
+<span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;python-mode-hook</span> <span class="ss">&#39;jedi:setup</span><span class="p">)</span>
+<span class="p">(</span><span class="k">setq</span> <span class="nv">jedi:complete-on-dot</span> <span class="no">t</span><span class="p">)</span>
+
+<span class="c1">;; Type:</span>
+<span class="c1">;;     M-x package-install RET jedi RET</span>
+<span class="c1">;;     M-x jedi:install-server RET</span>
+<span class="c1">;; Then open Python file.</span>
+</pre></div>
+</div>
+<p>See also: <a class="reference internal" href="#minimal-tryout"><em>Use minimal example setting to try Jedi.el without installation</em></a>.</p>
 </div>
 <div class="section" id="manual-install">
 <h3>Manual install<a class="headerlink" href="#manual-install" title="Permalink to this headline">¶</a></h3>
@@ -777,26 +823,11 @@ Paste the result of this function in bug report.</p>
 <p>Before posting question or bug report in the <a class="reference external" href="https://github.com/tkf/emacs-jedi/issues">issue tracker</a>, please
 investigate the problem by yourself.  Here is some checklist.</p>
 <ol class="arabic">
-<li><p class="first">You can try Jedi.el without installing it, by running
-<tt class="docutils literal"><span class="pre">make</span> <span class="pre">tryout</span></tt> if you have <a class="reference external" href="https://github.com/cask/cask">cask</a> installed.  This will
-install requirements for Jedi.el separated from your local setup in
-<tt class="docutils literal"><span class="pre">.emacs.d</span></tt>.  You can also check the configuration file
-<a class="reference external" href="https://github.com/tkf/emacs-jedi/blob/master/tryout-jedi.el">tryout-jedi.el</a> to see a minimum working configuration.  This is
-the configuration file loaded by <tt class="docutils literal"><span class="pre">make</span> <span class="pre">tryout</span></tt>.  If you have
-trouble setting up Jedi.el, compare your configuration file and
-<tt class="docutils literal"><span class="pre">tryout-jedi.el</span></tt>.</p>
-<p>If you get some error during <tt class="docutils literal"><span class="pre">make</span> <span class="pre">tryout</span></tt> or any other <tt class="docutils literal"><span class="pre">make</span></tt>
-tasks, checking <tt class="docutils literal"><span class="pre">elpa/install.log</span></tt> may help you finding the
-problem.</p>
-<p>If you install <a class="reference external" href="https://github.com/cask/cask">cask</a> in a different place or you don&#8217;t add it to
-the <tt class="docutils literal"><span class="pre">$PATH</span></tt>, you can call <tt class="docutils literal"><span class="pre">make</span></tt> like this:
-<tt class="docutils literal"><span class="pre">make</span> <span class="pre">CASK=PATH/TO/bin/cask</span> <span class="pre">tryout</span></tt>.
-Typically, <tt class="docutils literal"><span class="pre">PATH/TO/bin/cask</span></tt> is <tt class="docutils literal"><span class="pre">~/.cask/bin/cask</span></tt>.</p>
-<p>If you are too lazy to go to <a class="reference external" href="https://github.com/cask/cask">cask</a> site to checkout how to
-install it, here is what you need to do:</p>
-<div class="highlight-cl"><pre>curl -fsSkL https://raw.github.com/cask/cask/master/go | python
-make CASK=$HOME/.cask/bin/cask tryout</pre>
-</div>
+<li><p class="first">You can try Jedi.el without installing it.</p>
+<p>Check <a class="reference internal" href="#quick-try"><em>How to quickly try Jedi.el without installing it</em></a>.  If it works, compare with your Emacs setup
+carefully.  It is likely that there is something wrong in your
+Emacs setup.  You should also check minimal working examples in the
+<a class="reference internal" href="#install">install</a> section.</p>
 </li>
 <li><p class="first">To make sure that jedi.el is running correctly, you can
 do <tt class="docutils literal"><span class="pre">M-x</span> <span class="pre">jedi:show-jedi-version</span></tt>.  It will show the versions
@@ -830,6 +861,69 @@ from Marmalade, you should read <a class="reference external" href="http://tkf.g
 </div>
 <div class="section" id="faq">
 <h2>FAQ<a class="headerlink" href="#faq" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="how-to-quickly-try-jedi-el-without-installing-it">
+<span id="quick-try"></span><h3>How to quickly try Jedi.el without installing it<a class="headerlink" href="#how-to-quickly-try-jedi-el-without-installing-it" title="Permalink to this headline">¶</a></h3>
+<p>There are two ways.  One for new users and one for Jedi.el developers.</p>
+<ol class="arabic simple">
+<li><a class="reference internal" href="#minimal-tryout"><em>Use minimal example setting to try Jedi.el without installation</em></a></li>
+<li><a class="reference internal" href="#make-tryout"><em>Use make tryout to try Jedi.el without installation</em></a></li>
+</ol>
+<div class="section" id="use-minimal-example-setting-to-try-jedi-el-without-installation">
+<span id="minimal-tryout"></span><h4>Use minimal example setting to try Jedi.el without installation<a class="headerlink" href="#use-minimal-example-setting-to-try-jedi-el-without-installation" title="Permalink to this headline">¶</a></h4>
+<p>This is recommended if you are new to Jedi.el.</p>
+<ol class="arabic">
+<li><p class="first">Try Jedi.el without installation using package.el + MELPA</p>
+<p>Here is how to try el-get setup without touching your
+<tt class="docutils literal"><span class="pre">~/.emacs.d/</span></tt>.  This version uses package.el and MELPA.  Once
+emacs is launched, type <tt class="docutils literal"><span class="pre">M-x</span> <span class="pre">package-install</span> <span class="pre">RET</span> <span class="pre">jedi</span> <span class="pre">RET</span></tt> and
+<tt class="docutils literal"><span class="pre">M-x</span> <span class="pre">jedi:install-server</span> <span class="pre">RET</span></tt>:</p>
+<div class="highlight-sh"><div class="highlight"><pre>mkdir /tmp/test/    <span class="c"># any location is fine</span>
+<span class="nb">cd</span> /tmp/test/
+wget https://raw.github.com/tkf/emacs-jedi/master/doc/source/jedi-melpa.el
+<span class="nv">HOME</span><span class="o">=</span><span class="k">${</span><span class="nv">PWD</span><span class="k">}</span> emacs -Q -l jedi-melpa.el
+</pre></div>
+</div>
+</li>
+<li><p class="first">Try Jedi.el without installation using el-get</p>
+<p>If you want to try el-get setup, do the following instead.  You may
+remove <tt class="docutils literal"><span class="pre">--eval</span> <span class="pre">&quot;(setq</span> <span class="pre">el-get-install-skip-emacswiki-recipes</span> <span class="pre">nil)&quot;</span></tt>
+like the last commented line, but it will be very slow to start Emacs.
+Once emacs is launched, type <tt class="docutils literal"><span class="pre">M-x</span> <span class="pre">el-get-install</span> <span class="pre">RET</span> <span class="pre">jedi</span> <span class="pre">RET</span></tt> and
+<tt class="docutils literal"><span class="pre">M-x</span> <span class="pre">jedi:install-server</span> <span class="pre">RET</span></tt></p>
+<div class="highlight-sh"><div class="highlight"><pre>mkdir /tmp/test/    <span class="c"># any location is fine</span>
+<span class="nb">cd</span> /tmp/test/
+wget https://raw.github.com/tkf/emacs-jedi/master/doc/source/jedi-el-get.el
+<span class="nv">HOME</span><span class="o">=</span><span class="k">${</span><span class="nv">PWD</span><span class="k">}</span> emacs -Q --eval <span class="s2">&quot;(setq el-get-install-skip-emacswiki-recipes nil)&quot;</span> -l jedi-el-get.el
+<span class="c"># HOME=${PWD} emacs -Q -l jedi-el-get.el</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="use-make-tryout-to-try-jedi-el-without-installation">
+<span id="make-tryout"></span><h4>Use <tt class="docutils literal"><span class="pre">make</span> <span class="pre">tryout</span></tt> to try Jedi.el without installation<a class="headerlink" href="#use-make-tryout-to-try-jedi-el-without-installation" title="Permalink to this headline">¶</a></h4>
+<p>This is recommended if you want to develop Jedi.el.  If you have <a class="reference external" href="https://github.com/cask/cask">cask</a>
+command, then you just have to:</p>
+<div class="highlight-sh"><div class="highlight"><pre><span class="nb">cd </span>PATH/TO/emacs-jedi
+make tryout
+</pre></div>
+</div>
+<p>If you are too lazy to go to <a class="reference external" href="https://github.com/cask/cask">cask</a> site to checkout how to install it,
+here is what you need to do:</p>
+<div class="highlight-cl"><div class="highlight"><pre>curl -fsSkL https://raw.github.com/cask/cask/master/go | python
+make CASK=$HOME/.cask/bin/cask tryout
+</pre></div>
+</div>
+<p><tt class="docutils literal"><span class="pre">make</span> <span class="pre">tryout</span></tt> will install requirements for Jedi.el separated from
+your local setup in <tt class="docutils literal"><span class="pre">~/.emacs.d/</span></tt>.  You can also check the
+configuration file <a class="reference external" href="https://github.com/tkf/emacs-jedi/blob/master/tryout-jedi.el">tryout-jedi.el</a> to see a minimum working
+configuration.  This is the configuration file loaded by <tt class="docutils literal"><span class="pre">make</span> <span class="pre">tryout</span></tt>.</p>
+<p>If you install <a class="reference external" href="https://github.com/cask/cask">cask</a> in a different place or you don&#8217;t add it to the
+<tt class="docutils literal"><span class="pre">$PATH</span></tt>, you can call <tt class="docutils literal"><span class="pre">make</span></tt> like this: <tt class="docutils literal"><span class="pre">make</span>
+<span class="pre">CASK=PATH/TO/bin/cask</span> <span class="pre">tryout</span></tt>.  Typically, <tt class="docutils literal"><span class="pre">PATH/TO/bin/cask</span></tt> is
+<tt class="docutils literal"><span class="pre">~/.cask/bin/cask</span></tt>.</p>
+</div>
+</div>
 <div class="section" id="how-to-update-python-dependencies">
 <h3>How to update Python dependencies<a class="headerlink" href="#how-to-update-python-dependencies" title="Permalink to this headline">¶</a></h3>
 <p>Simply run Emacs command <tt class="docutils literal"><span class="pre">M-x</span> <span class="pre">jedi:install-server</span></tt>.
@@ -963,7 +1057,7 @@ v0.2.0.)</p>
 <li>Add <a class="reference internal" href="#jedi:toggle-log-traceback" title="jedi:toggle-log-traceback"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:toggle-log-traceback</span></tt></a> and
 <a class="reference internal" href="#jedi:pop-to-epc-buffer" title="jedi:pop-to-epc-buffer"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:pop-to-epc-buffer</span></tt></a>.</li>
 <li>Add default keybind and a simple way to setup recommended keybinds.
-See issue <a class="reference external" href="https://github.com/tkf/emacs-jedi/issues/47">#47</a> for the reason and discussion behind this change.</li>
+See issue <a href="#id9"><span class="problematic" id="id10">`#47`_</span></a> for the reason and discussion behind this change.</li>
 <li>Now <a class="reference internal" href="#jedi:ac-setup" title="jedi:ac-setup"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:ac-setup</span></tt></a> auto-magically enables auto-complete-mode.
 This is to help people from setting up auto-complete when they were not
 using it before installing jedi.el.  See:
@@ -974,7 +1068,7 @@ using it before installing jedi.el.  See:
 <p>Contributions from:</p>
 <p>Closed issues and pulled patches:</p>
 <blockquote>
-<div><a class="reference external" href="https://github.com/tkf/emacs-jedi/issues/47">#47</a></div></blockquote>
+<div></div></blockquote>
 </div>
 <div class="section" id="v0-1-2-2013-05-26">
 <h3>v0.1.2 (2013-05-26)<a class="headerlink" href="#v0-1-2-2013-05-26" title="Permalink to this headline">¶</a></h3>
@@ -996,37 +1090,14 @@ popup to be disrupted when showing candidates summary
 containing newlines (e.g., <tt class="docutils literal"><span class="pre">json.__all__</span></tt>).</li>
 </ul>
 <p>Contributions from:</p>
-<ul class="simple">
-<li><a class="reference external" href="https://github.com/asmeurer">Aaron Meurer</a></li>
-<li><a class="reference external" href="https://github.com/dbrgn">Danilo Bargen</a></li>
-<li><a class="reference external" href="https://github.com/fgallina">Fabián Ezequiel Gallina</a></li>
-<li><a class="reference external" href="https://github.com/immerrr">immerrr</a></li>
-<li><a class="reference external" href="https://github.com/jkpl">Jaakko Pallari</a></li>
-<li><a class="reference external" href="https://github.com/ryanolf">Ryan Olf</a></li>
-</ul>
 <p>Closed issues and pulled patches:</p>
 <blockquote>
-<div><a class="reference external" href="https://github.com/tkf/emacs-jedi/issues/13">#13</a>
-<a class="reference external" href="https://github.com/tkf/emacs-jedi/issues/15">#15</a>
-<a class="reference external" href="https://github.com/tkf/emacs-jedi/issues/17">#17</a>
-<a class="reference external" href="https://github.com/tkf/emacs-jedi/issues/19">#19</a>
-<a class="reference external" href="https://github.com/tkf/emacs-jedi/issues/26">#26</a>
-<a class="reference external" href="https://github.com/tkf/emacs-jedi/issues/27">#27</a>
-<a class="reference external" href="https://github.com/tkf/emacs-jedi/issues/29">#29</a>
-<a class="reference external" href="https://github.com/tkf/emacs-jedi/issues/30">#30</a>
-<a class="reference external" href="https://github.com/tkf/emacs-jedi/issues/33">#33</a>
-<a class="reference external" href="https://github.com/tkf/emacs-jedi/issues/38">#38</a>
-<a class="reference external" href="https://github.com/tkf/emacs-jedi/issues/44">#44</a>
-<a class="reference external" href="https://github.com/tkf/emacs-jedi/issues/52">#52</a>
-<a class="reference external" href="https://github.com/tkf/emacs-jedi/issues/53">#53</a>
-<a class="reference external" href="https://github.com/tkf/emacs-jedi/issues/54">#54</a>
-<a class="reference external" href="https://github.com/tkf/emacs-jedi/issues/59">#59</a>
-<a class="reference external" href="https://github.com/tkf/emacs-jedi/issues/62">#62</a></div></blockquote>
+<div></div></blockquote>
 </div>
 <div class="section" id="v0-1-1-2012-12-01">
 <h3>v0.1.1 (2012-12-01)<a class="headerlink" href="#v0-1-1-2012-12-01" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li>Add experimental &#8220;full-name&#8221; support <a class="footnote-reference" href="#fullname" id="id24">[2]</a>.</li>
+<li>Add experimental &#8220;full-name&#8221; support <a class="footnote-reference" href="#fullname" id="id7">[2]</a>.</li>
 <li><a class="reference external" href="https://github.com/tkf/emacs-jedi/pull/11">PR-11</a> fixes Makefile for BSD make (thanks, <a class="reference external" href="https://github.com/goro1080">&#64;goro1080</a>!).</li>
 <li>Fix <a class="reference external" href="https://github.com/tkf/emacs-jedi/issues/9">issue-9</a>: line number sent to the server was shifted when the cursor
 is at the beginning of line.</li>
@@ -1036,19 +1107,13 @@ is at the beginning of line.</li>
 Jedi commands to <tt class="xref el el-symbol docutils literal"><span class="pre">python-mode-map</span></tt> now.</li>
 </ul>
 <p>Contributions from:</p>
-<ul class="simple">
-<li><a class="reference external" href="https://github.com/goro1080">Kiyono Goro</a></li>
-</ul>
 <p>Closed issues and pulled patches:</p>
 <blockquote>
-<div><a class="reference external" href="https://github.com/tkf/emacs-jedi/issues/7">#7</a>
-<a class="reference external" href="https://github.com/tkf/emacs-jedi/issues/9">#9</a>
-<a class="reference external" href="https://github.com/tkf/emacs-jedi/issues/10">#10</a>
-<a class="reference external" href="https://github.com/tkf/emacs-jedi/issues/11">#11</a></div></blockquote>
+<div></div></blockquote>
 <table class="docutils footnote" frame="void" id="fullname" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id24">[2]</a></td><td><cite>jedi:get-full-name-*</cite> functions require developmental
+<tr><td class="label"><a class="fn-backref" href="#id7">[2]</a></td><td><cite>jedi:get-full-name-*</cite> functions require developmental
 version of <a class="reference external" href="https://github.com/davidhalter/jedi">Jedi</a>.
 See also: <a class="reference external" href="https://github.com/davidhalter/jedi/issues/61">Request: Definition.fullname · Issue #61 ·
 davidhalter/jedi</a></td></tr>
@@ -1064,16 +1129,9 @@ davidhalter/jedi</a></td></tr>
 <li>First version.</li>
 </ul>
 <p>Contributions from:</p>
-<ul class="simple">
-<li><a class="reference external" href="https://github.com/L42y">L42y</a></li>
-<li><a class="reference external" href="https://github.com/syohex">Syohei YOSHIDA</a></li>
-</ul>
 <p>Closed issues and pulled patches:</p>
 <blockquote>
-<div><a class="reference external" href="https://github.com/tkf/emacs-jedi/issues/1">#1</a>
-<a class="reference external" href="https://github.com/tkf/emacs-jedi/issues/2">#2</a>
-<a class="reference external" href="https://github.com/tkf/emacs-jedi/issues/6">#6</a>
-<a class="reference external" href="https://github.com/tkf/emacs-jedi/issues/8">#8</a></div></blockquote>
+<div></div></blockquote>
 </div>
 </div>
 </div>
@@ -1094,7 +1152,7 @@ davidhalter/jedi</a></td></tr>
     </div>
     <div class="footer">
         &copy; Copyright 2012, Takafumi Arakaki.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>
 </html>

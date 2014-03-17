@@ -323,33 +323,12 @@ Troubleshooting
 Before posting question or bug report in the `issue tracker`_, please
 investigate the problem by yourself.  Here is some checklist.
 
-#. You can try Jedi.el without installing it, by running
-   ``make tryout`` if you have cask_ installed.  This will
-   install requirements for Jedi.el separated from your local setup in
-   ``.emacs.d``.  You can also check the configuration file
-   tryout-jedi.el_ to see a minimum working configuration.  This is
-   the configuration file loaded by ``make tryout``.  If you have
-   trouble setting up Jedi.el, compare your configuration file and
-   ``tryout-jedi.el``.
+#. You can try Jedi.el without installing it.
 
-   If you get some error during ``make tryout`` or any other ``make``
-   tasks, checking ``elpa/install.log`` may help you finding the
-   problem.
-
-   .. _cask: https://github.com/cask/cask
-   .. _tryout-jedi.el:
-      https://github.com/tkf/emacs-jedi/blob/master/tryout-jedi.el
-
-   If you install cask_ in a different place or you don't add it to
-   the ``$PATH``, you can call ``make`` like this:
-   ``make CASK=PATH/TO/bin/cask tryout``.
-   Typically, ``PATH/TO/bin/cask`` is ``~/.cask/bin/cask``.
-
-   If you are too lazy to go to cask_ site to checkout how to
-   install it, here is what you need to do::
-
-     curl -fsSkL https://raw.github.com/cask/cask/master/go | python
-     make CASK=$HOME/.cask/bin/cask tryout
+   Check :ref:`quick-try`.  If it works, compare with your Emacs setup
+   carefully.  It is likely that there is something wrong in your
+   Emacs setup.  You should also check minimal working examples in the
+   install_ section.
 
 #. To make sure that jedi.el is running correctly, you can
    do ``M-x jedi:show-jedi-version``.  It will show the versions
@@ -387,10 +366,18 @@ investigate the problem by yourself.  Here is some checklist.
 FAQ
 ===
 
+.. _quick-try:
+
 How to quickly try Jedi.el without installing it
 ------------------------------------------------
 
 There are two ways.  One for new users and one for Jedi.el developers.
+
+1. :ref:`minimal-tryout`
+2. :ref:`make-tryout`
+
+
+.. _minimal-tryout:
 
 Use minimal example setting to try Jedi.el without installation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -419,6 +406,8 @@ This is recommended if you are new to Jedi.el.
       :language: sh
 
 
+.. _make-tryout:
+
 Use ``make tryout`` to try Jedi.el without installation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -429,6 +418,26 @@ command, then you just have to:
 
    cd PATH/TO/emacs-jedi
    make tryout
+
+If you are too lazy to go to cask_ site to checkout how to install it,
+here is what you need to do::
+
+  curl -fsSkL https://raw.github.com/cask/cask/master/go | python
+  make CASK=$HOME/.cask/bin/cask tryout
+
+``make tryout`` will install requirements for Jedi.el separated from
+your local setup in ``~/.emacs.d/``.  You can also check the
+configuration file tryout-jedi.el_ to see a minimum working
+configuration.  This is the configuration file loaded by ``make tryout``.
+
+.. _cask: https://github.com/cask/cask
+.. _tryout-jedi.el:
+   https://github.com/tkf/emacs-jedi/blob/master/tryout-jedi.el
+
+If you install cask_ in a different place or you don't add it to the
+``$PATH``, you can call ``make`` like this: ``make
+CASK=PATH/TO/bin/cask tryout``.  Typically, ``PATH/TO/bin/cask`` is
+``~/.cask/bin/cask``.
 
 
 How to update Python dependencies

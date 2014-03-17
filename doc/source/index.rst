@@ -52,6 +52,8 @@ Quick start
 
     (see also :el:symbol:`jedi:install-server`).
 
+See install_ section for minimal examples.
+
 
 Screenshots
 ===========
@@ -131,6 +133,13 @@ Note that Python packages are *not* installed automatically anymore
 (there is `a plan <https://github.com/tkf/emacs-jedi/issues/134>`_ to
 fix it).
 
+Here is a minimal example to setup Jedi.el via el-get_:
+
+.. literalinclude:: jedi-el-get.el
+   :language: cl
+
+See also: :ref:`minimal-tryout`.
+
 .. _el-get: https://github.com/dimitri/el-get
 
 
@@ -145,6 +154,22 @@ installed by these Emacs command:
 
 - ``M-x package-install RET jedi RET``
 - ``M-x jedi:install-server RET`` (see also :ref:`pyinstall`)
+
+Here is a minimal example to setup Jedi.el via package.el + MELPA:
+
+.. literalinclude:: jedi-melpa.el
+   :language: cl
+
+.. Un-comment the following once v0.2.0 is released in Marmalade:
+
+   Here is a minimal example to setup Jedi.el via package.el + Marmalade.
+   The only difference with the above MELPA case is the value of
+   :el:symbol:`package-archives`:
+
+   .. literalinclude:: jedi-marmalade.el
+      :language: cl
+
+See also: :ref:`minimal-tryout`.
 
 .. _Marmalade: http://marmalade-repo.org
 .. _MELPA: http://melpa.milkbox.net
@@ -302,33 +327,12 @@ Troubleshooting
 Before posting question or bug report in the `issue tracker`_, please
 investigate the problem by yourself.  Here is some checklist.
 
-#. You can try Jedi.el without installing it, by running
-   ``make tryout`` if you have cask_ installed.  This will
-   install requirements for Jedi.el separated from your local setup in
-   ``.emacs.d``.  You can also check the configuration file
-   tryout-jedi.el_ to see a minimum working configuration.  This is
-   the configuration file loaded by ``make tryout``.  If you have
-   trouble setting up Jedi.el, compare your configuration file and
-   ``tryout-jedi.el``.
+#. You can try Jedi.el without installing it.
 
-   If you get some error during ``make tryout`` or any other ``make``
-   tasks, checking ``elpa/install.log`` may help you finding the
-   problem.
-
-   .. _cask: https://github.com/cask/cask
-   .. _tryout-jedi.el:
-      https://github.com/tkf/emacs-jedi/blob/master/tryout-jedi.el
-
-   If you install cask_ in a different place or you don't add it to
-   the ``$PATH``, you can call ``make`` like this:
-   ``make CASK=PATH/TO/bin/cask tryout``.
-   Typically, ``PATH/TO/bin/cask`` is ``~/.cask/bin/cask``.
-
-   If you are too lazy to go to cask_ site to checkout how to
-   install it, here is what you need to do::
-
-     curl -fsSkL https://raw.github.com/cask/cask/master/go | python
-     make CASK=$HOME/.cask/bin/cask tryout
+   Check :ref:`quick-try`.  If it works, compare with your Emacs setup
+   carefully.  It is likely that there is something wrong in your
+   Emacs setup.  You should also check minimal working examples in the
+   install_ section.
 
 #. To make sure that jedi.el is running correctly, you can
    do ``M-x jedi:show-jedi-version``.  It will show the versions
@@ -365,6 +369,80 @@ investigate the problem by yourself.  Here is some checklist.
 
 FAQ
 ===
+
+.. _quick-try:
+
+How to quickly try Jedi.el without installing it
+------------------------------------------------
+
+There are two ways.  One for new users and one for Jedi.el developers.
+
+1. :ref:`minimal-tryout`
+2. :ref:`make-tryout`
+
+
+.. _minimal-tryout:
+
+Use minimal example setting to try Jedi.el without installation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This is recommended if you are new to Jedi.el.
+
+1. Try Jedi.el without installation using package.el + MELPA
+
+   Here is how to try el-get setup without touching your
+   ``~/.emacs.d/``.  This version uses package.el and MELPA.  Once
+   emacs is launched, type ``M-x package-install RET jedi RET`` and
+   ``M-x jedi:install-server RET``:
+
+   .. literalinclude:: jedi-melpa.sh
+      :language: sh
+
+2. Try Jedi.el without installation using el-get
+
+   If you want to try el-get setup, do the following instead.  You may
+   remove ``--eval "(setq el-get-install-skip-emacswiki-recipes nil)"``
+   like the last commented line, but it will be very slow to start Emacs.
+   Once emacs is launched, type ``M-x el-get-install RET jedi RET`` and
+   ``M-x jedi:install-server RET``
+
+   .. literalinclude:: jedi-el-get.sh
+      :language: sh
+
+
+.. _make-tryout:
+
+Use ``make tryout`` to try Jedi.el without installation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This is recommended if you want to develop Jedi.el.  If you have cask_
+command, then you just have to:
+
+.. sourcecode:: sh
+
+   cd PATH/TO/emacs-jedi
+   make tryout
+
+If you are too lazy to go to cask_ site to checkout how to install it,
+here is what you need to do::
+
+  curl -fsSkL https://raw.github.com/cask/cask/master/go | python
+  make CASK=$HOME/.cask/bin/cask tryout
+
+``make tryout`` will install requirements for Jedi.el separated from
+your local setup in ``~/.emacs.d/``.  You can also check the
+configuration file tryout-jedi.el_ to see a minimum working
+configuration.  This is the configuration file loaded by ``make tryout``.
+
+.. _cask: https://github.com/cask/cask
+.. _tryout-jedi.el:
+   https://github.com/tkf/emacs-jedi/blob/master/tryout-jedi.el
+
+If you install cask_ in a different place or you don't add it to the
+``$PATH``, you can call ``make`` like this: ``make
+CASK=PATH/TO/bin/cask tryout``.  Typically, ``PATH/TO/bin/cask`` is
+``~/.cask/bin/cask``.
+
 
 How to update Python dependencies
 ---------------------------------

@@ -628,6 +628,14 @@ versioning rule, though).
 - In fact, ``make requirements`` is obsolete now.  Running this
   command print some error message for help and exit with an error.
 
+Contributions from:
+
+.. include:: releases/v0.2.0/authors.txt
+
+Closed issues and pulled patches:
+
+   .. include:: releases/v0.2.0/closed.txt
+
 .. _python-environment.el: https://github.com/tkf/emacs-python-environment
 
 

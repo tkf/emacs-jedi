@@ -647,6 +647,7 @@ v0.2.0.)
 
 Highlights:
 
+- `Syohei YOSHIDA`_ (@syohex) is in our team.  Welcome!
 - Add :el:symbol:`jedi:toggle-log-traceback` and
   :el:symbol:`jedi:pop-to-epc-buffer`.
 - Add default keybind and a simple way to setup recommended keybinds.

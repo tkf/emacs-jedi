@@ -768,8 +768,16 @@ INDEX-th result.</p>
 <dl class="function">
 <dt id="jedi:install-server">
 <em class="property">function </em><tt class="descname">jedi:install-server</tt><a class="headerlink" href="#jedi:install-server" title="Permalink to this definition">¶</a></dt>
-<dd><p>Install Jedi.el dependencies in <tt class="docutils literal"><span class="pre">~/.emacs.d/.python-environments/default</span></tt>.
-This is the default location.  You can modify the location by changing
+<dd><p>This command installs Jedi server script jediepcserver.py in a
+Python environment dedicated to Emacs.  By default, the
+environment is at <tt class="docutils literal"><span class="pre">~/.emacs.d/.python-environments/default/</span></tt>.
+This environment is automatically created by <tt class="docutils literal"><span class="pre">virtualenv</span></tt> if it
+does not exist.</p>
+<p>Run this command (i.e., type <tt class="docutils literal"><span class="pre">M-x</span> <span class="pre">jedi:install-server</span> <span class="pre">RET</span></tt>)
+whenever Jedi.el shows a message to do so.  It is a good idea to
+run this every time after you update Jedi.el to sync version of
+Python modules used by Jedi.el and Jedi.el itself.</p>
+<p>You can modify the location of the environment by changing
 <a class="reference internal" href="#jedi:environment-root" title="jedi:environment-root"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:environment-root</span></tt></a> and/or <tt class="xref el el-symbol docutils literal"><span class="pre">python-environment-directory</span></tt>.  More
 specifically, Jedi.el will install Python modules under the directory
 <tt class="docutils literal"><span class="pre">PYTHON-ENVIRONMENT-DIRECTORY/JEDI:ENVIRONMENT-ROOT</span></tt>.  Note that you
@@ -778,7 +786,7 @@ an unusual location, use <tt class="xref el el-symbol docutils literal"><span cl
 location.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">Jedi.el is installed in a virtual environment but it
+<p class="last">jediepcserver.py is installed in a virtual environment but it
 does not mean Jedi.el cannot recognize the modules in virtual
 environment you are using for your Python development.  Jedi
 EPC server recognize the virtualenv it is in (i.e., the
@@ -795,6 +803,11 @@ Python modules for Jedi.el.  You still can install Python
 modules used by Jedi.el manually.  However, you are then
 responsible for keeping Jedi.el and Python modules compatible.</p>
 </div>
+<p>See also:</p>
+<ul class="simple">
+<li><a class="reference external" href="https://github.com/tkf/emacs-jedi/pull/72">https://github.com/tkf/emacs-jedi/pull/72</a></li>
+<li><a class="reference external" href="https://github.com/tkf/emacs-jedi/issues/140#issuecomment-37358527">https://github.com/tkf/emacs-jedi/issues/140#issuecomment-37358527</a></li>
+</ul>
 </dd></dl>
 
 <dl class="function">

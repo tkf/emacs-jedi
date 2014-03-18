@@ -43,7 +43,7 @@ help:
 clean:
 	-rm -rf $(BUILDDIR)/*/*
 
-html:
+html: releases
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
@@ -162,6 +162,8 @@ RELEASES_AUTHORS = $(addsuffix /authors.txt, $(RELEASES))
 RELEASES_CLOSED = $(addsuffix /closed.txt, $(RELEASES))
 ISSUE_URL = https://github.com/tkf/emacs-jedi/issues
 
+.PHONY: releases FORCE
+
 releases: $(RELEASES_AUTHORS) $(RELEASES_CLOSED)
 
 source/releases/%/authors.txt: source/releases/%/range Makefile
@@ -180,6 +182,13 @@ source/releases/%/closed.txt: source/releases/%/range Makefile
 		| sort --numeric-sort \
 		| sed 's%\(.*\)%`#\1 <$(ISSUE_URL)/\1>`_%' \
 		> $@
+
+# Run these two targets unconditionally.  See (info "(make) Force Targets")
+# Since source/releases/v0.2.0/range has no end, the result may differ
+# every time they are run.
+# To skip these targets, run make with "RELEASES=".
+source/releases/v0.2.0/authors.txt: FORCE
+source/releases/v0.2.0/closed.txt: FORCE
 
 # Load other makefiles.  See: (info "(make) Include")
 include *.mk

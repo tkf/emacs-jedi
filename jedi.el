@@ -1120,8 +1120,18 @@ what jedi can do."
 
 ;;;###autoload
 (defun jedi:install-server ()
-  "Install Jedi.el dependencies in ``~/.emacs.d/.python-environments/default``.
-This is the default location.  You can modify the location by changing
+  "This command installs Jedi server script jediepcserver.py in a
+Python environment dedicated to Emacs.  By default, the
+environment is at ``~/.emacs.d/.python-environments/default/``.
+This environment is automatically created by ``virtualenv`` if it
+does not exist.
+
+Run this command (i.e., type ``M-x jedi:install-server RET``)
+whenever Jedi.el shows a message to do so.  It is a good idea to
+run this every time after you update Jedi.el to sync version of
+Python modules used by Jedi.el and Jedi.el itself.
+
+You can modify the location of the environment by changing
 `jedi:environment-root' and/or `python-environment-directory'.  More
 specifically, Jedi.el will install Python modules under the directory
 ``PYTHON-ENVIRONMENT-DIRECTORY/JEDI:ENVIRONMENT-ROOT``.  Note that you
@@ -1129,7 +1139,7 @@ need command line program ``virtualenv``.  If you have the command in
 an unusual location, use `python-environment-virtualenv' to specify the
 location.
 
-.. NOTE:: Jedi.el is installed in a virtual environment but it
+.. NOTE:: jediepcserver.py is installed in a virtual environment but it
    does not mean Jedi.el cannot recognize the modules in virtual
    environment you are using for your Python development.  Jedi
    EPC server recognize the virtualenv it is in (i.e., the
@@ -1142,7 +1152,12 @@ location.
 .. NOTE:: It is highly recommended to use this command to install
    Python modules for Jedi.el.  You still can install Python
    modules used by Jedi.el manually.  However, you are then
-   responsible for keeping Jedi.el and Python modules compatible."
+   responsible for keeping Jedi.el and Python modules compatible.
+
+See also:
+
+- https://github.com/tkf/emacs-jedi/pull/72
+- https://github.com/tkf/emacs-jedi/issues/140#issuecomment-37358527"
   (interactive)
   (deferred:$
     (python-environment-run jedi:install-server--command

@@ -6,3 +6,4 @@
 
    index
    deprecation
+   changelog

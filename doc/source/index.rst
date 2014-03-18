@@ -10,6 +10,8 @@
      * `Command`_
      * `Troubleshooting`_
      * `FAQ`_
+     * :doc:`toc`
+     * :doc:`changelog`
 
    * `Repository <https://github.com/tkf/emacs-jedi>`_ (at GitHub)
    * `Issue tracker <https://github.com/tkf/emacs-jedi/issues>`_ (at GitHub)

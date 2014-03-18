@@ -9,6 +9,7 @@
      * `Configuration`_
      * `Command`_
      * `Troubleshooting`_
+     * `FAQ`_
 
    * `Repository <https://github.com/tkf/emacs-jedi>`_ (at GitHub)
    * `Issue tracker <https://github.com/tkf/emacs-jedi/issues>`_ (at GitHub)

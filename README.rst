@@ -10,6 +10,7 @@
      * `Screenshots <http://tkf.github.io/emacs-jedi/latest#screenshots>`_
      * `Configuration <http://tkf.github.io/emacs-jedi/latest#configuration>`_
      * `Command <http://tkf.github.io/emacs-jedi/latest#command>`_
+     * `FAQ <http://tkf.github.io/emacs-jedi/latest#faq>`_
      * `Troubleshooting <http://tkf.github.io/emacs-jedi/latest#troubleshooting>`_
 
    * `Repository <https://github.com/tkf/emacs-jedi>`_ (at GitHub)

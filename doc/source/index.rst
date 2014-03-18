@@ -601,3 +601,12 @@ One of the design goal for Jedi.el is to **never block user**.
 This is extremely important thing to have in mind because you use
 Emacs to edit something, not to wait some random lisp program to finish.
 EPC_ and deferred.el_ are perfect libraries to achieve this goal.
+
+
+More resources
+==============
+
+.. toctree::
+
+   deprecation
+   changelog

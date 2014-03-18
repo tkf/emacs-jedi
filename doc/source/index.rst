@@ -755,6 +755,12 @@ Closed issues and pulled patches:
 
 .. authors-to-github account map:
 
+.. _Ting-Yu Lin: https://github.com/aethanyc
+.. _abyssly: https://github.com/abyssly
+.. _Akihiro Uchida: https://github.com/uchida
+.. _Sean Dague: https://github.com/sdague
+.. _Thomas Frössman: https://github.com/thomasf
+.. _Vyacheslav Levit: https://github.com/vlevit
 .. _Aaron Meurer: https://github.com/asmeurer
 .. _Danilo Bargen: https://github.com/dbrgn
 .. _Fabián Ezequiel Gallina: https://github.com/fgallina

@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 """
 Jedi EPC server.
 

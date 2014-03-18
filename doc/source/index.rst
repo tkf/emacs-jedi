@@ -46,7 +46,7 @@ Quick start
     If you install Jedi.el manually (BTW, you shouldn't!), you need to add
     more stuff to it.  See `manual install`_ section.
 
-(3) **Setup Python requirements** by running
+(3) **Install Python server** (jediepcserver.py) by running
 
     - ``M-x jedi:install-server`` in Emacs
 
@@ -185,10 +185,10 @@ Manual install
 
 .. _pyinstall:
 
-Python package installation
----------------------------
+Python server (jediepcserver.py) installation
+---------------------------------------------
 
-As of Jedi.el v0.2.0, Python package installation is done by running
+As of Jedi.el v0.2.0, jediepcserver.py installation is done by running
 Emacs command :el:symbol:`jedi:install-server`, i.e., typing
 ``M-x jedi:install-server RET`` in Emacs.  The same command can be used to
 update Python packages used by Jedi.el.  So, running this command
@@ -202,15 +202,30 @@ You can configure the location of the Python packages installed by
 - :el:symbol:`python-environment-default-root-name`
 
 If you want to install Python packages manually, rather than using
-:el:symbol:`jedi:install-server`, see `Manually install Python packages`_
-below.
+:el:symbol:`jedi:install-server`, see :ref:`manual-pyinstall` below.
 
-Manually install Python packages
---------------------------------
+.. _manual-pyinstall:
 
-If you want to install Python packages manually, make sure that
-:el:symbol:`jedi:server-command` points to the executable that can
-import required Python modules.
+Manually install Python server (jediepcserver.py)
+-------------------------------------------------
+
+Install jediepcserver.py script to wherever you want.  For example,
+you can use...
+
+- pip::
+
+    pip install -U PATH/TO/EMACS-JEDI/
+
+- setup.py directly::
+
+    cd PATH/TO/EMACS-JEDI/
+    python setup.py install
+
+Then find where your jediepcserver.py ends up.  Set the location by::
+
+    (setq jedi:server-command '("PATH/TO/jediepcserver.py"))
+
+See also :el:symbol:`jedi:server-command`.
 
 
 Setup
@@ -261,10 +276,10 @@ Configuration
 .. el:function:: jedi:setup
 .. el:function:: jedi:ac-setup
 .. el:variable:: jedi:complete-on-dot
-.. el:variable:: jedi:server-command
-   :value: '("python" "JEDI:SOURCE-DIR/jediepcserver.py")
 .. el:variable:: jedi:environment-root
 .. el:variable:: jedi:environment-virtualenv
+.. el:variable:: jedi:server-command
+   :value: '("~/.emacs.d/.python-environments/default/bin/jediepcserver.py")
 .. el:variable:: jedi:server-args
 .. el:variable:: jedi:get-in-function-call-timeout
 .. el:variable:: jedi:get-in-function-call-delay

@@ -11,6 +11,9 @@
      * `Troubleshooting`_
      * `FAQ`_
 
+   * `Q & A in StackOverflow
+     <http://stackoverflow.com/questions/tagged/emacs-jedi>`_
+     (with ``emacs-jedi`` tag)
    * `Repository <https://github.com/tkf/emacs-jedi>`_ (at GitHub)
    * `Issue tracker <https://github.com/tkf/emacs-jedi/issues>`_ (at GitHub)
    * `Travis CI <https://travis-ci.org/tkf/emacs-jedi>`_ |build-status|

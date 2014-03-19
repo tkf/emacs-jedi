@@ -23,10 +23,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="Emacs Jedi 0.2.0alpha2 documentation" href="#" />
-     
-    
-
+    <link rel="top" title="Emacs Jedi 0.2.0alpha2 documentation" href="#" /> 
   </head>
   <body>
     <div class="related">
@@ -55,6 +52,8 @@
 <li><a class="reference internal" href="#faq">FAQ</a></li>
 </ul>
 </li>
+<li><a class="reference external" href="http://stackoverflow.com/questions/tagged/emacs-jedi">Q &amp; A in StackOverflow</a>
+(with <tt class="docutils literal"><span class="pre">emacs-jedi</span></tt> tag)</li>
 <li><a class="reference external" href="https://github.com/tkf/emacs-jedi">Repository</a> (at GitHub)</li>
 <li><a class="reference external" href="https://github.com/tkf/emacs-jedi/issues">Issue tracker</a> (at GitHub)</li>
 <li><a class="reference external" href="https://travis-ci.org/tkf/emacs-jedi">Travis CI</a> <a class="reference external" href="http://travis-ci.org/tkf/emacs-jedi"><img alt="Build Status" src="https://secure.travis-ci.org/tkf/emacs-jedi.png?branch=master" /></a></li>
@@ -873,18 +872,31 @@ Paste the result of this function in bug report.</p>
 <h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline">¶</a></h2>
 <p>Before posting question or bug report in the <a class="reference external" href="https://github.com/tkf/emacs-jedi/issues">issue tracker</a>, please
 investigate the problem by yourself.  Here is some checklist.</p>
+<p>It is best to mention that you went through this list (or stuck with
+somewhere) in your question or bug report.</p>
 <ol class="arabic">
-<li><p class="first">You can try Jedi.el without installing it.</p>
+<li><p class="first">You can try Jedi.el without installing it, in a &#8220;clean Emacs setup&#8221;
+<a class="footnote-reference" href="#id8" id="id4">[2]</a> .  If you don&#8217;t know what is wrong and don&#8217;t know where to
+start, this it the best thing to try first.  This helps you to find
+out if your setting is wrong or if it is actually a bug in Jedi.el.</p>
 <p>Check <a class="reference internal" href="#quick-try"><em>How to quickly try Jedi.el without installing it</em></a>.  If it works, compare with your Emacs setup
 carefully.  It is likely that there is something wrong in your
 Emacs setup.  You should also check minimal working examples in the
 <a class="reference internal" href="#install">install</a> section.</p>
 </li>
-<li><p class="first">To make sure that jedi.el is running correctly, you can
-do <tt class="docutils literal"><span class="pre">M-x</span> <span class="pre">jedi:show-jedi-version</span></tt>.  It will show the versions
-of the Python libraries you are using.</p>
-<p>This is least complex way to communicate with the Jedi server.  If
-it doesn&#8217;t work, rest of Jedi.el functions will not work.</p>
+<li><p class="first">Run <tt class="kbd docutils literal"><span class="pre">M-x</span></tt> <a class="reference internal" href="#jedi:show-version-info" title="jedi:show-version-info"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:show-version-info</span></tt></a>.
+This helps you in two ways.</p>
+<ol class="arabic">
+<li><p class="first">Paste the result of this function when you are asking question
+or reporting bug, to give people basic information.</p>
+</li>
+<li><p class="first">To make sure jedi.el is running correctly and communicating with
+Jedi EPC server.</p>
+<p>This is the least complex way to communicate with the Jedi
+server.  If it doesn&#8217;t work, rest of Jedi.el functions will not
+work.</p>
+</li>
+</ol>
 </li>
 <li><p class="first">To check that <a class="reference internal" href="#jedi:setup" title="jedi:setup"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:setup</span></tt></a> is called properly via
 <tt class="xref el el-symbol docutils literal"><span class="pre">python-mode-hook</span></tt>, run <tt class="docutils literal"><span class="pre">M-:</span> <span class="pre">jedi-mode</span> <span class="pre">RET</span></tt> in
@@ -903,12 +915,27 @@ of other libraries.  You can check the definition of keybind
 by <tt class="docutils literal"><span class="pre">&lt;f1&gt;</span> <span class="pre">k</span> <span class="pre">C-c</span> <span class="pre">?</span></tt> (or <tt class="docutils literal"><span class="pre">C-h</span></tt> instead of <tt class="docutils literal"><span class="pre">&lt;f1&gt;</span></tt>), for example.
 This one should show the help for <a class="reference internal" href="#jedi:show-doc" title="jedi:show-doc"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:show-doc</span></tt></a>.</p>
 </li>
+<li><p class="first">If you get something like <tt class="docutils literal"><span class="pre">deferred</span> <span class="pre">error</span> <span class="pre">:</span> <span class="pre">(error</span> <span class="pre">...)</span></tt> in your
+echo area (equivalently, the <tt class="docutils literal"><span class="pre">*Messages*</span></tt> buffer), most of the
+time the error is from Python-Jedi.  Get traceback following &#8220;<a class="reference internal" href="#how-to-get-traceback">How
+to get traceback</a>&#8221; and see where the error is from.  If it is from
+Python-Jedi, send the bug report to its <a class="reference external" href="https://github.com/davidhalter/jedi/issues">issue tracker</a>.</p>
+</li>
 <li><p class="first">Make sure you are reading right version of document.  If you
 are using developmental version (installed via el-get, MELPA
 or manually from github), you should read <a class="reference external" href="http://tkf.github.io/emacs-jedi/latest">developmental version</a>.  If you installed
 from Marmalade, you should read <a class="reference external" href="http://tkf.github.io/emacs-jedi/released">released version</a>.</p>
 </li>
 </ol>
+<table class="docutils footnote" frame="void" id="id8" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id4">[2]</a></td><td>By &#8220;clean Emacs setup&#8221; I mean a Emacs process started in such a
+way that it does not read your Emacs configuration file and
+libraries installed by you.  In this manual, several ways to do
+that are described.  See <a class="reference internal" href="#quick-try"><em>How to quickly try Jedi.el without installing it</em></a>.</td></tr>
+</tbody>
+</table>
 </div>
 <div class="section" id="faq">
 <h2>FAQ<a class="headerlink" href="#faq" title="Permalink to this headline">¶</a></h2>
@@ -930,7 +957,7 @@ emacs is launched, type <tt class="docutils literal"><span class="pre">M-x</span
 <tt class="docutils literal"><span class="pre">M-x</span> <span class="pre">jedi:install-server</span> <span class="pre">RET</span></tt>:</p>
 <div class="highlight-sh"><div class="highlight"><pre>mkdir /tmp/test/    <span class="c"># any location is fine</span>
 <span class="nb">cd</span> /tmp/test/
-wget https://raw.github.com/tkf/emacs-jedi/master/doc/source/jedi-melpa.el
+wget --no-check-certificate https://raw.github.com/tkf/emacs-jedi/master/doc/source/jedi-melpa.el
 <span class="nv">HOME</span><span class="o">=</span><span class="k">${</span><span class="nv">PWD</span><span class="k">}</span> emacs -Q -l jedi-melpa.el
 </pre></div>
 </div>
@@ -943,19 +970,32 @@ Once emacs is launched, type <tt class="docutils literal"><span class="pre">M-x<
 <tt class="docutils literal"><span class="pre">M-x</span> <span class="pre">jedi:install-server</span> <span class="pre">RET</span></tt></p>
 <div class="highlight-sh"><div class="highlight"><pre>mkdir /tmp/test/    <span class="c"># any location is fine</span>
 <span class="nb">cd</span> /tmp/test/
-wget https://raw.github.com/tkf/emacs-jedi/master/doc/source/jedi-el-get.el
+wget --no-check-certificate https://raw.github.com/tkf/emacs-jedi/master/doc/source/jedi-el-get.el
 <span class="nv">HOME</span><span class="o">=</span><span class="k">${</span><span class="nv">PWD</span><span class="k">}</span> emacs -Q --eval <span class="s2">&quot;(setq el-get-install-skip-emacswiki-recipes nil)&quot;</span> -l jedi-el-get.el
 <span class="c"># HOME=${PWD} emacs -Q -l jedi-el-get.el</span>
 </pre></div>
 </div>
 </li>
 </ol>
+<p>The above methods run minimal example mentioned in the <a class="reference internal" href="#install">install</a>
+section.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>In older Emacs version (&lt; 24.4), the method 1 using
+package.el may result in an error something like</p>
+<div class="highlight-text"><div class="highlight"><pre>jedi.el:37:1:Error: Cannot open load file: python-environment
+</pre></div>
+</div>
+<p class="last">In this case, <tt class="kbd docutils literal"><span class="pre">M-x</span> <span class="pre">package-install</span> <span class="pre">RET</span> <span class="pre">python-environment</span> <span class="pre">RET</span></tt>
+may solve the problem.</p>
+</div>
 </div>
 <div class="section" id="use-make-tryout-to-try-jedi-el-without-installation">
 <span id="make-tryout"></span><h4>Use <tt class="docutils literal"><span class="pre">make</span> <span class="pre">tryout</span></tt> to try Jedi.el without installation<a class="headerlink" href="#use-make-tryout-to-try-jedi-el-without-installation" title="Permalink to this headline">¶</a></h4>
 <p>This is recommended if you want to develop Jedi.el.  If you have <a class="reference external" href="https://github.com/cask/cask">cask</a>
 command, then you just have to:</p>
-<div class="highlight-sh"><div class="highlight"><pre><span class="nb">cd </span>PATH/TO/emacs-jedi
+<div class="highlight-sh"><div class="highlight"><pre>git clone https://github.com/tkf/emacs-jedi.git
+<span class="nb">cd </span>emacs-jedi
 make tryout
 </pre></div>
 </div>
@@ -1043,9 +1083,9 @@ you need are compatible with Python 3.</p>
 <h3>How to setup proxy<a class="headerlink" href="#how-to-setup-proxy" title="Permalink to this headline">¶</a></h3>
 <p><a class="reference internal" href="#jedi:install-server" title="jedi:install-server"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:install-server</span></tt></a> runs <a class="reference external" href="http://pip.readthedocs.org/en/latest/reference/pip_install.html">pip install</a>.  So, you may
 want to set proxy for it.  In that case, set <span class="target" id="index-0"></span><tt class="xref std std-envvar docutils literal"><span class="pre">http_proxy</span></tt> and
-<span class="target" id="index-1"></span><tt class="xref std std-envvar docutils literal"><span class="pre">https_proxy</span></tt> <a class="footnote-reference" href="#id8" id="id6">[2]</a>.</p>
+<span class="target" id="index-1"></span><tt class="xref std std-envvar docutils literal"><span class="pre">https_proxy</span></tt> <a class="footnote-reference" href="#id11" id="id9">[3]</a>.</p>
 <p>If you want to set it in <tt class="docutils literal"><span class="pre">~/.bashrc</span></tt>, do something like the
-following.  Since Emacs <a class="footnote-reference" href="#id9" id="id7">[3]</a> and other programs read this variable, it
+following.  Since Emacs <a class="footnote-reference" href="#id12" id="id10">[4]</a> and other programs read this variable, it
 may be the best approach.:</p>
 <div class="highlight-cl"><div class="highlight"><pre><span class="nb">export</span> <span class="nv">http_proxy=http://[user:passwd@]proxy.server:port</span>
 <span class="nb">export</span> <span class="nv">https_proxy=https://[user:passwd@]proxy.server:port</span>
@@ -1060,10 +1100,10 @@ may be the best approach.:</p>
 <span class="target" id="index-2"></span><tt class="xref std std-envvar docutils literal"><span class="pre">PIP_PROXY</span></tt> instead of <span class="target" id="index-3"></span><tt class="xref std std-envvar docutils literal"><span class="pre">http_proxy</span></tt> and
 <span class="target" id="index-4"></span><tt class="xref std std-envvar docutils literal"><span class="pre">https_proxy</span></tt>.  This sets default value for <a class="reference external" href="http://pip.readthedocs.org/en/latest/reference/pip.html#cmdoption--proxy">pip &#8211;proxy option</a>
 (see also <a class="reference external" href="http://pip.readthedocs.org/en/latest/user_guide.html#environment-variables">pip &gt; User Guide &gt; Environment Variables</a>).</p>
-<table class="docutils footnote" frame="void" id="id8" rules="none">
+<table class="docutils footnote" frame="void" id="id11" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id6">[2]</a></td><td><p class="first">See also:
+<tr><td class="label"><a class="fn-backref" href="#id9">[3]</a></td><td><p class="first">See also:
 <a class="reference external" href="http://stackoverflow.com/questions/14149422/using-pip-behind-a-proxy">http://stackoverflow.com/questions/14149422/using-pip-behind-a-proxy</a></p>
 <p class="last">(BTW, <span class="target" id="index-5"></span><tt class="xref std std-envvar docutils literal"><span class="pre">http_proxy</span></tt> and <span class="target" id="index-6"></span><tt class="xref std std-envvar docutils literal"><span class="pre">https_proxy</span></tt> are not
 mentioned in pip manual.  If anybody know official information from
@@ -1072,10 +1112,10 @@ please add it here.)</p>
 </td></tr>
 </tbody>
 </table>
-<table class="docutils footnote" frame="void" id="id9" rules="none">
+<table class="docutils footnote" frame="void" id="id12" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id7">[3]</a></td><td><a class="reference external" href="http://www.gnu.org/software/emacs/manual/html_node/url/Proxies.html">Proxies - URL Programmer&#8217;s Manual</a></td></tr>
+<tr><td class="label"><a class="fn-backref" href="#id10">[4]</a></td><td><a class="reference external" href="http://www.gnu.org/software/emacs/manual/html_node/url/Proxies.html">Proxies - URL Programmer&#8217;s Manual</a></td></tr>
 </tbody>
 </table>
 </div>
@@ -1244,7 +1284,7 @@ containing newlines (e.g., <tt class="docutils literal"><span class="pre">json._
 <div class="section" id="v0-1-1-2012-12-01">
 <h3>v0.1.1 (2012-12-01)<a class="headerlink" href="#v0-1-1-2012-12-01" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li>Add experimental &#8220;full-name&#8221; support <a class="footnote-reference" href="#fullname" id="id43">[4]</a>.</li>
+<li>Add experimental &#8220;full-name&#8221; support <a class="footnote-reference" href="#fullname" id="id46">[5]</a>.</li>
 <li><a class="reference external" href="https://github.com/tkf/emacs-jedi/pull/11">PR-11</a> fixes Makefile for BSD make (thanks, <a class="reference external" href="https://github.com/goro1080">&#64;goro1080</a>!).</li>
 <li>Fix <a class="reference external" href="https://github.com/tkf/emacs-jedi/issues/9">issue-9</a>: line number sent to the server was shifted when the cursor
 is at the beginning of line.</li>
@@ -1266,7 +1306,7 @@ Jedi commands to <tt class="xref el el-symbol docutils literal"><span class="pre
 <table class="docutils footnote" frame="void" id="fullname" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id43">[4]</a></td><td><cite>jedi:get-full-name-*</cite> functions require developmental
+<tr><td class="label"><a class="fn-backref" href="#id46">[5]</a></td><td><cite>jedi:get-full-name-*</cite> functions require developmental
 version of <a class="reference external" href="https://github.com/davidhalter/jedi">Jedi</a>.
 See also: <a class="reference external" href="https://github.com/davidhalter/jedi/issues/61">Request: Definition.fullname · Issue #61 ·
 davidhalter/jedi</a></td></tr>

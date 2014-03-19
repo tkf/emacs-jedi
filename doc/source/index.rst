@@ -465,7 +465,8 @@ command, then you just have to:
 
 .. sourcecode:: sh
 
-   cd PATH/TO/emacs-jedi
+   git clone https://github.com/tkf/emacs-jedi.git
+   cd emacs-jedi
    make tryout
 
 If you are too lazy to go to cask_ site to checkout how to install it,

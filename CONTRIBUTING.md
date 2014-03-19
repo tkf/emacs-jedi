@@ -1,13 +1,14 @@
 # Contribution guide line
 
 
-## Can I ask question in the issue tracker?
+## Where should I ask question about Jedi.el?
 
-It is OK to ask question in the issue tracker, but if the question is
-not too specific to Jedi.el, consider asking question in other place
-such as [stackoverflow](http://stackoverflow.com).  For example,
-please do not ask "How to install Jedi.el using package.el?" in the
-issue tracker.  Also, please search older questions in the tracker.
+Please ask question in [StackOverflow with `emacs-jedi` tag][so-tag].
+
+However, you may find some old questions in GitHub issue tracker so it
+is worth searching in it.
+
+[so-tag]: http://stackoverflow.com/questions/tagged/emacs-jedi
 
 
 ## Bug report / Question

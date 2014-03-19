@@ -444,6 +444,10 @@ This is recommended if you are new to Jedi.el.
       :language: sh
 
 
+The above methods run minimal example mentioned in the install_
+section.
+
+
 .. note:: In older Emacs version (< 24.4), the method 1 using
    package.el may result in an error something like
 

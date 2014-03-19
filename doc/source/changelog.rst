@@ -13,6 +13,14 @@ versioning rule, though).
 - In fact, ``make requirements`` is obsolete now.  Running this
   command print some error message for help and exit with an error.
 
+Contributions from:
+
+.. include:: releases/v0.2.0/authors.txt
+
+Closed issues and pulled patches:
+
+   .. include:: releases/v0.2.0/closed.txt
+
 .. _python-environment.el: https://github.com/tkf/emacs-python-environment
 
 
@@ -24,6 +32,7 @@ v0.2.0.)
 
 Highlights:
 
+- `Syohei YOSHIDA`_ (@syohex) is in our team.  Welcome!
 - Add :el:symbol:`jedi:toggle-log-traceback` and
   :el:symbol:`jedi:pop-to-epc-buffer`.
 - Add default keybind and a simple way to setup recommended keybinds.
@@ -132,6 +141,12 @@ Closed issues and pulled patches:
 
 .. authors-to-github account map:
 
+.. _Ting-Yu Lin: https://github.com/aethanyc
+.. _abyssly: https://github.com/abyssly
+.. _Akihiro Uchida: https://github.com/uchida
+.. _Sean Dague: https://github.com/sdague
+.. _Thomas Frössman: https://github.com/thomasf
+.. _Vyacheslav Levit: https://github.com/vlevit
 .. _Aaron Meurer: https://github.com/asmeurer
 .. _Danilo Bargen: https://github.com/dbrgn
 .. _Fabián Ezequiel Gallina: https://github.com/fgallina

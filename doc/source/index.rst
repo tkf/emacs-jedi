@@ -444,6 +444,17 @@ This is recommended if you are new to Jedi.el.
       :language: sh
 
 
+.. note:: In older Emacs version (< 24.4), the method 1 using
+   package.el may result in an error something like
+
+   .. sourcecode:: text
+
+      jedi.el:37:1:Error: Cannot open load file: python-environment
+
+   In this case, :kbd:`M-x package-install RET python-environment RET`
+   may solve the problem.
+
+
 .. _make-tryout:
 
 Use ``make tryout`` to try Jedi.el without installation

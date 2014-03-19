@@ -387,6 +387,14 @@ somewhere) in your question or bug report.
    by ``<f1> k C-c ?`` (or ``C-h`` instead of ``<f1>``), for example.
    This one should show the help for :el:symbol:`jedi:show-doc`.
 
+#. If you get something like ``deferred error : (error ...)`` in your
+   echo area (equivalently, the ``*Messages*`` buffer), most of the
+   time the error is from Python-Jedi.  Get traceback following "`How
+   to get traceback`_" and see where the error is from.  If it is from
+   Python-Jedi, send the bug report to its `issue tracker`__.
+
+   __ https://github.com/davidhalter/jedi/issues
+
 #. Make sure you are reading right version of document.  If you
    are using developmental version (installed via el-get, MELPA
    or manually from github), you should read `developmental version

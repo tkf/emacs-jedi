@@ -343,19 +343,31 @@ Troubleshooting
 Before posting question or bug report in the `issue tracker`_, please
 investigate the problem by yourself.  Here is some checklist.
 
-#. You can try Jedi.el without installing it.
+It is best to mention that you went through this list (or stuck with
+somewhere) in your question or bug report.
+
+#. You can try Jedi.el without installing it, in a "clean Emacs setup"
+   [#]_ .  If you don't know what is wrong and don't know where to
+   start, this it the best thing to try first.  This helps you to find
+   out if your setting is wrong or if it is actually a bug in Jedi.el.
 
    Check :ref:`quick-try`.  If it works, compare with your Emacs setup
    carefully.  It is likely that there is something wrong in your
    Emacs setup.  You should also check minimal working examples in the
    install_ section.
 
-#. To make sure that jedi.el is running correctly, you can
-   do ``M-x jedi:show-jedi-version``.  It will show the versions
-   of the Python libraries you are using.
+#. Run :kbd:`M-x` :el:symbol:`jedi:show-version-info`.
+   This helps you in two ways.
 
-   This is least complex way to communicate with the Jedi server.  If
-   it doesn't work, rest of Jedi.el functions will not work.
+   1. Paste the result of this function when you are asking question
+      or reporting bug, to give people basic information.
+
+   2. To make sure jedi.el is running correctly and communicating with
+      Jedi EPC server.
+
+      This is the least complex way to communicate with the Jedi
+      server.  If it doesn't work, rest of Jedi.el functions will not
+      work.
 
 #. To check that :el:symbol:`jedi:setup` is called properly via
    :el:symbol:`python-mode-hook`, run ``M-: jedi-mode RET`` in
@@ -381,6 +393,12 @@ investigate the problem by yourself.  Here is some checklist.
    <http://tkf.github.io/emacs-jedi/latest>`_.  If you installed
    from Marmalade, you should read `released version
    <http://tkf.github.io/emacs-jedi/released>`_.
+
+
+.. [#] By "clean Emacs setup" I mean a Emacs process started in such a
+   way that it does not read your Emacs configuration file and
+   libraries installed by you.  In this manual, several ways to do
+   that are described.  See :ref:`quick-try`.
 
 
 FAQ

@@ -12,6 +12,8 @@
      * `Command <http://tkf.github.io/emacs-jedi/latest#command>`_
      * `FAQ <http://tkf.github.io/emacs-jedi/latest#faq>`_
      * `Troubleshooting <http://tkf.github.io/emacs-jedi/latest#troubleshooting>`_
+     * `Complete overview <http://tkf.github.io/emacs-jedi/latest/contents.html>`_
+     * `Changelog <http://tkf.github.io/emacs-jedi/latest/changelog.html>`_
 
    * `Q & A in StackOverflow
      <http://stackoverflow.com/questions/tagged/emacs-jedi>`_

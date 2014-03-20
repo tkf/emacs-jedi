@@ -13,6 +13,9 @@
      * :doc:`toc`
      * :doc:`changelog`
 
+   * `Q & A in StackOverflow
+     <http://stackoverflow.com/questions/tagged/emacs-jedi>`_
+     (with ``emacs-jedi`` tag)
    * `Repository <https://github.com/tkf/emacs-jedi>`_ (at GitHub)
    * `Issue tracker <https://github.com/tkf/emacs-jedi/issues>`_ (at GitHub)
    * `Travis CI <https://travis-ci.org/tkf/emacs-jedi>`_ |build-status|
@@ -333,19 +336,31 @@ Troubleshooting
 Before posting question or bug report in the `issue tracker`_, please
 investigate the problem by yourself.  Here is some checklist.
 
-#. You can try Jedi.el without installing it.
+It is best to mention that you went through this list (or stuck with
+somewhere) in your question or bug report.
+
+#. You can try Jedi.el without installing it, in a "clean Emacs setup"
+   [#]_ .  If you don't know what is wrong and don't know where to
+   start, this it the best thing to try first.  This helps you to find
+   out if your setting is wrong or if it is actually a bug in Jedi.el.
 
    Check :ref:`quick-try`.  If it works, compare with your Emacs setup
    carefully.  It is likely that there is something wrong in your
    Emacs setup.  You should also check minimal working examples in the
    install_ section.
 
-#. To make sure that jedi.el is running correctly, you can
-   do ``M-x jedi:show-jedi-version``.  It will show the versions
-   of the Python libraries you are using.
+#. Run :kbd:`M-x` :el:symbol:`jedi:show-version-info`.
+   This helps you in two ways.
 
-   This is least complex way to communicate with the Jedi server.  If
-   it doesn't work, rest of Jedi.el functions will not work.
+   1. Paste the result of this function when you are asking question
+      or reporting bug, to give people basic information.
+
+   2. To make sure jedi.el is running correctly and communicating with
+      Jedi EPC server.
+
+      This is the least complex way to communicate with the Jedi
+      server.  If it doesn't work, rest of Jedi.el functions will not
+      work.
 
 #. To check that :el:symbol:`jedi:setup` is called properly via
    :el:symbol:`python-mode-hook`, run ``M-: jedi-mode RET`` in
@@ -365,12 +380,26 @@ investigate the problem by yourself.  Here is some checklist.
    by ``<f1> k C-c ?`` (or ``C-h`` instead of ``<f1>``), for example.
    This one should show the help for :el:symbol:`jedi:show-doc`.
 
+#. If you get something like ``deferred error : (error ...)`` in your
+   echo area (equivalently, the ``*Messages*`` buffer), most of the
+   time the error is from Python-Jedi.  Get traceback following "`How
+   to get traceback`_" and see where the error is from.  If it is from
+   Python-Jedi, send the bug report to its `issue tracker`__.
+
+   __ https://github.com/davidhalter/jedi/issues
+
 #. Make sure you are reading right version of document.  If you
    are using developmental version (installed via el-get, MELPA
    or manually from github), you should read `developmental version
    <http://tkf.github.io/emacs-jedi/latest>`_.  If you installed
    from Marmalade, you should read `released version
    <http://tkf.github.io/emacs-jedi/released>`_.
+
+
+.. [#] By "clean Emacs setup" I mean a Emacs process started in such a
+   way that it does not read your Emacs configuration file and
+   libraries installed by you.  In this manual, several ways to do
+   that are described.  See :ref:`quick-try`.
 
 
 FAQ
@@ -416,6 +445,21 @@ This is recommended if you are new to Jedi.el.
       :language: sh
 
 
+The above methods run minimal example mentioned in the install_
+section.
+
+
+.. note:: In older Emacs version (< 24.4), the method 1 using
+   package.el may result in an error something like
+
+   .. sourcecode:: text
+
+      jedi.el:37:1:Error: Cannot open load file: python-environment
+
+   In this case, :kbd:`M-x package-install RET python-environment RET`
+   may solve the problem.
+
+
 .. _make-tryout:
 
 Use ``make tryout`` to try Jedi.el without installation
@@ -426,7 +470,8 @@ command, then you just have to:
 
 .. sourcecode:: sh
 
-   cd PATH/TO/emacs-jedi
+   git clone https://github.com/tkf/emacs-jedi.git
+   cd emacs-jedi
    make tryout
 
 If you are too lazy to go to cask_ site to checkout how to install it,

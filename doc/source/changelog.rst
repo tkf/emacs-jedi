@@ -12,6 +12,10 @@ versioning rule, though).
   need to run ``make requirements`` outside of Emacs.
 - In fact, ``make requirements`` is obsolete now.  Running this
   command print some error message for help and exit with an error.
+- StackOverflow_ is the main place for questions now.
+  Previously it was treated in GitHub `issue tracker`_.
+- :el:symbol:`jedi:show-setup-info` is added to help bug reports and
+  questions.
 
 Contributions from:
 
@@ -22,6 +26,8 @@ Closed issues and pulled patches:
    .. include:: releases/v0.2.0/closed.txt
 
 .. _python-environment.el: https://github.com/tkf/emacs-python-environment
+.. _StackOverflow: http://stackoverflow.com/questions/tagged/emacs-jedi
+.. _issue tracker: https://github.com/tkf/emacs-jedi/issues
 
 
 v0.1.3 (never released)
@@ -42,7 +48,8 @@ Highlights:
   using it before installing jedi.el.  See:
   `#40 <https://github.com/tkf/emacs-jedi/issues/40>`_,
   `bbatsov/prelude#251 <https://github.com/bbatsov/prelude/issues/251>`_,
-  `stackoverflow <http://stackoverflow.com/questions/15658963>`_.
+  `this question in StackOverflow
+  <http://stackoverflow.com/questions/15658963>`_.
 
 Contributions from:
 

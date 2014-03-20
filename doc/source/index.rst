@@ -367,6 +367,10 @@ somewhere) in your question or bug report.
    1. Paste the result of this function when you are asking question
       or reporting bug, to give people basic information.
 
+      Unless you are sure if it is irrelevant, it is recommended to
+      put this information.  If you think it is too long for a simple
+      question/report, you can always use https://gist.github.com etc.
+
    2. To make sure jedi.el is running correctly and communicating with
       Jedi EPC server.
 

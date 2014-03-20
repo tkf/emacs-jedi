@@ -156,3 +156,7 @@ Closed issues and pulled patches:
 .. _L42y: https://github.com/L42y
 .. _Ryan Olf: https://github.com/ryanolf
 .. _Syohei YOSHIDA: https://github.com/syohex
+
+
+.. Links
+.. _jedi: https://github.com/davidhalter/jedi

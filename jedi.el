@@ -1042,6 +1042,59 @@ See also `jedi:imenu-create-index-function'."
 
 ;;; Meta info
 
+(defun jedi:show-setup-info ()
+  "Show installation and configuration info in a buffer.
+Paste the result of this function when asking question or
+reporting bug.  This command also tries to detect errors when
+communicating with Jedi EPC server.  If you have some problem you
+may find some information about communication error."
+  (interactive)
+  (let (epc get-epc-error version-reply)
+    (condition-case err
+        (setq epc (jedi:get-epc))
+      (error (setq get-epc-error err)))
+    (when epc
+      (setq version-reply
+            (condition-case err
+                (epc:sync
+                 epc
+                 (deferred:$
+                   (deferred:timeout 500
+                     '(:timeout nil)
+                     (epc:call-deferred epc 'get_jedi_version nil))
+                   (deferred:error it
+                     (lambda (err) `(:error ,err)))))
+              (error `(:sync-error ,err)))))
+    (let ((standard-output (get-buffer-create "*jedi:show-setup-info*")))
+      (with-current-buffer standard-output
+        (emacs-lisp-mode)
+        (erase-buffer)
+        (insert ";; Emacs Lisp version:\n")
+        (pp `(:emacs-version ,emacs-version :jedi-version ,jedi:version))
+        (insert ";; Python version:\n")
+        (pp version-reply)
+        (when get-epc-error
+          (insert ";; EPC error:\n")
+          (pp `(:get-epc-error ,get-epc-error)))
+        (insert ";; Customization:\n")
+        (pp (jedi:-list-customization))
+        (display-buffer standard-output)))))
+
+(defun jedi:-list-defcustoms ()
+  (loop for sym being the symbols
+        for name = (symbol-name sym)
+        when (and (or (string-prefix-p "jedi:" name)
+                      (string-prefix-p "python-environment-" name))
+                  (custom-variable-p sym))
+        collect sym))
+
+(defun jedi:-list-customization ()
+  (loop for sym in (sort (jedi:-list-defcustoms)
+                         (lambda (x y)
+                           (string< (symbol-name x)
+                                    (symbol-name y))))
+        collect (cons sym (symbol-value sym))))
+
 (defun jedi:get-jedi-version-request ()
   "Request version of Python modules and return a deferred object."
   (epc:call-deferred (jedi:get-epc) 'get_jedi_version nil))

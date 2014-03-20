@@ -346,19 +346,6 @@ somewhere) in your question or bug report.
 
 .. _StackOverflow: http://stackoverflow.com/questions/tagged/emacs-jedi
 
-#. You can try Jedi.el without installing it, in a "clean Emacs setup"
-   [#]_ .  If you don't know what is wrong and don't know where to
-   start, this it the best thing to try first.  This helps you to find
-   out if your setting is wrong or if it is actually a bug in Jedi.el.
-
-   Check :ref:`quick-try`.  If it works, compare with your Emacs setup
-   carefully.  It is likely that there is something wrong in your
-   Emacs setup.  You should also check minimal working examples in the
-   install_ section.
-
-   (Note that currently there is no automated way to do this in
-   Windows without Cygwin.  If you know it, please document!)
-
 #. Run :kbd:`M-x` :el:symbol:`jedi:show-setup-info` :kbd:`RET`
    (if you don't have :el:symbol:`jedi:show-setup-info`,
    try :el:symbol:`jedi:show-version-info` instead).
@@ -377,6 +364,19 @@ somewhere) in your question or bug report.
       This is the least complex way to communicate with the Jedi
       server.  If it doesn't work, rest of Jedi.el functions will not
       work.
+
+#. You can try Jedi.el without installing it, in a "clean Emacs setup"
+   [#]_ .  If you don't know what is wrong and don't know what to do
+   next, this it the best thing to try.  This helps you to find
+   out if your setting is wrong or if it is actually a bug in Jedi.el.
+
+   Check :ref:`quick-try`.  If it works, compare with your Emacs setup
+   carefully.  It is likely that there is something wrong in your
+   Emacs setup.  You should also check minimal working examples in the
+   install_ section.
+
+   (Note that currently there is no automated way to do this in
+   Windows without Cygwin.  If you know it, please document!)
 
 #. To check that :el:symbol:`jedi:setup` is called properly via
    :el:symbol:`python-mode-hook`, run ``M-: jedi-mode RET`` in

@@ -327,6 +327,7 @@ Command
 .. el:function:: jedi:pop-to-epc-buffer
 .. el:function:: jedi:toggle-log-traceback
 .. el:function:: jedi:toggle-debug-server
+.. el:function:: jedi:show-setup-info
 .. el:function:: jedi:show-version-info
 
 
@@ -358,7 +359,9 @@ somewhere) in your question or bug report.
    (Note that currently there is no automated way to do this in
    Windows without Cygwin.  If you know it, please document!)
 
-#. Run :kbd:`M-x` :el:symbol:`jedi:show-version-info`.
+#. Run :kbd:`M-x` :el:symbol:`jedi:show-setup-info` :kbd:`RET`
+   (if you don't have :el:symbol:`jedi:show-setup-info`,
+   try :el:symbol:`jedi:show-version-info` instead).
    This helps you in two ways.
 
    1. Paste the result of this function when you are asking question

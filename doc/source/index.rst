@@ -346,15 +346,14 @@ somewhere) in your question or bug report.
 
 .. _StackOverflow: http://stackoverflow.com/questions/tagged/emacs-jedi
 
-#. Run :kbd:`M-x` :el:symbol:`jedi:show-setup-info` :kbd:`RET`
-   (if you don't have :el:symbol:`jedi:show-setup-info`,
-   try :el:symbol:`jedi:show-version-info` instead).
+#. Run :kbd:`M-x` :el:symbol:`jedi:show-setup-info` :kbd:`RET` (if you
+   don't have it, try :el:symbol:`jedi:show-version-info` instead).
    This helps you in two ways.
 
    1. Paste the result of this function when you are asking question
       or reporting bug, to give people basic information.
 
-      Unless you are sure if it is irrelevant, it is recommended to
+      Unless you are sure that it is irrelevant, it is recommended to
       put this information.  If you think it is too long for a simple
       question/report, you can always use https://gist.github.com etc.
 

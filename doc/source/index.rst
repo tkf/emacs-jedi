@@ -327,6 +327,7 @@ Command
 .. el:function:: jedi:pop-to-epc-buffer
 .. el:function:: jedi:toggle-log-traceback
 .. el:function:: jedi:toggle-debug-server
+.. el:function:: jedi:show-setup-info
 .. el:function:: jedi:show-version-info
 
 
@@ -345,9 +346,27 @@ somewhere) in your question or bug report.
 
 .. _StackOverflow: http://stackoverflow.com/questions/tagged/emacs-jedi
 
+#. Run :kbd:`M-x` :el:symbol:`jedi:show-setup-info` :kbd:`RET` (if you
+   don't have it, try :el:symbol:`jedi:show-version-info` instead).
+   This helps you in two ways.
+
+   1. Paste the result of this function when you are asking question
+      or reporting bug, to give people basic information.
+
+      Unless you are sure that it is irrelevant, it is recommended to
+      put this information.  If you think it is too long for a simple
+      question/report, you can always use https://gist.github.com etc.
+
+   2. To make sure jedi.el is running correctly and communicating with
+      Jedi EPC server.
+
+      This is the least complex way to communicate with the Jedi
+      server.  If it doesn't work, rest of Jedi.el functions will not
+      work.
+
 #. You can try Jedi.el without installing it, in a "clean Emacs setup"
-   [#]_ .  If you don't know what is wrong and don't know where to
-   start, this it the best thing to try first.  This helps you to find
+   [#]_ .  If you don't know what is wrong and don't know what to do
+   next, this it the best thing to try.  This helps you to find
    out if your setting is wrong or if it is actually a bug in Jedi.el.
 
    Check :ref:`quick-try`.  If it works, compare with your Emacs setup
@@ -357,19 +376,6 @@ somewhere) in your question or bug report.
 
    (Note that currently there is no automated way to do this in
    Windows without Cygwin.  If you know it, please document!)
-
-#. Run :kbd:`M-x` :el:symbol:`jedi:show-version-info`.
-   This helps you in two ways.
-
-   1. Paste the result of this function when you are asking question
-      or reporting bug, to give people basic information.
-
-   2. To make sure jedi.el is running correctly and communicating with
-      Jedi EPC server.
-
-      This is the least complex way to communicate with the Jedi
-      server.  If it doesn't work, rest of Jedi.el functions will not
-      work.
 
 #. To check that :el:symbol:`jedi:setup` is called properly via
    :el:symbol:`python-mode-hook`, run ``M-: jedi-mode RET`` in

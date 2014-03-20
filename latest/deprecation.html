@@ -1,0 +1,171 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Deprecation &mdash; Emacs Jedi 0.2.0alpha2 documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.2.0alpha2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Emacs Jedi 0.2.0alpha2 documentation" href="index.html" />
+    <link rel="next" title="Changelog" href="changelog.html" />
+    <link rel="prev" title="Jedi.el - Python auto-completion for Emacs" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="changelog.html" title="Changelog"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Jedi.el - Python auto-completion for Emacs"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Emacs Jedi 0.2.0alpha2 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="deprecation">
+<h1>Deprecation<a class="headerlink" href="#deprecation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="deprecated-configuration">
+<h2>Deprecated configuration<a class="headerlink" href="#deprecated-configuration" title="Permalink to this headline">¶</a></h2>
+<dl class="variable">
+<dt id="jedi:setup-keys">
+<em class="property">variable </em><big>(</big><tt class="descname">jedi:setup-keys </tt><em>nil</em><big>)</big><a class="headerlink" href="#jedi:setup-keys" title="Permalink to this definition">¶</a></dt>
+<dd><p>Setup recommended keybinds.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Use of this value is obsolete now.  As of 0.1.3,
+jedi.el has default keybinds, which are different than these. See also
+<tt class="xref el el-symbol docutils literal"><span class="pre">jedi-mode</span></tt>.</p>
+</div>
+<div class="admonition-default-keybinds admonition">
+<p class="first admonition-title">Default keybinds</p>
+<dl class="last docutils">
+<dt><tt class="docutils literal"><span class="pre">&lt;C-tab&gt;</span></tt> <span class="classifier-delimiter">:</span> <span class="classifier">= <a class="reference internal" href="#jedi:key-complete" title="jedi:key-complete"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:key-complete</span></tt></a></span></dt>
+<dd>Complete code at point. (<a class="reference internal" href="index.html#jedi:complete" title="jedi:complete"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:complete</span></tt></a>)</dd>
+<dt><tt class="docutils literal"><span class="pre">C-.</span></tt> <span class="classifier-delimiter">:</span> <span class="classifier">= <a class="reference internal" href="#jedi:key-goto-definition" title="jedi:key-goto-definition"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:key-goto-definition</span></tt></a></span></dt>
+<dd>Goto the definition of the object at point. (<a class="reference internal" href="index.html#jedi:goto-definition" title="jedi:goto-definition"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:goto-definition</span></tt></a>)</dd>
+<dt><tt class="docutils literal"><span class="pre">C-c</span> <span class="pre">d</span></tt> <span class="classifier-delimiter">:</span> <span class="classifier">= <a class="reference internal" href="#jedi:key-show-doc" title="jedi:key-show-doc"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:key-show-doc</span></tt></a></span></dt>
+<dd>Show the documentation of the object at point. (<a class="reference internal" href="index.html#jedi:show-doc" title="jedi:show-doc"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:show-doc</span></tt></a>)</dd>
+<dt><tt class="docutils literal"><span class="pre">C-c</span> <span class="pre">r</span></tt> <span class="classifier-delimiter">:</span> <span class="classifier">= <a class="reference internal" href="#jedi:key-related-names" title="jedi:key-related-names"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:key-related-names</span></tt></a></span></dt>
+<dd>Find related names of the object at point.
+(<a class="reference internal" href="index.html#helm-jedi-related-names" title="helm-jedi-related-names"><tt class="xref el el-symbol docutils literal"><span class="pre">helm-jedi-related-names</span></tt></a> / <a class="reference internal" href="index.html#anything-jedi-related-names" title="anything-jedi-related-names"><tt class="xref el el-symbol docutils literal"><span class="pre">anything-jedi-related-names</span></tt></a>)</dd>
+</dl>
+</div>
+<p>When <a class="reference internal" href="#jedi:setup-keys" title="jedi:setup-keys"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:setup-keys</span></tt></a> is non-<tt class="xref el el-symbol docutils literal"><span class="pre">nil</span></tt>, recommended keybinds are set
+in <tt class="xref el el-symbol docutils literal"><span class="pre">jedi-mode-map</span></tt> when <strong>loading</strong> jedi.el.  Therefore, you must
+set this value before jedi.el is loaded.  As recommended usage of
+jedi.el is to call <a class="reference internal" href="index.html#jedi:setup" title="jedi:setup"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:setup</span></tt></a> via <tt class="xref el el-symbol docutils literal"><span class="pre">python-mode-hook</span></tt> where
+<a class="reference internal" href="index.html#jedi:setup" title="jedi:setup"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:setup</span></tt></a> is autloaded, setting <a class="reference internal" href="#jedi:setup-keys" title="jedi:setup-keys"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:setup-keys</span></tt></a> to <tt class="xref el el-symbol docutils literal"><span class="pre">t</span></tt> in
+you emacs setup (e.g., <tt class="docutils literal"><span class="pre">.emacs.d/init.el</span></tt>) works fine.:</p>
+<div class="highlight-cl"><div class="highlight"><pre><span class="p">(</span><span class="k">setq</span> <span class="nv">jedi:setup-keys</span> <span class="no">t</span><span class="p">)</span>
+<span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;python-mode-hook</span> <span class="ss">&#39;jedi:setup</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If you want to require jedi.el explicitly when loading Emacs,
+make sure to set <a class="reference internal" href="#jedi:setup-keys" title="jedi:setup-keys"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:setup-keys</span></tt></a> before loading jedi.el:</p>
+<div class="highlight-cl"><div class="highlight"><pre><span class="p">(</span><span class="k">setq</span> <span class="nv">jedi:setup-keys</span> <span class="no">t</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;jedi</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Byte compiler warns about unbound variable if you set
+<a class="reference internal" href="#jedi:setup-keys" title="jedi:setup-keys"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:setup-keys</span></tt></a> before loading jedi.el.  The proper way to
+suppress this warning is the following:</p>
+<div class="highlight-cl"><div class="highlight"><pre><span class="p">(</span><span class="nv">eval-when-compile</span> <span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;jedi</span> <span class="no">nil</span> <span class="no">t</span><span class="p">))</span>
+<span class="p">(</span><span class="k">setq</span> <span class="nv">jedi:setup-keys</span> <span class="no">t</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You can change these keybinds by changing <a class="reference internal" href="#jedi:key-complete" title="jedi:key-complete"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:key-complete</span></tt></a>,
+<a class="reference internal" href="#jedi:key-goto-definition" title="jedi:key-goto-definition"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:key-goto-definition</span></tt></a>, <a class="reference internal" href="#jedi:key-show-doc" title="jedi:key-show-doc"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:key-show-doc</span></tt></a>, and
+<a class="reference internal" href="#jedi:key-related-names" title="jedi:key-related-names"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:key-related-names</span></tt></a>.  For example, default keybind for
+ropemacs&#8217;s <tt class="xref el el-symbol docutils literal"><span class="pre">rope-show-doc</span></tt> is same as <a class="reference internal" href="index.html#jedi:show-doc" title="jedi:show-doc"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:show-doc</span></tt></a>.  You can
+avoid collision by something like this:</p>
+<div class="highlight-cl"><div class="highlight"><pre><span class="p">(</span><span class="k">setq</span> <span class="nv">jedi:key-show-doc</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c D&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="variable">
+<dt id="jedi:key-complete">
+<em class="property">variable </em><big>(</big><tt class="descname">jedi:key-complete </tt><em>(kbd &quot;&lt;C-tab&gt;&quot;)</em><big>)</big><a class="headerlink" href="#jedi:key-complete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Keybind for command <a class="reference internal" href="index.html#jedi:complete" title="jedi:complete"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:complete</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="variable">
+<dt id="jedi:key-goto-definition">
+<em class="property">variable </em><big>(</big><tt class="descname">jedi:key-goto-definition </tt><em>(kbd &quot;C-.&quot;)</em><big>)</big><a class="headerlink" href="#jedi:key-goto-definition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Keybind for command <a class="reference internal" href="index.html#jedi:goto-definition" title="jedi:goto-definition"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:goto-definition</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="variable">
+<dt id="jedi:key-show-doc">
+<em class="property">variable </em><big>(</big><tt class="descname">jedi:key-show-doc </tt><em>(kbd &quot;C-c d&quot;)</em><big>)</big><a class="headerlink" href="#jedi:key-show-doc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Keybind for command <a class="reference internal" href="index.html#jedi:show-doc" title="jedi:show-doc"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:show-doc</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="variable">
+<dt id="jedi:key-related-names">
+<em class="property">variable </em><big>(</big><tt class="descname">jedi:key-related-names </tt><em>(kbd &quot;C-c r&quot;)</em><big>)</big><a class="headerlink" href="#jedi:key-related-names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Keybind for command <a class="reference internal" href="index.html#helm-jedi-related-names" title="helm-jedi-related-names"><tt class="xref el el-symbol docutils literal"><span class="pre">helm-jedi-related-names</span></tt></a> or
+<a class="reference internal" href="index.html#anything-jedi-related-names" title="anything-jedi-related-names"><tt class="xref el el-symbol docutils literal"><span class="pre">anything-jedi-related-names</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="variable">
+<dt id="jedi:key-goto-definition-pop-marker">
+<em class="property">variable </em><big>(</big><tt class="descname">jedi:key-goto-definition-pop-marker </tt><em>(kbd &quot;C-,&quot;)</em><big>)</big><a class="headerlink" href="#jedi:key-goto-definition-pop-marker" title="Permalink to this definition">¶</a></dt>
+<dd><p>Keybind for command <a class="reference internal" href="index.html#jedi:goto-definition-pop-marker" title="jedi:goto-definition-pop-marker"><tt class="xref el el-symbol docutils literal"><span class="pre">jedi:goto-definition-pop-marker</span></tt></a>.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="changelog.html" title="Changelog"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Jedi.el - Python auto-completion for Emacs"
+             >previous</a> |</li>
+        <li><a href="index.html">Emacs Jedi 0.2.0alpha2 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Takafumi Arakaki.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

@@ -355,6 +355,9 @@ somewhere) in your question or bug report.
    Emacs setup.  You should also check minimal working examples in the
    install_ section.
 
+   (Note that currently there is no automated way to do this in
+   Windows without Cygwin.  If you know it, please document!)
+
 #. Run :kbd:`M-x` :el:symbol:`jedi:show-version-info`.
    This helps you in two ways.
 

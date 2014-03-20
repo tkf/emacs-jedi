@@ -333,11 +333,17 @@ Command
 Troubleshooting
 ===============
 
-Before posting question or bug report in the `issue tracker`_, please
-investigate the problem by yourself.  Here is some checklist.
+.. note:: If you have a question, ask question in StackOverflow_ with
+   ``emacs-jedi`` tag.  We stopped using the issue tracker for Q & A.
+
+Before posting question in StackOverflow_ or bug report in the `issue
+tracker`_, please investigate the problem by yourself.  Here is some
+checklist.
 
 It is best to mention that you went through this list (or stuck with
 somewhere) in your question or bug report.
+
+.. _StackOverflow: http://stackoverflow.com/questions/tagged/emacs-jedi
 
 #. You can try Jedi.el without installing it, in a "clean Emacs setup"
    [#]_ .  If you don't know what is wrong and don't know where to

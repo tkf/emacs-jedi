@@ -10,7 +10,7 @@
      * `Command`_
      * `Troubleshooting`_
      * `FAQ`_
-     * :doc:`toc`
+     * :doc:`Complete overview <contents>`
      * :doc:`changelog`
 
    * `Q & A in StackOverflow

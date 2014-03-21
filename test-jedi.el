@@ -249,6 +249,12 @@ rebooted; not still living ones."
       (jedi:server-pool--gc))
     (should (= (length (jedi:-get-servers-in-use)) 0))))
 
+
+;;; Misc
+
+(ert-deftest jedi:show-setup-info-smoke-test ()
+  (jedi:show-setup-info))
+
 (provide 'test-jedi)
 
 ;; Local Variables:

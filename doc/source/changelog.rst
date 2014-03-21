@@ -16,6 +16,7 @@ versioning rule, though).
   Previously it was treated in GitHub `issue tracker`_.
 - :el:symbol:`jedi:show-setup-info` is added to help bug reports and
   questions.
+- :el:symbol:`jedi:install-python-jedi-dev` is added.
 
 Contributions from:
 

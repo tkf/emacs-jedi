@@ -78,7 +78,10 @@ to make this setting work."
   :group 'jedi)
 
 (defun jedi:-env-server-command ()
-  (list (python-environment-bin "jediepcserver.py" jedi:environment-root)))
+  (let ((script
+         (python-environment-bin "jediepcserver.py" jedi:environment-root)))
+    (when script
+      (list script))))
 
 (defcustom jedi:server-command
   (or (jedi:-env-server-command)

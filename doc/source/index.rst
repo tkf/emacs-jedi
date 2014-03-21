@@ -297,6 +297,7 @@ Configuration
 .. el:variable:: jedi:doc-display-buffer
 .. el:variable:: jedi:install-imenu
 .. el:variable:: jedi:imenu-create-index-function
+.. el:variable:: jedi:install-python-jedi-dev-command
 
 
 Keybinds
@@ -325,6 +326,7 @@ Command
 
 .. el:package:: jedi
 .. el:function:: jedi:install-server
+.. el:function:: jedi:install-python-jedi-dev
 .. el:function:: jedi:pop-to-epc-buffer
 .. el:function:: jedi:toggle-log-traceback
 .. el:function:: jedi:toggle-debug-server

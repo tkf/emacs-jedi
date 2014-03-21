@@ -1233,6 +1233,24 @@ See also:
                                     jedi:environment-virtualenv)
     (setq-default jedi:server-command (jedi:-env-server-command))))
 
+(defcustom jedi:install-python-jedi-dev-command
+  '("pip" "install" "--upgrade"
+    "git+https://github.com/davidhalter/jedi.git@dev#egg=jedi")
+  "Pip command to be used for `jedi:install-python-jedi-dev'."
+  :group 'jedi)
+
+(defun jedi:install-python-jedi-dev ()
+  "Install developmental version of Python-Jedi from GitHub."
+  (interactive)
+  (deferred:$
+    (python-environment-run jedi:install-python-jedi-dev-command
+                            jedi:environment-root
+                            jedi:environment-virtualenv)
+    (deferred:watch it
+      (lambda (_)
+        (message "\
+Now restart EPC servers.  Then you are ready to go with Jedi-dev!")))))
+
 
 ;;; Debugging
 

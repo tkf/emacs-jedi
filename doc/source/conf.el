@@ -10,8 +10,7 @@
 (let* ((doc-source-path (file-name-directory load-file-name))
        (project-path (jedi:parent-dir (jedi:parent-dir doc-source-path))))
   (add-to-list 'load-path project-path)
-  (cask-setup project-path))
-(package-initialize)
+  (cask-initialize project-path))
 
 ;; Load Jedi.el
 (require 'jedi)

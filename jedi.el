@@ -81,7 +81,8 @@ to make this setting work."
   (list (python-environment-bin "jediepcserver.py" jedi:environment-root)))
 
 (defcustom jedi:server-command
-  (or (jedi:-env-server-command)
+  (if (car (jedi:-env-server-command))
+      (jedi:-env-server-command)
       (list "python" jedi:server-script))
   "Command used to run Jedi server.
 

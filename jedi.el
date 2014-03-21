@@ -1074,7 +1074,9 @@ may find some information about communication error."
         (emacs-lisp-mode)
         (erase-buffer)
         (insert ";; Emacs Lisp version:\n")
-        (pp `(:emacs-version ,emacs-version :jedi-version ,jedi:version))
+        (pp `(:emacs-version ,emacs-version
+              :jedi-version ,jedi:version
+              :python-environment-version ,python-environment-version))
         (insert ";; Python version:\n")
         (pp version-reply)
         (when get-epc-error

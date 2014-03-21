@@ -78,8 +78,9 @@ to make this setting work."
   :group 'jedi)
 
 (defun jedi:-env-server-command ()
-  (let ((script
-         (python-environment-bin "jediepcserver.py" jedi:environment-root)))
+  (let* ((getbin (lambda (x) (python-environment-bin x jedi:environment-root)))
+         (script (or (funcall getbin "jediepcserver")
+                     (funcall getbin "jediepcserver.py"))))
     (when script
       (list script))))
 

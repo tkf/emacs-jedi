@@ -1078,7 +1078,7 @@ may find some information about communication error."
         (insert ";; Python version:\n")
         (pp version-reply)
         (when get-epc-error
-          (insert ";; EPC error:\n")
+          (insert "\n;; EPC error:\n")
           (pp `(:get-epc-error ,get-epc-error)))
         (insert ";; Customization:\n")
         (pp (jedi:-list-customization))

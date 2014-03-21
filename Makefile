@@ -70,11 +70,10 @@ requirements:
 install-jedi-dev:
 	${PIP_INSTALL} --upgrade ${JEDI_DEV_URL}
 
-env: $(ENV)/$(BINDIR)/activate
-$(ENV)/$(BINDIR)/activate: ${ELPA_DIR} jedi.el jediepcserver.py setup.py
+env: $(ENV)/$(BINDIR)/jediepcserver
+$(ENV)/$(BINDIR)/jediepcserver: ${ELPA_DIR} jedi.el jediepcserver.py setup.py
 	${VIRTUAL_EMACS} -batch -l jedi.el -f "jedi:install-server-block"
 	test -f $@
-	touch $@
 
 clean-env:
 	rm -rf $(ENV)

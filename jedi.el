@@ -1082,6 +1082,11 @@ may find some information about communication error."
         (when get-epc-error
           (insert "\n;; EPC error:\n")
           (pp `(:get-epc-error ,get-epc-error)))
+        (insert ";; Command line:\n")
+        (pp `(:virtualenv
+              ,(executable-find (car python-environment-virtualenv))
+              :virtualenv-version
+              ,(ignore-errors (jedi:-virtualenv-version))))
         (insert ";; Customization:\n")
         (pp (jedi:-list-customization))
         (display-buffer standard-output)))))
@@ -1100,6 +1105,15 @@ may find some information about communication error."
                            (string< (symbol-name x)
                                     (symbol-name y))))
         collect (cons sym (symbol-value sym))))
+
+(defun jedi:-virtualenv-version ()
+  "Return output of virtualenv --version"
+  (with-temp-buffer
+    (erase-buffer)
+    (call-process (executable-find (car python-environment-virtualenv))
+                  nil t nil
+                  "--version")
+    (buffer-string)))
 
 (defun jedi:get-jedi-version-request ()
   "Request version of Python modules and return a deferred object."

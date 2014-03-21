@@ -3,7 +3,7 @@
 ;; Copyright (C) 2012 Takafumi Arakaki
 
 ;; Author: Takafumi Arakaki <aka.tkf at gmail.com>
-;; Package-Requires: ((epc "0.1.0") (auto-complete "1.4") (python-environment "0"))
+;; Package-Requires: ((epc "0.1.0") (auto-complete "1.4") (python-environment "0.0.2"))
 ;; Version: 0.2.0alpha2
 
 ;; This file is NOT part of GNU Emacs.
@@ -78,8 +78,9 @@ to make this setting work."
   :group 'jedi)
 
 (defun jedi:-env-server-command ()
-  (let ((script
-         (python-environment-bin "jediepcserver.py" jedi:environment-root)))
+  (let* ((getbin (lambda (x) (python-environment-bin x jedi:environment-root)))
+         (script (or (funcall getbin "jediepcserver")
+                     (funcall getbin "jediepcserver.py"))))
     (when script
       (list script))))
 
@@ -486,7 +487,7 @@ key, or start new one if there is none."
   (let ((cached (gethash command jedi:server-pool--table)))
     (if (and cached (jedi:epc--live-p cached))
         cached
-      (let* ((default-directory jedi:source-dir)
+      (let* ((default-directory "/")
              (mngr (jedi:epc--start-epc (car command) (cdr command))))
         (puthash command mngr jedi:server-pool--table)
         (jedi:server-pool--gc-when-idle)

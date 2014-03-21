@@ -71,7 +71,7 @@ install-jedi-dev:
 	${PIP_INSTALL} --upgrade ${JEDI_DEV_URL}
 
 env: $(ENV)/$(BINDIR)/jediepcserver
-$(ENV)/$(BINDIR)/jediepcserver: ${ELPA_DIR} jedi.el jediepcserver.py setup.py
+$(ENV)/$(BINDIR)/jediepcserver: ${ELPA_DIR} jediepcserver.py setup.py
 	${VIRTUAL_EMACS} -batch -l jedi.el -f "jedi:install-server-block"
 	test -f $@
 

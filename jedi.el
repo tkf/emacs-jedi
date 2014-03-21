@@ -487,7 +487,7 @@ key, or start new one if there is none."
   (let ((cached (gethash command jedi:server-pool--table)))
     (if (and cached (jedi:epc--live-p cached))
         cached
-      (let* ((default-directory jedi:source-dir)
+      (let* ((default-directory "/")
              (mngr (jedi:epc--start-epc (car command) (cdr command))))
         (puthash command mngr jedi:server-pool--table)
         (jedi:server-pool--gc-when-idle)

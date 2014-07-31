@@ -258,8 +258,6 @@ def jedi_epc_server(address='localhost', port=0, port_file=sys.stdout,
         server.logger.addHandler(handler)
         server.logger.setLevel(logging.DEBUG)
 
-    server.serve_forever()
-    server.logger.info('exit')
     return server
 
 
@@ -312,7 +310,9 @@ def main(args=None):
         '--ipdb', dest='debugger', const='ipdb', action='store_const',
         help='start ipdb when error occurs.')
     ns = parser.parse_args(args)
-    jedi_epc_server(**vars(ns))
+    server = jedi_epc_server(**vars(ns))
+    server.serve_forever()
+    server.logger.info('exit')
 
 
 if __name__ == '__main__':

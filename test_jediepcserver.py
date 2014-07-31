@@ -11,7 +11,7 @@ def osenv(*args, **kwds):
     def putenvs(dct):
         for (k, v) in dct.items():
             if v is None:
-                del os.environ[k]
+                os.environ.pop(k, None)
             else:
                 os.environ[k] = v
     newenv = dict(*args, **kwds)
@@ -23,10 +23,18 @@ def osenv(*args, **kwds):
         putenvs(oldenv)
 
 
-def test_add_virtualenv_path_runs_fine_in_non_virtualenv():
+def test_epc_server_runs_fine_in_non_virtualenv():
     # See: https://github.com/tkf/emacs-jedi/issues/3
     with osenv(VIRTUAL_ENV=None):
-        jep.add_virtualenv_path()
+        jep.jedi_epc_server()
+
+
+def test_epc_server_runs_fine_in_virtualenv():
+    with osenv(VIRTUAL_ENV='/foobar'):
+        jep.jedi_epc_server()
+    import sys
+    venv_path = '/foobar/lib/python%d.%d/site-packages' % sys.version_info[:2]
+    assert venv_path in sys.path
 
 
 def check_defined_names(source, keys, deftree):

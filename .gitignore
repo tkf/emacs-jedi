@@ -7,3 +7,4 @@ doc/build
 doc/gh-pages
 doc/source/releases/*/*.txt
 jedi-port.log
+*.elc

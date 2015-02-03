@@ -592,7 +592,7 @@ See: https://github.com/tkf/emacs-jedi/issues/54"
   "Call ``Script(...).METHOD-NAME`` and return a deferred object."
   (let ((source      (buffer-substring-no-properties (point-min) (point-max)))
         (line        (count-lines (point-min) (min (1+ (point)) (point-max))))
-        (column      (current-column))
+        (column      (- (point) (line-beginning-position)))
         (source-path (jedi:-buffer-file-name)))
     (epc:call-deferred (jedi:get-epc)
                        method-name

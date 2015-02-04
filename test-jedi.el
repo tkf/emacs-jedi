@@ -55,53 +55,58 @@
 ;;; EPC
 
 (ert-deftest jedi:complete-request ()
-  (jedi-testing:sync
-    (with-temp-buffer
-      (erase-buffer)
-      (insert "import json" "\n" "json.l")
-      (jedi:complete-request)))
-  (should (equal (sort (jedi:ac-direct-matches) #'string-lessp)
-                 '("load" "loads"))))
+  (with-python-temp-buffer
+    "
+import json
+json.l
+"
+    (goto-char (1- (point-max)))
+    (jedi-testing:sync (jedi:complete-request))
+    (should (equal (sort (jedi:ac-direct-matches) #'string-lessp)
+                   '("load" "loads")))))
 
 (ert-deftest jedi:get-in-function-call-request ()
-  (destructuring-bind (&key params index call_name)
-      (jedi-testing:sync
-        (with-temp-buffer
-          (erase-buffer)
-          (insert "isinstance(obj,")
-          (jedi:call-deferred 'get_in_function_call)))
-    (should (equal params '("object" "class_or_type_or_tuple")))
-    (should (equal index 1))
-    (should (equal call_name "isinstance"))))
+  (with-python-temp-buffer
+    "
+isinstance(obj,
+"
+    (goto-char (1- (point-max)))
+    (destructuring-bind (&key params index call_name)
+        (jedi-testing:sync (jedi:call-deferred 'get_in_function_call))
+      (should (equal params '("object" "class_or_type_or_tuple")))
+      (should (equal index 1))
+      (should (equal call_name "isinstance")))))
 
 (ert-deftest jedi:goto-request ()
-  (let ((reply
-         (jedi-testing:sync
-           (with-temp-buffer
-             (erase-buffer)
-             (insert "import json" "\n" "json.load")
-             (jedi:call-deferred 'goto)))))
-    (destructuring-bind (&key line_nr module_path
-                              column module_name description)
-        (car reply)
-      (should (integerp line_nr))
-      (should (stringp module_path)))))
+  (with-python-temp-buffer
+    "
+import json
+json.load
+"
+    (goto-char (1- (point-max)))
+    (let ((reply (jedi-testing:sync (jedi:call-deferred 'goto))))
+      (destructuring-bind (&key line_nr module_path
+                                column module_name description)
+          (car reply)
+        (should (integerp line_nr))
+        (should (stringp module_path))))))
 
 (ert-deftest jedi:get-definition-request ()
-  (let ((reply
-         (jedi-testing:sync
-           (with-temp-buffer
-             (erase-buffer)
-             (insert "import json" "\n" "json.load")
-             (jedi:call-deferred 'get_definition)))))
-    (destructuring-bind (&key doc desc_with_module line_nr column module_path
-                              full_name name type description)
-        (car reply)
-      (should (stringp doc))
-      (should (stringp desc_with_module))
-      (should (integerp line_nr))
-      (should (integerp column))
-      (should (stringp module_path)))))
+  (with-python-temp-buffer
+    "
+import json
+json.load
+"
+    (goto-char (1- (point-max)))
+    (let ((reply (jedi-testing:sync (jedi:call-deferred 'get_definition))))
+      (destructuring-bind (&key doc desc_with_module line_nr column module_path
+                                full_name name type description)
+          (car reply)
+        (should (stringp doc))
+        (should (stringp desc_with_module))
+        (should (integerp line_nr))
+        (should (integerp column))
+        (should (stringp module_path))))))
 
 (ert-deftest jedi:show-version-info ()
   (kill-buffer (get-buffer-create "*jedi:version*"))

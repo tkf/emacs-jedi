@@ -33,6 +33,15 @@
 
 (require 'jedi)
 
+(defmacro with-python-temp-buffer (code &rest body)
+  "Insert `code' and enable `python-mode'. cursor is beginning of buffer"
+  (declare (indent 0) (debug t))
+  `(with-temp-buffer
+     (insert ,code)
+     (goto-char (point-min))
+     (python-mode)
+     (font-lock-fontify-buffer)
+     ,@body))
 
 (defun jedi-testing:sync (d)
   (epc:sync (jedi:get-epc) d))
@@ -254,6 +263,30 @@ rebooted; not still living ones."
 
 (ert-deftest jedi:show-setup-info-smoke-test ()
   (jedi:show-setup-info))
+
+
+;;; Regression test
+
+(ert-deftest regression-test-194 ()
+  "Wrong column calculation when using TAB instead of space."
+  (with-python-temp-buffer
+    "
+def func(a):
+        pass
+
+if True:
+        x = 1
+	func(x) # <- tab indentation
+"
+    (search-forward "def func(a):")
+    (let ((def-line (line-number-at-pos)))
+      (search-forward "func(x)")
+      (goto-char (match-beginning 0))
+      (let ((reply (jedi-testing:sync (jedi:call-deferred 'get_definition))))
+        (destructuring-bind (&key doc desc_with_module line_nr column module_path
+                                  full_name name type description)
+            (car reply)
+          (should (= line_nr def-line)))))))
 
 (provide 'test-jedi)
 

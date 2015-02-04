@@ -288,8 +288,6 @@ if True:
             (car reply)
           (should (= line_nr def-line)))))))
 
-(provide 'test-jedi)
-
 ;; Local Variables:
 ;; coding: utf-8
 ;; indent-tabs-mode: nil

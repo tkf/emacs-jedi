@@ -37,6 +37,7 @@
   "Insert `code' and enable `python-mode'. cursor is beginning of buffer"
   (declare (indent 0) (debug t))
   `(with-temp-buffer
+     (setq python-indent-guess-indent-offset nil)
      (insert ,code)
      (goto-char (point-min))
      (python-mode)

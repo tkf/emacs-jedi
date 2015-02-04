@@ -33,6 +33,16 @@
 
 (require 'jedi)
 
+(defmacro with-python-temp-buffer (code &rest body)
+  "Insert `code' and enable `python-mode'. cursor is beginning of buffer"
+  (declare (indent 0) (debug t))
+  `(with-temp-buffer
+     (setq python-indent-guess-indent-offset nil)
+     (insert ,code)
+     (goto-char (point-min))
+     (python-mode)
+     (font-lock-fontify-buffer)
+     ,@body))
 
 (defun jedi-testing:sync (d)
   (epc:sync (jedi:get-epc) d))
@@ -45,53 +55,58 @@
 ;;; EPC
 
 (ert-deftest jedi:complete-request ()
-  (jedi-testing:sync
-    (with-temp-buffer
-      (erase-buffer)
-      (insert "import json" "\n" "json.l")
-      (jedi:complete-request)))
-  (should (equal (sort (jedi:ac-direct-matches) #'string-lessp)
-                 '("load" "loads"))))
+  (with-python-temp-buffer
+    "
+import json
+json.l
+"
+    (goto-char (1- (point-max)))
+    (jedi-testing:sync (jedi:complete-request))
+    (should (equal (sort (jedi:ac-direct-matches) #'string-lessp)
+                   '("load" "loads")))))
 
 (ert-deftest jedi:get-in-function-call-request ()
-  (destructuring-bind (&key params index call_name)
-      (jedi-testing:sync
-        (with-temp-buffer
-          (erase-buffer)
-          (insert "isinstance(obj,")
-          (jedi:call-deferred 'get_in_function_call)))
-    (should (equal params '("object" "class_or_type_or_tuple")))
-    (should (equal index 1))
-    (should (equal call_name "isinstance"))))
+  (with-python-temp-buffer
+    "
+isinstance(obj,
+"
+    (goto-char (1- (point-max)))
+    (destructuring-bind (&key params index call_name)
+        (jedi-testing:sync (jedi:call-deferred 'get_in_function_call))
+      (should (equal params '("object" "class_or_type_or_tuple")))
+      (should (equal index 1))
+      (should (equal call_name "isinstance")))))
 
 (ert-deftest jedi:goto-request ()
-  (let ((reply
-         (jedi-testing:sync
-           (with-temp-buffer
-             (erase-buffer)
-             (insert "import json" "\n" "json.load")
-             (jedi:call-deferred 'goto)))))
-    (destructuring-bind (&key line_nr module_path
-                              column module_name description)
-        (car reply)
-      (should (integerp line_nr))
-      (should (stringp module_path)))))
+  (with-python-temp-buffer
+    "
+import json
+json.load
+"
+    (goto-char (1- (point-max)))
+    (let ((reply (jedi-testing:sync (jedi:call-deferred 'goto))))
+      (destructuring-bind (&key line_nr module_path
+                                column module_name description)
+          (car reply)
+        (should (integerp line_nr))
+        (should (stringp module_path))))))
 
 (ert-deftest jedi:get-definition-request ()
-  (let ((reply
-         (jedi-testing:sync
-           (with-temp-buffer
-             (erase-buffer)
-             (insert "import json" "\n" "json.load")
-             (jedi:call-deferred 'get_definition)))))
-    (destructuring-bind (&key doc desc_with_module line_nr column module_path
-                              full_name name type description)
-        (car reply)
-      (should (stringp doc))
-      (should (stringp desc_with_module))
-      (should (integerp line_nr))
-      (should (integerp column))
-      (should (stringp module_path)))))
+  (with-python-temp-buffer
+    "
+import json
+json.load
+"
+    (goto-char (1- (point-max)))
+    (let ((reply (jedi-testing:sync (jedi:call-deferred 'get_definition))))
+      (destructuring-bind (&key doc desc_with_module line_nr column module_path
+                                full_name name type description)
+          (car reply)
+        (should (stringp doc))
+        (should (stringp desc_with_module))
+        (should (integerp line_nr))
+        (should (integerp column))
+        (should (stringp module_path))))))
 
 (ert-deftest jedi:show-version-info ()
   (kill-buffer (get-buffer-create "*jedi:version*"))
@@ -255,7 +270,29 @@ rebooted; not still living ones."
 (ert-deftest jedi:show-setup-info-smoke-test ()
   (jedi:show-setup-info))
 
-(provide 'test-jedi)
+
+;;; Regression test
+
+(ert-deftest regression-test-194 ()
+  "Wrong column calculation when using TAB instead of space."
+  (with-python-temp-buffer
+    "
+def func(a):
+        pass
+
+if True:
+        x = 1
+	func(x) # <- tab indentation
+"
+    (search-forward "def func(a):")
+    (let ((def-line (line-number-at-pos)))
+      (search-forward "func(x)")
+      (goto-char (match-beginning 0))
+      (let ((reply (jedi-testing:sync (jedi:call-deferred 'get_definition))))
+        (destructuring-bind (&key doc desc_with_module line_nr column module_path
+                                  full_name name type description)
+            (car reply)
+          (should (= line_nr def-line)))))))
 
 ;; Local Variables:
 ;; coding: utf-8

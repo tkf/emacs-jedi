@@ -631,6 +631,8 @@ See: https://github.com/tkf/emacs-jedi/issues/54"
 (defun jedi:dot-complete ()
   "Insert dot and complete code at point."
   (interactive)
+  (when overwrite-mode
+    (delete-char 1))
   (insert ".")
   (unless (or (ac-cursor-on-diable-face-p)
               ;; don't complete if the dot is immediately after int literal

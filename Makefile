@@ -73,7 +73,7 @@ install-jedi-dev:
 
 env: $(ENV)/$(BINDIR)/jediepcserver
 $(ENV)/$(BINDIR)/jediepcserver: ${ELPA_DIR} jediepcserver.py setup.py
-	${VIRTUAL_EMACS} -batch -l jedi.el -f "jedi:install-server-block"
+	${VIRTUAL_EMACS} -batch -L . -l jedi.el -f "jedi:install-server-block"
 	test -f $@
 
 clean-env:
@@ -86,7 +86,7 @@ clean: clean-env clean-el
 print-deps: elpa env
 	@echo "----------------------- Dependencies -----------------------"
 	$(EMACS) --version
-	${VIRTUAL_EMACS} -batch -l jedi.el -f jedi:print-jedi-version
+	${VIRTUAL_EMACS} -batch -L . -l jedi.el -f jedi:print-jedi-version
 	ls -d $(ENV)/*/python*/site-packages/*egg-info
 	@echo "------------------------------------------------------------"
 

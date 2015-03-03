@@ -3,8 +3,8 @@
 ;; Copyright (C) 2015 Takafumi Arakaki
 
 ;; Author: Takafumi Arakaki <aka.tkf at gmail.com>
-;; Package-Requires: ((epc "0.1.0") (auto-complete "1.4") (python-environment "0.0.2"))
-;; Version: 0.2.0alpha2
+;; Package-Requires: ((jedi-core "0.2.1") (auto-complete "1.4"))
+;; Version: 0.2.1
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@
   (require 'cl))
 
 (require 'auto-complete)
-(require 'jedi-common)
+(require 'jedi-core)
 
 ;;; AC source
 (defun jedi:ac-direct-matches ()

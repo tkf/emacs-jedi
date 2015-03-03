@@ -1,4 +1,4 @@
-;;; jedi-common.el --- Common code of jedi.el and company-jedi.el
+;;; jedi-core.el --- Common code of jedi.el and company-jedi.el
 
 ;; Author: Takafumi Arakaki <aka.tkf at gmail.com>
 ;; Package-Requires: ((epc "0.1.0") (python-environment "0.0.2"))
@@ -1279,11 +1279,11 @@ running server."
  (command is copied in the kill-ring)")))
 
 
-(provide 'jedi-common)
+(provide 'jedi-core)
 
 ;; Local Variables:
 ;; coding: utf-8
 ;; indent-tabs-mode: nil
 ;; End:
 
-;;; jedi.el ends here
+;;; jedi-core.el ends here

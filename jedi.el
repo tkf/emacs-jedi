@@ -106,6 +106,7 @@ in their Emacs configuration."
       (add-hook 'after-change-functions 'jedi:after-change-handler nil t)
     (remove-hook 'after-change-functions 'jedi:after-change-handler t)))
 
+;;;###autoload
 (setq jedi:setup-function #'jedi:ac-setup
       jedi:mode-function #'jedi:auto-complete-mode)
 

@@ -109,6 +109,7 @@
 (defun company-jedi--setup ()
   (add-to-list 'company-backends 'company-jedi))
 
+;;;###autoload
 (setq jedi:setup-function #'company-jedi--setup)
 
 (provide 'company-jedi)

@@ -1,9 +1,6 @@
-;;; jedi.el --- a Python auto-completion for Emacs
-
-;; Copyright (C) 2012 Takafumi Arakaki
+;;; jedi-common.el --- Common code of jedi.el and company-jedi.el
 
 ;; Author: Takafumi Arakaki <aka.tkf at gmail.com>
-;; Package-Requires: ((epc "0.1.0") (auto-complete "1.4") (python-environment "0.0.2"))
 ;; Version: 0.2.0alpha2
 
 ;; This file is NOT part of GNU Emacs.
@@ -33,7 +30,6 @@
 (require 'ring)
 
 (require 'epc)
-(require 'auto-complete)
 (require 'python-environment)
 (declare-function pos-tip-show "pos-tip")
 
@@ -56,6 +52,9 @@
   (convert-standard-filename
    (expand-file-name "jediepcserver.py" jedi:source-dir))
   "Full path to Jedi server script file ``jediepcserver.py``.")
+
+(defvar jedi:setup-function nil)
+(defvar jedi:mode-function nil)
 
 
 ;;; Configuration variables
@@ -392,27 +391,25 @@ toolitp when inside of function call.
   (let ((map jedi-mode-map))
     (when jedi:use-shortcuts
       (define-key map (kbd "M-.") 'jedi:goto-definition)
-      (define-key map (kbd "M-,") 'jedi:goto-definition-pop-marker))
-    (if jedi:complete-on-dot
-        (define-key map "." 'jedi:dot-complete)
-      (define-key map "." nil)))
+      (define-key map (kbd "M-,") 'jedi:goto-definition-pop-marker)))
   (if jedi-mode
       (progn
         (when jedi:install-imenu
-          (add-hook 'after-change-functions 'jedi:after-change-handler nil t)
           (jedi:defined-names-deferred)
           (setq imenu-create-index-function jedi:imenu-create-index-function))
         (add-hook 'post-command-hook 'jedi:handle-post-command nil t)
         (add-hook 'kill-buffer-hook 'jedi:server-pool--gc-when-idle nil t))
     (remove-hook 'post-command-hook 'jedi:handle-post-command t)
-    (remove-hook 'after-change-functions 'jedi:after-change-handler t)
     (remove-hook 'kill-buffer-hook 'jedi:server-pool--gc-when-idle t)
-    (jedi:server-pool--gc-when-idle)))
+    (jedi:server-pool--gc-when-idle))
+  (when jedi:mode-function
+    (funcall jedi:mode-function)))
 
 ;; Define keybinds.
 ;; See: https://github.com/tkf/emacs-jedi/issues/47
 (let ((map jedi-mode-map))
-  (define-key map (kbd "<C-tab>") 'jedi:complete)
+  (when (and (boundp 'auto-complete-mode) auto-complete-mode)
+    (define-key map (kbd "<C-tab>") 'jedi:complete))
   (define-key map (kbd "C-c ?") 'jedi:show-doc)
   (define-key map (kbd "C-c .") 'jedi:goto-definition)
   (define-key map (kbd "C-c ,") 'jedi:goto-definition-pop-marker)
@@ -615,72 +612,6 @@ See: https://github.com/tkf/emacs-jedi/issues/54"
   (deferred:nextc (jedi:call-deferred 'complete)
     (lambda (reply)
       (setq jedi:complete-reply reply))))
-
-;;;###autoload
-(defun* jedi:complete (&key (expand ac-expand-on-auto-complete))
-  "Complete code at point."
-  (interactive)
-  (lexical-let ((expand expand))
-    (deferred:nextc (jedi:complete-request)
-      (lambda ()
-        (let ((ac-expand-on-auto-complete expand))
-          (ac-start :triggered 'command))))))
-;; Calling `auto-complete' or `ac-update-greedy' instead of `ac-start'
-;; here did not work.
-
-(defun jedi:dot-complete ()
-  "Insert dot and complete code at point."
-  (interactive)
-  (when overwrite-mode
-    (delete-char 1))
-  (insert ".")
-  (unless (or (ac-cursor-on-diable-face-p)
-              ;; don't complete if the dot is immediately after int literal
-              (looking-back "\\(\\`\\|[^._[:alnum:]]\\)[0-9]+\\."))
-    (jedi:complete :expand nil)))
-
-
-;;; AC source
-
-(defun jedi:ac-direct-matches ()
-  (mapcar
-   (lambda (x)
-     (destructuring-bind (&key word doc description symbol)
-         x
-       (popup-make-item word
-                        :symbol symbol
-                        :document (unless (equal doc "") doc)
-                        :summary description)))
-   jedi:complete-reply))
-
-(defun jedi:ac-direct-prefix ()
-  (or (ac-prefix-default)
-      (when (= jedi:complete-request-point (point))
-        jedi:complete-request-point)))
-
-;; (makunbound 'ac-source-jedi-direct)
-(ac-define-source jedi-direct
-  '((candidates . jedi:ac-direct-matches)
-    (prefix . jedi:ac-direct-prefix)
-    (init . jedi:complete-request)
-    (requires . -1)))
-
-;;;###autoload
-(defun jedi:ac-setup ()
-  "Add Jedi AC sources to `ac-sources'.
-
-If auto-completion is all you need, you can call this function instead
-of `jedi:setup', like this::
-
-   (add-hook 'python-mode-hook 'jedi:ac-setup)
-
-Note that this function calls `auto-complete-mode' if it is not
-already enabled, for people who don't call `global-auto-complete-mode'
-in their Emacs configuration."
-  (interactive)
-  (add-to-list 'ac-sources 'ac-source-jedi-direct)
-  (unless auto-complete-mode
-    (auto-complete-mode)))
 
 
 ;;; Call signature (get_in_function_call)
@@ -1168,7 +1099,7 @@ This is automatically added to the `jedi-mode-hook' when
 ;;;###autoload
 (defun jedi:setup ()
   "Fully setup jedi.el for current buffer.
-It setups `ac-sources' (calls `jedi:ac-setup') and turns
+It setups `ac-sources' or `company-backends' and turns
 `jedi-mode' on.
 
 This function is intended to be called from `python-mode-hook',
@@ -1179,7 +1110,8 @@ like this::
 You can also call this function as a command, to quickly test
 what jedi can do."
   (interactive)
-  (jedi:ac-setup)
+  (when jedi:setup-function
+    (funcall jedi:setup-function))
   (when jedi:import-python-el-settings
     ;; Hack to access buffer/dir-local vars: http://bit.ly/Y5IfMV.
     ;; Given that `jedi:setup' is added to the `python-mode-hook'
@@ -1346,7 +1278,7 @@ running server."
  (command is copied in the kill-ring)")))
 
 
-(provide 'jedi)
+(provide 'jedi-common)
 
 ;; Local Variables:
 ;; coding: utf-8

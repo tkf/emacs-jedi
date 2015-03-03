@@ -94,7 +94,7 @@
              (funcall cb (delete-dups (reverse candidates))))))))
 
 ;;;###autoload
-(defun company-jedi (command &optional arg &rest ignored)
+(defun company-jedi (command &optional _arg &rest ignored)
   "`company-mode' completion back-end for Python JEDI."
   (interactive (list 'interactive))
   (cl-case command

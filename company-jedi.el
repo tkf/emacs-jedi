@@ -1,9 +1,11 @@
-;;; company-jedi.el --- company-mode completion back-end for Python JEDI
+;;; company-jedi.el --- company-mode completion back-end for Python JEDI -*- lexical-binding: t; -*-
 ;;
 ;; Copyright (C) 2009, 2011-2014  Free Software Foundation, Inc.
-;;
+
 ;; Author: Boy <boyw165@gmail.com>
-;;
+;; Package-Requires: ((emacs "24") (company-mode "0.8.11") (epc "0.1.0") (python-environment "0.0.2"))
+;; Version: 0.01
+
 ;; This file is part of GNU Emacs.
 ;;
 ;; GNU Emacs is free software: you can redistribute it and/or modify
@@ -78,32 +80,36 @@
            thing))))
 
 (defun company-jedi-candidates (cb)
-  (lexical-let ((cb cb))
-    (deferred:nextc
-      (jedi:call-deferred 'complete)
-      (lambda (reply)
-        (let (word
-              candidates)
-          (dolist (cand reply)
-            (and (setq word (plist-get cand :word))
-                 (push (if (equal company-prefix ".")
-                           (concat "." word)
-                         word) candidates)))
-          (and candidates
-               (funcall cb (delete-dups (reverse candidates)))))))))
+  (deferred:nextc
+    (jedi:call-deferred 'complete)
+    (lambda (reply)
+      (let (word
+            candidates)
+        (dolist (cand reply)
+          (and (setq word (plist-get cand :word))
+               (push (if (equal company-prefix ".")
+                         (concat "." word)
+                       word) candidates)))
+        (and candidates
+             (funcall cb (delete-dups (reverse candidates))))))))
 
 ;;;###autoload
 (defun company-jedi (command &optional arg &rest ignored)
   "`company-mode' completion back-end for Python JEDI."
   (interactive (list 'interactive))
   (cl-case command
-    (interactive (require 'company)
-                 (company-begin-backend 'company-jedi))
+    (interactive (company-begin-backend 'company-jedi))
     (prefix (company-jedi-prefix))
     (candidates (cons :async 'company-jedi-candidates))
     (meta nil)
     (doc-buffer nil)
     (location nil)))
+
+;;;###autoload
+(defun company-jedi--setup ()
+  (add-to-list 'company-backends 'company-jedi))
+
+(setq jedi:setup-function #'company-jedi--setup)
 
 (provide 'company-jedi)
 ;;; company-jedi.el ends here

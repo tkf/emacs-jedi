@@ -42,7 +42,8 @@
 ;;; Code:
 
 ;; GNU Library.
-(require 'cl)
+(require 'company)
+(require 'jedi-common)
 (require 'thingatpt)
 
 (defgroup company-jedi nil
@@ -62,7 +63,6 @@
 (defun company-jedi-prefix ()
   (ignore-errors
     (and (eq major-mode 'python-mode)
-         (require 'jedi)
          (let ((face (get-text-property (point) 'face))
                (bounds (or (bounds-of-thing-at-point 'symbol)
                            (and (eq (char-before) ?.)

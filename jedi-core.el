@@ -1,7 +1,8 @@
-;;; jedi-common.el --- Common code of jedi.el and company-jedi.el
+;;; jedi-core.el --- Common code of jedi.el and company-jedi.el
 
 ;; Author: Takafumi Arakaki <aka.tkf at gmail.com>
-;; Version: 0.2.0alpha2
+;; Package-Requires: ((epc "0.1.0") (python-environment "0.0.2"))
+;; Version: 0.2.1
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -39,7 +40,7 @@
   :group 'completion
   :prefix "jedi:")
 
-(defconst jedi:version "0.2.0alpha2")
+(defconst jedi:version "0.2.1")
 
 (defvar jedi:source-dir (if load-file-name
                             (file-name-directory load-file-name)
@@ -1278,11 +1279,11 @@ running server."
  (command is copied in the kill-ring)")))
 
 
-(provide 'jedi-common)
+(provide 'jedi-core)
 
 ;; Local Variables:
 ;; coding: utf-8
 ;; indent-tabs-mode: nil
 ;; End:
 
-;;; jedi.el ends here
+;;; jedi-core.el ends here

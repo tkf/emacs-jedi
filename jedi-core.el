@@ -32,6 +32,8 @@
 
 (require 'epc)
 (require 'python-environment)
+
+(declare-function popup-tip "popup")
 (declare-function pos-tip-show "pos-tip")
 
 

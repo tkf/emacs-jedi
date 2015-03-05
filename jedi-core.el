@@ -32,6 +32,8 @@
 
 (require 'epc)
 (require 'python-environment)
+
+(declare-function popup-tip "popup")
 (declare-function pos-tip-show "pos-tip")
 
 
@@ -633,7 +635,7 @@ See: https://github.com/tkf/emacs-jedi/issues/54"
       (concat call_name "(" (mapconcat #'identity params ", ") ")"))))
 
 (defun jedi:get-in-function-call--tooltip-show (args)
-  (when (and args (not ac-completing))
+  (when (and args (and (boundp 'ac-completing) (not ac-completing)))
     (jedi:tooltip-show
      (apply #'jedi:get-in-function-call--construct-call-signature args))))
 
@@ -938,10 +940,6 @@ one request at the time is emitted."
   (unless jedi:defined-names--cache
     (epc:sync (jedi:get-epc) (jedi:defined-names--singleton-deferred)))
   jedi:defined-names--cache)
-
-(defun jedi:after-change-handler (&rest _)
-  (unless (or (ac-menu-live-p) (ac-inline-live-p))
-    (jedi:defined-names--singleton-deferred)))
 
 (defun jedi:imenu-make-marker (def)
   (destructuring-bind (&key line_nr column &allow-other-keys) def

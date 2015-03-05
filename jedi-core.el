@@ -939,10 +939,6 @@ one request at the time is emitted."
     (epc:sync (jedi:get-epc) (jedi:defined-names--singleton-deferred)))
   jedi:defined-names--cache)
 
-(defun jedi:after-change-handler (&rest _)
-  (unless (or (ac-menu-live-p) (ac-inline-live-p))
-    (jedi:defined-names--singleton-deferred)))
-
 (defun jedi:imenu-make-marker (def)
   (destructuring-bind (&key line_nr column &allow-other-keys) def
     (save-excursion (jedi:goto--line-column line_nr column)

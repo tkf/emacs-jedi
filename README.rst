@@ -44,6 +44,13 @@ the `released version <http://tkf.github.io/emacs-jedi/released>`_.
    See more screenshots
    `here <http://tkf.github.io/emacs-jedi/latest#screenshots>`_.
 
+Company Users
+=============
+
+If you use `company <https://github.com/company-mode/company-mode>`_,
+please see `company-jedi <https://github.com/syohex/company-jedi>`_.
+
+
 .. Build status badge
 .. |build-status|
    image:: https://secure.travis-ci.org/tkf/emacs-jedi.png?branch=master

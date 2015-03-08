@@ -1,7 +1,7 @@
-;;; jedi-core.el --- Common code of jedi.el and company-jedi.el
+;;; jedi-core.el --- Common code of jedi.el and company-jedi.el -*- lexical-binding: t; -*-
 
 ;; Author: Takafumi Arakaki <aka.tkf at gmail.com>
-;; Package-Requires: ((epc "0.1.0") (python-environment "0.0.2"))
+;; Package-Requires: ((emacs "24") (epc "0.1.0") (python-environment "0.0.2") (cl-lib "0.5"))
 ;; Version: 0.2.1
 
 ;; This file is NOT part of GNU Emacs.
@@ -26,8 +26,7 @@
 
 ;;; Code:
 
-(eval-when-compile
-  (require 'cl))
+(require 'cl-lib)
 (require 'ring)
 
 (require 'epc)
@@ -495,12 +494,12 @@ key, or start new one if there is none."
 
 (defun jedi:-get-servers-in-use ()
   "Return a list of non-nil `jedi:epc' in all buffers."
-  (loop with mngr-list
-        for buffer in (buffer-list)
-        for mngr = (with-current-buffer buffer jedi:epc)
-        when (and mngr (not (memq mngr mngr-list)))
-        collect mngr into mngr-list
-        finally return mngr-list))
+  (cl-loop with mngr-list
+           for buffer in (buffer-list)
+           for mngr = (with-current-buffer buffer jedi:epc)
+           when (and mngr (not (memq mngr mngr-list)))
+           collect mngr into mngr-list
+           finally return mngr-list))
 
 (defvar jedi:server-pool--gc-timer nil)
 
@@ -624,7 +623,7 @@ See: https://github.com/tkf/emacs-jedi/issues/54"
   "Face used for the argument at point in a function's argument list"
   :group 'jedi)
 
-(defun* jedi:get-in-function-call--construct-call-signature
+(cl-defun jedi:get-in-function-call--construct-call-signature
     (&key params index call_name)
   (if (not index)
       (concat call_name "()")
@@ -726,14 +725,13 @@ INDEX-th result."
     (jedi:goto-definition-next other-window))
    (t
     (setq jedi:goto-definition--index (or index 0))
-    (lexical-let ((other-window other-window))
-      (deferred:nextc (jedi:call-deferred
-                       (case deftype
-                         ((assignment nil) 'goto)
-                         (definition 'get_definition)
-                         (t (error "Unsupported deftype: %s" deftype))))
-        (lambda (reply)
-          (jedi:goto-definition--callback reply other-window)))))))
+    (deferred:nextc (jedi:call-deferred
+                     (cl-case deftype
+                       ((assignment nil) 'goto)
+                       (definition 'get_definition)
+                       (t (error "Unsupported deftype: %s" deftype))))
+      (lambda (reply)
+        (jedi:goto-definition--callback reply other-window))))))
 
 (defun jedi:goto-definition-push-marker ()
   "Push point onto goto-definition marker ring."
@@ -776,11 +774,11 @@ INDEX-th result."
          (n jedi:goto-definition--index)
          (next (lambda ()
                  (when (< n (1- len))
-                   (incf jedi:goto-definition--index)
+                   (cl-incf jedi:goto-definition--index)
                    (jedi:goto-definition--nth other-window)
                    t))))
-    (destructuring-bind (&key line_nr column module_path module_name
-                              &allow-other-keys)
+    (cl-destructuring-bind (&key line_nr column module_path module_name
+                                 &allow-other-keys)
         (nth n jedi:goto-definition--cache)
       (cond
        ((equal module_name "__builtin__")
@@ -818,13 +816,13 @@ INDEX-th result."
     (jedi:call-deferred 'get_definition)
     (deferred:nextc it
       (lambda (reply)
-        (loop for def in reply
-              do (destructuring-bind (&key full_name &allow-other-keys)
-                     def
-                   (when full_name
-                     (return full_name))))))))
+        (cl-loop for def in reply
+                 do (cl-destructuring-bind (&key full_name &allow-other-keys)
+                        def
+                      (when full_name
+                        (return full_name))))))))
 
-(defun* jedi:get-full-name-sync (&key (timeout 500))
+(cl-defun jedi:get-full-name-sync (&key (timeout 500))
   (epc:sync
    (jedi:get-epc)
    (deferred:timeout timeout nil (jedi:get-full-name-deferred))))
@@ -841,28 +839,27 @@ INDEX-th result."
 (defun jedi:related-names--to-file-line (reply)
   (mapcar
    (lambda (x)
-     (destructuring-bind
-         (&key line_nr column module_name module_path description)
+     (cl-destructuring-bind
+         (&key line_nr module_name module_path description &allow-other-keys)
          x
        (format "%s:%s: %s - %s" module_path line_nr
                module_name description)))
    reply))
 
 (defun jedi:related-names--helm (helm)
-  (lexical-let ((helm helm))
-    (deferred:nextc
-      (let ((to-file-line #'jedi:related-names--to-file-line))
-        (deferred:parallel
-          (deferred:nextc (jedi:call-deferred 'related_names) to-file-line)
-          (deferred:nextc (jedi:call-deferred 'goto)          to-file-line)))
-      (lambda (candidates-list)
-        (funcall
-         helm
-         :sources (list (jedi:related-names--source "Jedi Related Names"
-                                                    (car candidates-list))
-                        (jedi:related-names--source "Jedi Goto"
-                                                    (cadr candidates-list)))
-         :buffer (format "*%s jedi:related-names*" helm))))))
+  (deferred:nextc
+    (let ((to-file-line #'jedi:related-names--to-file-line))
+      (deferred:parallel
+        (deferred:nextc (jedi:call-deferred 'related_names) to-file-line)
+        (deferred:nextc (jedi:call-deferred 'goto)          to-file-line)))
+    (lambda (candidates-list)
+      (funcall
+       helm
+       :sources (list (jedi:related-names--source "Jedi Related Names"
+                                                  (car candidates-list))
+                      (jedi:related-names--source "Jedi Goto"
+                                                  (cadr candidates-list)))
+       :buffer (format "*%s jedi:related-names*" helm)))))
 
 ;;;###autoload
 (defun helm-jedi-related-names ()
@@ -887,30 +884,29 @@ INDEX-th result."
   (deferred:nextc (jedi:call-deferred 'get_definition)
     (lambda (reply)
       (with-current-buffer (get-buffer-create jedi:doc-buffer-name)
-        (loop with has-doc = nil
-              with first = t
-              with inhibit-read-only = t
-              initially (erase-buffer)
-              for def in reply
-              do (destructuring-bind
-                     (&key doc desc_with_module line_nr module_path
-                           &allow-other-keys)
-                     def
-                   (unless (or (null doc) (equal doc ""))
-                     (if first
-                         (setq first nil)
-                       (insert "\n\n---\n\n"))
-                     (insert "Docstring for " desc_with_module "\n\n" doc)
-                     (setq has-doc t)))
-              finally do
-              (if (not has-doc)
-                  (message "Document not found.")
-                (progn
-                  (goto-char (point-min))
-                  (when (fboundp jedi:doc-mode)
-                    (funcall jedi:doc-mode))
-                  (run-hooks 'jedi:doc-hook)
-                  (funcall jedi:doc-display-buffer (current-buffer)))))))))
+        (cl-loop with has-doc = nil
+                 with first = t
+                 with inhibit-read-only = t
+                 initially (erase-buffer)
+                 for def in reply
+                 do (cl-destructuring-bind
+                        (&key doc desc_with_module &allow-other-keys)
+                        def
+                      (unless (or (null doc) (equal doc ""))
+                        (if first
+                            (setq first nil)
+                          (insert "\n\n---\n\n"))
+                        (insert "Docstring for " desc_with_module "\n\n" doc)
+                        (setq has-doc t)))
+                 finally do
+                 (if (not has-doc)
+                     (message "Document not found.")
+                   (progn
+                     (goto-char (point-min))
+                     (when (fboundp jedi:doc-mode)
+                       (funcall jedi:doc-mode))
+                     (run-hooks 'jedi:doc-hook)
+                     (funcall jedi:doc-display-buffer (current-buffer)))))))))
 
 
 ;;; Defined names (imenu)
@@ -942,7 +938,7 @@ one request at the time is emitted."
   jedi:defined-names--cache)
 
 (defun jedi:imenu-make-marker (def)
-  (destructuring-bind (&key line_nr column &allow-other-keys) def
+  (cl-destructuring-bind (&key line_nr column &allow-other-keys) def
     (save-excursion (jedi:goto--line-column line_nr column)
                     (point-marker))))
 
@@ -956,14 +952,14 @@ See also `jedi:imenu-create-index-function'."
   (jedi:create-nested-imenu-index-1))
 
 (defun jedi:create-nested-imenu-index-1 (&optional items)
-  (loop for (def . subdefs) in (or items jedi:defined-names--cache)
-        if subdefs
-        collect (append
-                 (list (plist-get def :local_name)
-                       (jedi:create-nested-imenu-index--item def))
-                 (jedi:create-nested-imenu-index-1 subdefs))
-        else
-        collect (jedi:create-nested-imenu-index--item def)))
+  (cl-loop for (def . subdefs) in (or items jedi:defined-names--cache)
+           if subdefs
+           collect (append
+                    (list (plist-get def :local_name)
+                          (jedi:create-nested-imenu-index--item def))
+                    (jedi:create-nested-imenu-index-1 subdefs))
+           else
+           collect (jedi:create-nested-imenu-index--item def)))
 
 (defun jedi:create-flat-imenu-index ()
   "`imenu-create-index-function' for Jedi.el to create flatten index.
@@ -972,10 +968,10 @@ See also `jedi:imenu-create-index-function'."
   (jedi:create-flat-imenu-index-1))
 
 (defun jedi:create-flat-imenu-index-1 (&optional items)
-  (loop for (def . subdefs) in (or items jedi:defined-names--cache)
-        collect (cons (plist-get def :local_name) (jedi:imenu-make-marker def))
-        when subdefs
-        append (jedi:create-flat-imenu-index-1 subdefs)))
+  (cl-loop for (def . subdefs) in (or items jedi:defined-names--cache)
+           collect (cons (plist-get def :local_name) (jedi:imenu-make-marker def))
+           when subdefs
+           append (jedi:create-flat-imenu-index-1 subdefs)))
 
 
 ;;; Meta info
@@ -1026,19 +1022,19 @@ may find some information about communication error."
         (display-buffer standard-output)))))
 
 (defun jedi:-list-defcustoms ()
-  (loop for sym being the symbols
-        for name = (symbol-name sym)
-        when (and (or (string-prefix-p "jedi:" name)
-                      (string-prefix-p "python-environment-" name))
-                  (custom-variable-p sym))
-        collect sym))
+  (cl-loop for sym being the symbols
+           for name = (symbol-name sym)
+           when (and (or (string-prefix-p "jedi:" name)
+                         (string-prefix-p "python-environment-" name))
+                     (custom-variable-p sym))
+           collect sym))
 
 (defun jedi:-list-customization ()
-  (loop for sym in (sort (jedi:-list-defcustoms)
-                         (lambda (x y)
-                           (string< (symbol-name x)
-                                    (symbol-name y))))
-        collect (cons sym (symbol-value sym))))
+  (cl-loop for sym in (sort (jedi:-list-defcustoms)
+                            (lambda (x y)
+                              (string< (symbol-name x)
+                                       (symbol-name y))))
+           collect (cons sym (symbol-value sym))))
 
 (defun jedi:-virtualenv-version ()
   "Return output of virtualenv --version"

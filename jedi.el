@@ -97,6 +97,7 @@ in their Emacs configuration."
               (looking-back "\\(\\`\\|[^._[:alnum:]]\\)[0-9]+\\."))
     (jedi:complete :expand nil)))
 
+;;;###autoload
 (defun jedi:auto-complete-mode ()
   (let ((map jedi-mode-map))
     (if jedi:complete-on-dot

@@ -21,6 +21,8 @@
    * `Repository <https://github.com/tkf/emacs-jedi>`_ (at GitHub)
    * `Issue tracker <https://github.com/tkf/emacs-jedi/issues>`_ (at GitHub)
    * `Travis CI <https://travis-ci.org/tkf/emacs-jedi>`_ |build-status|
+   * `MELPA <https://melpa.org/#/jedi-jedi>`_ |melpa-badge|
+   * `MELPA Stable <https://stable.melpa.org/#/jedi>`_ |melpa-stable-badge|
 
 
 What is it?
@@ -56,3 +58,11 @@ please see `company-jedi <https://github.com/syohex/company-jedi>`_.
    image:: https://secure.travis-ci.org/tkf/emacs-jedi.png?branch=master
    :target: http://travis-ci.org/tkf/emacs-jedi
    :alt: Build Status
+.. |melpa-badge|
+   image:: http://melpa.org/packages/jedi-badge.svg
+   :target: http://melpa.org/#/jedi
+   :alt: MELPA Badge
+.. |melpa-stable-badge|
+   image:: http://stable.melpa.org/packages/jedi-badge.svg
+   :target: http://stable.melpa.org/#/jedi
+   :alt: MELPA Stable Badge

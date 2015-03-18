@@ -7,10 +7,8 @@ python:
   - "3.4"
 env:
   matrix:
-    - EMACS=emacs
     - EMACS=emacs24 EMACS_PPA=ppa:cassou/emacs
     - EMACS=emacs-snapshot EMACS_PPA=ppa:ubuntu-elisp/ppa
-    - EMACS=emacs-snapshot EMACS_PPA=ppa:cassou/emacs
   global:
     - CASK=$HOME/.cask/bin/cask
     # Turn on --use-mirrors option everywhere (even in tox):
@@ -20,9 +18,7 @@ env:
 matrix:
   allow_failures:
     # Allow failures with EMACS=emacs
-    - env: EMACS=emacs
     - env: EMACS=emacs-snapshot EMACS_PPA=ppa:ubuntu-elisp/ppa
-    - env: EMACS=emacs-snapshot EMACS_PPA=ppa:cassou/emacs
 before_install:
   - pip install -q virtualenv tox
 

@@ -106,7 +106,7 @@ candidates is wide, try the newest version of popup.el_.
 .. _popup.el: https://github.com/auto-complete/popup-el
 .. _python-environment.el: https://github.com/tkf/emacs-python-environment
 
-Jedi.el is currently tested against Emacs 24.3-devel, 24.2 and 23.1.
+Jedi.el is currently tested against Emacs 24.3-devel, 24.2
 
 Command line program
 --------------------
@@ -121,7 +121,7 @@ Python
 - python-epc_
 - argparse (for Python 2.6)
 
-Jedi.el is tested against Python 2.6, 2.7, 3.2 and 3.3.
+Jedi.el is tested against Python 2.6, 2.7, 3.2 and 3.3, 3.4.
 
 
 Install

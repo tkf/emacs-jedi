@@ -3,8 +3,8 @@
 ;; Copyright (C) 2015 Takafumi Arakaki
 
 ;; Author: Takafumi Arakaki <aka.tkf at gmail.com>
-;; Package-Requires: ((emacs "24") (jedi-core "0.2.1") (auto-complete "1.4"))
-;; Version: 0.2.1
+;; Package-Requires: ((emacs "24") (jedi-core "0.2.2") (auto-complete "1.4"))
+;; Version: 0.2.2
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by

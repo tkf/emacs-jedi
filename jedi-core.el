@@ -2,7 +2,7 @@
 
 ;; Author: Takafumi Arakaki <aka.tkf at gmail.com>
 ;; Package-Requires: ((emacs "24") (epc "0.1.0") (python-environment "0.0.2") (cl-lib "0.5"))
-;; Version: 0.2.1
+;; Version: 0.2.2
 
 ;; This file is NOT part of GNU Emacs.
 

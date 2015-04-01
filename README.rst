@@ -50,7 +50,7 @@ Company Users
 =============
 
 If you use `company <https://github.com/company-mode/company-mode>`_,
-please see `company-jedi <https://github.com/syohex/company-jedi>`_.
+please see `company-jedi <https://github.com/syohex/emacs-company-jedi>`_.
 
 
 .. Build status badge

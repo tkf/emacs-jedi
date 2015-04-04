@@ -198,14 +198,21 @@ def get_jedi_version():
     ) for module in [sys, jedi, epc, sexpdata]]
 
 
+def path_expand_vars_and_user(p):
+    return os.path.expandvars(os.path.expanduser(p))
+
+
 def jedi_epc_server(address='localhost', port=0, port_file=sys.stdout,
                     sys_path=[], virtual_env=[],
                     debugger=None, log=None, log_level=None,
                     log_traceback=None):
-    add_virtualenv_path()
+    default_venv = os.getenv('VIRTUAL_ENV')
+    if default_venv:
+        add_virtualenv_path(default_venv)
+
     for p in virtual_env:
-        add_virtualenv_path(p)
-    sys_path = map(os.path.expandvars, map(os.path.expanduser, sys_path))
+        add_virtualenv_path(path_expand_vars_and_user(p))
+    sys_path = map(path_expand_vars_and_user, sys_path)
     sys.path = [''] + list(filter(None, itertools.chain(sys_path, sys.path)))
     # Workaround Jedi's module cache.  Use this workaround until Jedi
     # got an API to set module paths.
@@ -251,8 +258,6 @@ def jedi_epc_server(address='localhost', port=0, port_file=sys.stdout,
         server.logger.addHandler(handler)
         server.logger.setLevel(logging.DEBUG)
 
-    server.serve_forever()
-    server.logger.info('exit')
     return server
 
 
@@ -262,10 +267,8 @@ def import_jedi():
     import jedi.api
 
 
-def add_virtualenv_path(venv=os.getenv('VIRTUAL_ENV')):
+def add_virtualenv_path(venv):
     """Add virtualenv's site-packages to `sys.path`."""
-    if not venv:
-        return
     venv = os.path.abspath(venv)
     path = os.path.join(
         venv, 'lib', 'python%d.%d' % sys.version_info[:2], 'site-packages')
@@ -307,7 +310,9 @@ def main(args=None):
         '--ipdb', dest='debugger', const='ipdb', action='store_const',
         help='start ipdb when error occurs.')
     ns = parser.parse_args(args)
-    jedi_epc_server(**vars(ns))
+    server = jedi_epc_server(**vars(ns))
+    server.serve_forever()
+    server.logger.info('exit')
 
 
 if __name__ == '__main__':

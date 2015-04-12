@@ -83,13 +83,12 @@ in their Emacs configuration."
 ;; Calling `auto-complete' or `ac-update-greedy' instead of `ac-start'
 ;; here did not work.
 
-(defun jedi:dot-complete ()
+(defun jedi:dot-complete (nchars)
   "Insert dot and complete code at point."
-  (interactive)
-  (when overwrite-mode
-    (delete-char 1))
-  (insert ".")
-  (unless (or (ac-cursor-on-diable-face-p)
+  (interactive "p")
+  (self-insert-command nchars)
+  (unless (or (/= prefix-arg 1) ;; don't complete if inserted 2+ dots
+              (ac-cursor-on-diable-face-p)
               ;; don't complete if the dot is immediately after int literal
               (looking-back "\\(\\`\\|[^._[:alnum:]]\\)[0-9]+\\."))
     (jedi:complete :expand nil)))
@@ -109,5 +108,4 @@ in their Emacs configuration."
       jedi:mode-function #'jedi:auto-complete-mode)
 
 (provide 'jedi)
-
-;;; jedi-auto-complete.el ends here
+;;; jedi.el ends here

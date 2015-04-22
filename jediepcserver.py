@@ -31,6 +31,7 @@ import re
 import itertools
 import logging
 import site
+import glob
 
 jedi = None  # I will load it later
 
@@ -270,10 +271,10 @@ def import_jedi():
 def add_virtualenv_path(venv):
     """Add virtualenv's site-packages to `sys.path`."""
     venv = os.path.abspath(venv)
-    path = os.path.join(
-        venv, 'lib', 'python%d.%d' % sys.version_info[:2], 'site-packages')
-    sys.path.insert(0, path)
-    site.addsitedir(path)
+    paths = glob.glob( os.path.join(
+        venv, 'lib', 'python*', 'site-packages') )
+    for path in paths:
+        site.addsitedir(path)
 
 
 def main(args=None):

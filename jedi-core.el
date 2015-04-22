@@ -584,8 +584,7 @@ See also: `jedi:server-args'."
 (defun jedi:-buffer-file-name ()
   "Return `buffer-file-name' without text properties.
 See: https://github.com/tkf/emacs-jedi/issues/54"
-  (when (stringp buffer-file-name)
-    (substring-no-properties buffer-file-name)))
+  (substring-no-properties (or (buffer-file-name) "")))
 
 (defun jedi:call-deferred (method-name)
   "Call ``Script(...).METHOD-NAME`` and return a deferred object."

@@ -87,7 +87,9 @@ def complete(*args):
 
 
 def get_in_function_call(*args):
-    call_def = jedi_script(*args).get_in_function_call()
+    sig = jedi_script(*args).call_signatures()
+    call_def = sig[0] if sig else None
+
     if call_def:
         return dict(
             # p.get_code(False) should do the job.  But jedi-vim use replace.
@@ -102,9 +104,9 @@ def get_in_function_call(*args):
 
 def _goto(method, *args):
     """
-    Helper function for `goto` and `related_names`.
+    Helper function for `goto_assignments` and `usages`.
 
-    :arg  method: `jedi.Script.goto` or `jedi.Script.related_names`
+    :arg  method: `jedi.Script.goto_assignments` or `jedi.Script.usages`
     :arg    args: Arguments to `jedi_script`
 
     """
@@ -122,11 +124,11 @@ def _goto(method, *args):
 
 
 def goto(*args):
-    return _goto(jedi.Script.goto, *args)
+    return _goto(jedi.Script.goto_assignments, *args)
 
 
 def related_names(*args):
-    return _goto(jedi.Script.related_names, *args)
+    return _goto(jedi.Script.usages, *args)
 
 
 def definition_to_dict(d):
@@ -144,7 +146,7 @@ def definition_to_dict(d):
 
 
 def get_definition(*args):
-    definitions = jedi_script(*args).get_definition()
+    definitions = jedi_script(*args).goto_definitions()
     return list(map(definition_to_dict, definitions))
 
 

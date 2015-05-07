@@ -51,7 +51,7 @@ def candidate_symbol(comp):
     Return a character representing completion type.
 
     :type comp: jedi.api.Completion
-    :arg  comp: A completion object returned by `jedi.Script.complete`.
+    :arg  comp: A completion object returned by `jedi.Script.completions`.
 
     """
     try:
@@ -76,9 +76,9 @@ _WHITESPACES_RE = re.compile(r'\s+')
 
 def complete(*args):
     reply = []
-    for comp in jedi_script(*args).complete():
+    for comp in jedi_script(*args).completions():
         reply.append(dict(
-            word=comp.word,
+            word=comp.name,
             doc=comp.doc,
             description=candidates_description(comp),
             symbol=candidate_symbol(comp),
@@ -114,7 +114,7 @@ def _goto(method, *args):
     definitions = method(jedi_script(*args))
     return [dict(
         column=d.column,
-        line_nr=d.line_nr,
+        line_nr=d.line,
         module_path=d.module_path if d.module_path != '__builtin__' else [],
         module_name=d.module_name,
         description=d.description,
@@ -134,7 +134,7 @@ def definition_to_dict(d):
         doc=d.doc,
         description=d.description,
         desc_with_module=d.desc_with_module,
-        line_nr=d.line_nr,
+        line_nr=d.line,
         column=d.column,
         module_path=d.module_path,
         name=getattr(d, 'name', []),

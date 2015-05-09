@@ -30,10 +30,19 @@ def test_epc_server_runs_fine_in_non_virtualenv():
 
 
 def test_epc_server_runs_fine_in_virtualenv():
-    with osenv(VIRTUAL_ENV='/foobar'):
-        jep.jedi_epc_server()
     import sys
-    venv_path = '/foobar/lib/python%d.%d/site-packages' % sys.version_info[:2]
+    major_version = sys.version_info[:2][0]
+    minor_version = sys.version_info[:2][1]
+    relative_venv_path = ".tox/py{0}{1}".format(major_version,
+                                                minor_version)
+    full_venv_path = os.path.join(os.getcwd(), relative_venv_path)
+
+    with osenv(VIRTUAL_ENV=full_venv_path):
+        jep.jedi_epc_server()
+
+    venv_path = '{}/lib/python{}.{}/site-packages'.format(full_venv_path,
+                                                          major_version,
+                                                          minor_version)
     assert venv_path in sys.path
 
 

@@ -39,7 +39,7 @@ def test_epc_server_runs_fine_in_virtualenv():
     with osenv(VIRTUAL_ENV=full_venv_path):
         jep.jedi_epc_server()
 
-    venv_path = '{}/lib/python{}.{}/site-packages'.format(full_venv_path,
+    venv_path = '{0}/lib/python{1}.{2}/site-packages'.format(full_venv_path,
                                                           major_version,
                                                           minor_version)
     assert venv_path in sys.path

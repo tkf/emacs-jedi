@@ -99,9 +99,10 @@ in their Emacs configuration."
     (if jedi:complete-on-dot
         (define-key map "." 'jedi:dot-complete)
       (define-key map "." nil)))
-  (if jedi-mode
-      (add-hook 'after-change-functions 'jedi:after-change-handler nil t)
-    (remove-hook 'after-change-functions 'jedi:after-change-handler t)))
+  (when jedi:install-imenu
+    (if jedi-mode
+        (add-hook 'after-change-functions 'jedi:after-change-handler nil t)
+      (remove-hook 'after-change-functions 'jedi:after-change-handler t))))
 
 ;;;###autoload
 (setq jedi:setup-function #'jedi:ac-setup

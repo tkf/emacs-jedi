@@ -633,7 +633,7 @@ See: https://github.com/tkf/emacs-jedi/issues/54"
       (concat call_name "(" (mapconcat #'identity params ", ") ")"))))
 
 (defun jedi:get-in-function-call--tooltip-show (args)
-  (when (and args (or (not (boundp auto-complete-mode))
+  (when (and args (or (not (boundp 'auto-complete-mode))
                       (and (boundp 'ac-completing) (not ac-completing))))
     (jedi:tooltip-show
      (apply #'jedi:get-in-function-call--construct-call-signature args))))

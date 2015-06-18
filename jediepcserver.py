@@ -134,7 +134,7 @@ def related_names(*args):
 
 def definition_to_dict(d):
     return dict(
-        doc=d.doc,
+        doc=d.docstring(),
         description=d.description,
         desc_with_module=d.desc_with_module,
         line_nr=d.line,

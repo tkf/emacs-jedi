@@ -49,6 +49,8 @@ the `released version <http://tkf.github.io/emacs-jedi/released>`_.
 Company Users
 =============
 
+**NOTE: Please do not install 'jedi' package for company users. You should install only company-jedi.**
+
 If you use `company <https://github.com/company-mode/company-mode>`_,
 please see `company-jedi <https://github.com/syohex/emacs-company-jedi>`_.
 

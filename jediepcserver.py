@@ -78,9 +78,14 @@ _WHITESPACES_RE = re.compile(r'\s+')
 def complete(*args):
     reply = []
     for comp in jedi_script(*args).completions():
+        try:
+            docstr = comp.docstring()
+        except KeyError:
+            docstr = ""
+
         reply.append(dict(
             word=comp.name,
-            doc=comp.doc,
+            doc=docstr,
             description=candidates_description(comp),
             symbol=candidate_symbol(comp),
         ))

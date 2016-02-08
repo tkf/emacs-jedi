@@ -1,8 +1,8 @@
 ;; Standard package.el + MELPA setup
-;; (See also: https://github.com/milkypostman/melpa#usage)
+;; (See also: https://github.com/melpa/melpa#usage)
 (require 'package)
 (add-to-list 'package-archives
-             '("melpa" . "http://melpa.milkbox.net/packages/") t)
+             '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
 
 

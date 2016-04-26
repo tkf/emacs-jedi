@@ -31,7 +31,7 @@
 (defun jedi:ac-direct-matches ()
   (mapcar
    (lambda (x)
-     (destructuring-bind (&key word doc description symbol)
+     (cl-destructuring-bind (&key word doc description symbol)
          x
        (popup-make-item word
                         :symbol symbol

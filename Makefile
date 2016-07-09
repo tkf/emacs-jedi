@@ -13,8 +13,8 @@ export EMACS ?= emacs
 
 BINDIR ?= bin
 
-ELPA_DIR = \
-	.cask/$(shell ${EMACS} -Q --batch --eval '(princ emacs-version)')/elpa
+ELPA_DIR = $(shell EMACS=$(EMACS) $(CASK) package-directory)
+
 # See: cask-elpa-dir
 
 VIRTUAL_EMACS = ${CASK} exec ${EMACS} -Q \

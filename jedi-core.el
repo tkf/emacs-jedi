@@ -1173,6 +1173,16 @@ See also:
         (setq-default jedi:server-command (jedi:-env-server-command))))))
 
 ;;;###autoload
+(defun jedi:reinstall-server ()
+  "Reinstall Jedi server script jediepcserver.py."
+  (interactive)
+  (let ((root (python-environment-root-path jedi:environment-root)))
+    (when (yes-or-no-p
+           (format "Reinstall jedi server environment(%s) ?" (abbreviate-file-name root)))
+      (delete-directory root t)
+      (jedi:install-server))))
+
+;;;###autoload
 (defun jedi:install-server-block ()
   "Blocking version `jedi:install-server'."
   (prog1

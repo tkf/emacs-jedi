@@ -308,6 +308,12 @@ Keybinds
 .. el:keymap:: jedi-mode-map
 .. el:variable:: jedi:use-shortcuts
 
+For navigating auto-complete suggestions, you can use arrow keys. Jedi.el uses
+`auto-complete <https://github.com/auto-complete/auto-complete>`_, so check
+`its documentation
+<https://github.com/auto-complete/auto-complete/blob/master/doc/manual.md#candidate-selection>`_
+for other options. See also the `StackOverflow answer
+<http://stackoverflow.com/questions/28310365/how-do-i-scroll-through-the-autocomplete-options-in-emacs-jedi-besides-arrow-ke>`_.
 
 Command
 =======

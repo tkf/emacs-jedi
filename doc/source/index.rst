@@ -224,10 +224,19 @@ you can use...
 
     pip install -U PATH/TO/EMACS-JEDI/
 
+ for example::
+ 
+    ~/anaconda/bin/pip install -U ~/.emacs.d/elpa/jedi-core-20160501.2043/
+
 - setup.py directly::
 
     cd PATH/TO/EMACS-JEDI/
     python setup.py install
+
+ for example::
+ 
+    cd ~/.emacs.d/elpa/jedi-core-20160501.2043/
+    ~/anaconda/bin/python setup.py install
 
 Then find where your jediepcserver.py ends up.  Set the location by::
 

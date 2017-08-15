@@ -25,13 +25,18 @@ If not, see <http://www.gnu.org/licenses/>.
 
 """
 
+import argparse
 import os
 import sys
 import re
 import logging
 import glob
 
-jedi = None  # I will load it later
+import epc
+import epc.server
+import jedi
+import jedi.api
+import sexpdata
 
 
 PY3 = (sys.version_info[0] >= 3)
@@ -197,8 +202,6 @@ def get_module_version(module):
 
 
 def get_jedi_version():
-    import epc
-    import sexpdata
     return [dict(
         name=module.__name__,
         file=getattr(module, '__file__', []),
@@ -225,11 +228,6 @@ def jedi_epc_server(address='localhost', port=0, port_file=sys.stdout,
     for p in sys_path:
         _jedi_sys_path.insert(0, p)
 
-    # Workaround Jedi's module cache.  Use this workaround until Jedi
-    # got an API to set module paths.
-    # See also: https://github.com/davidhalter/jedi/issues/36
-    import_jedi()
-    import epc.server
     server = epc.server.EPCServer((address, port))
     server.register_function(complete)
     server.register_function(get_in_function_call)
@@ -272,12 +270,6 @@ def jedi_epc_server(address='localhost', port=0, port_file=sys.stdout,
     return server
 
 
-def import_jedi():
-    global jedi
-    import jedi
-    import jedi.api
-
-
 def add_virtualenv_path(venv):
     """Add virtualenv's site-packages to `sys.path`.
     that jedi will see.
@@ -290,7 +282,6 @@ def add_virtualenv_path(venv):
 
 
 def main(args=None):
-    import argparse
     parser = argparse.ArgumentParser(
         formatter_class=argparse.RawTextHelpFormatter,
         description=__doc__)

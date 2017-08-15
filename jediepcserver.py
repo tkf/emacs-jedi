@@ -30,7 +30,6 @@ import os
 import sys
 import re
 import logging
-import glob
 
 import epc
 import epc.server
@@ -274,11 +273,10 @@ def add_virtualenv_path(venv):
     """Add virtualenv's site-packages to `sys.path`.
     that jedi will see.
     """
-    venv = os.path.abspath(venv)
-    paths = glob.glob(os.path.join(
-        venv, 'lib', 'python*', 'site-packages'))
-    for path in paths:
-        _jedi_sys_path.append(path)
+    from jedi.evaluate.sys_path import _get_venv_path_dirs, _get_sys_path_with_egglinks
+    sys_path = _get_venv_path_dirs(venv)
+    sys_path = _get_sys_path_with_egglinks(sys_path)
+    _jedi_sys_path.extend(sys_path)
 
 
 def main(args=None):

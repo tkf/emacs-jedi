@@ -30,7 +30,6 @@ import sys
 import re
 import itertools
 import logging
-import site
 import glob
 
 jedi = None  # I will load it later
@@ -38,13 +37,15 @@ jedi = None  # I will load it later
 
 PY3 = (sys.version_info[0] >= 3)
 NEED_ENCODE = not PY3
+_virtual_env_paths = []
 
 
 def jedi_script(source, line, column, source_path):
     if NEED_ENCODE:
         source = source.encode('utf-8')
         source_path = source_path and source_path.encode('utf-8')
-    return jedi.Script(source, line, column, source_path or '')
+    return jedi.Script(source, line, column, source_path or '',
+                       sys_path=_virtual_env_paths)
 
 
 def candidate_symbol(comp):
@@ -276,12 +277,14 @@ def import_jedi():
 
 
 def add_virtualenv_path(venv):
-    """Add virtualenv's site-packages to `sys.path`."""
+    """Add virtualenv's site-packages to `sys.path`.
+    that jedi will see.
+    """
     venv = os.path.abspath(venv)
     paths = glob.glob(os.path.join(
         venv, 'lib', 'python*', 'site-packages'))
     for path in paths:
-        site.addsitedir(path)
+        _virtual_env_paths.append(path)
 
 
 def main(args=None):

@@ -28,7 +28,6 @@ If not, see <http://www.gnu.org/licenses/>.
 import os
 import sys
 import re
-import itertools
 import logging
 import glob
 
@@ -37,7 +36,7 @@ jedi = None  # I will load it later
 
 PY3 = (sys.version_info[0] >= 3)
 NEED_ENCODE = not PY3
-_virtual_env_paths = []
+_jedi_sys_path = []
 
 
 def jedi_script(source, line, column, source_path):
@@ -45,7 +44,7 @@ def jedi_script(source, line, column, source_path):
         source = source.encode('utf-8')
         source_path = source_path and source_path.encode('utf-8')
     return jedi.Script(source, line, column, source_path or '',
-                       sys_path=_virtual_env_paths)
+                       sys_path=_jedi_sys_path)
 
 
 def candidate_symbol(comp):
@@ -221,8 +220,11 @@ def jedi_epc_server(address='localhost', port=0, port_file=sys.stdout,
 
     for p in virtual_env:
         add_virtualenv_path(path_expand_vars_and_user(p))
-    sys_path = map(path_expand_vars_and_user, sys_path)
-    sys.path = [''] + list(filter(None, itertools.chain(sys_path, sys.path)))
+
+    sys_path = list(filter(None, map(path_expand_vars_and_user, sys_path)))
+    for p in sys_path:
+        _jedi_sys_path.insert(0, p)
+
     # Workaround Jedi's module cache.  Use this workaround until Jedi
     # got an API to set module paths.
     # See also: https://github.com/davidhalter/jedi/issues/36
@@ -284,7 +286,7 @@ def add_virtualenv_path(venv):
     paths = glob.glob(os.path.join(
         venv, 'lib', 'python*', 'site-packages'))
     for path in paths:
-        _virtual_env_paths.append(path)
+        _jedi_sys_path.append(path)
 
 
 def main(args=None):

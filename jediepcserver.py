@@ -48,7 +48,7 @@ def jedi_script(source, line, column, source_path):
         source = source.encode('utf-8')
         source_path = source_path and source_path.encode('utf-8')
     return jedi.Script(source, line, column, source_path or '',
-                       sys_path=_jedi_sys_path)
+                       sys_path=_jedi_sys_path if _jedi_sys_path else None)
 
 
 def candidate_symbol(comp):

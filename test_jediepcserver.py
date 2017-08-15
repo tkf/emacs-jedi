@@ -3,7 +3,6 @@ import textwrap
 from contextlib import contextmanager
 
 import jediepcserver as jep
-jep.import_jedi()
 
 
 @contextmanager
@@ -29,20 +28,16 @@ def test_epc_server_runs_fine_in_non_virtualenv():
         jep.jedi_epc_server()
 
 
-def test_epc_server_runs_fine_in_virtualenv():
+def test_epc_server_doesnt_change_sys_path_in_virtualenv():
     import sys
-    major_version = sys.version_info[:2][0]
-    minor_version = sys.version_info[:2][1]
     relative_venv_path = ".tox/py"
     full_venv_path = os.path.join(os.getcwd(), relative_venv_path)
 
+    orig_sys_path = sys.path[:]
     with osenv(VIRTUAL_ENV=full_venv_path):
         jep.jedi_epc_server()
 
-    venv_path = '{0}/lib/python{1}.{2}/site-packages'.format(full_venv_path,
-                                                             major_version,
-                                                             minor_version)
-    assert venv_path in sys.path
+    assert sys.path == orig_sys_path
 
 
 def check_defined_names(source, keys, deftree):

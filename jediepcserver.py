@@ -100,9 +100,9 @@ def get_in_function_call(*args):
         return dict(
             # p.get_code(False) should do the job.  But jedi-vim use replace.
             # So follow what jedi-vim does...
-            params=[p.get_code().replace('\n', '') for p in call_def.params],
+            params=[p.name for p in call_def.params],
             index=call_def.index,
-            call_name=call_def.call_name,
+            call_name=call_def.name,
         )
     else:
         return []  # nil

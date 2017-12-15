@@ -260,9 +260,7 @@ at the top."
   :group 'jedi)
 
 (defcustom jedi:install-imenu nil
-  "[EXPERIMENTAL] If `t', use Jedi to create `imenu' index.
-To use this feature, you need to install the developmental
-version (\"dev\" branch) of Jedi."
+  "If `t', use Jedi to create `imenu' index."
   :group 'jedi)
 
 (defcustom jedi:imenu-create-index-function 'jedi:create-nested-imenu-index

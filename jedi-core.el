@@ -55,6 +55,11 @@
    (expand-file-name "jediepcserver.py" jedi:source-dir))
   "Full path to Jedi server script file ``jediepcserver.py``.")
 
+(defvar jedi:remote-server-script
+  (convert-standard-filename
+   (expand-file-name "remote_jediepcserver.py" jedi:source-dir))
+  "Full path to Jedi server script file ``jediepcserver.py``.")
+
 (defvar jedi:setup-function nil)
 (defvar jedi:mode-function nil)
 
@@ -385,7 +390,7 @@ avoid collision by something like this::
 (define-minor-mode jedi-mode
   "Jedi mode.
 When `jedi-mode' is on, call signature is automatically shown as
-toolitp when inside of function call.
+tooltip when inside of function call.
 
 \\{jedi-mode-map}"
   :keymap jedi-mode-map
@@ -525,11 +530,17 @@ key, or start new one if there is none."
 
 ;;; Server management
 
+(defun jedi:-server-command ()
+    (let ((host (file-remote-p (jedi:-buffer-file-name) 'host)))
+      (message "Host is: %s" host)
+      (if host
+          (list "python3" jedi:remote-server-script host)
+        (append jedi:server-command jedi:server-args))))
+
 (defun jedi:start-server ()
   (if (jedi:epc--live-p jedi:epc)
       (message "Jedi server is already started!")
-    (setq jedi:epc (jedi:server-pool--start
-                    (append jedi:server-command jedi:server-args))))
+    (setq jedi:epc (jedi:server-pool--start (jedi:-server-command))))
   jedi:epc)
 
 (defun jedi:stop-server ()
@@ -1164,6 +1175,7 @@ See also:
 - https://github.com/tkf/emacs-jedi/pull/72
 - https://github.com/tkf/emacs-jedi/issues/140#issuecomment-37358527"
   (interactive)
+  
   (deferred:$
     (python-environment-run jedi:install-server--command
                             jedi:environment-root

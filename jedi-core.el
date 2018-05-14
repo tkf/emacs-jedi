@@ -531,16 +531,18 @@ key, or start new one if there is none."
 ;;; Server management
 
 (defun jedi:-server-command ()
-    (let ((host (file-remote-p (jedi:-buffer-file-name) 'host)))
-      (message "Host is: %s" host)
-      (if host
-          (list "python3" jedi:remote-server-script host)
-        (append jedi:server-command jedi:server-args))))
+  (let ((host (file-remote-p (jedi:-buffer-file-name) 'host)))
+    (message "Host is: %s" host)
+    (if host
+        (list "python3" jedi:remote-server-script host)
+      (append jedi:server-command jedi:server-args))))
 
 (defun jedi:start-server ()
   (if (jedi:epc--live-p jedi:epc)
       (message "Jedi server is already started!")
-    (setq jedi:epc (jedi:server-pool--start (jedi:-server-command))))
+    (progn
+      (message "Running server with %s" (jedi:-server-command))
+      (setq jedi:epc (jedi:server-pool--start (jedi:-server-command)))))
   jedi:epc)
 
 (defun jedi:stop-server ()
@@ -1132,7 +1134,7 @@ what jedi can do."
 
 ;;; Virtualenv setup
 (defvar jedi:install-server--command
-  `("pip" "install" "--upgrade" ,(convert-standard-filename jedi:source-dir)))
+  `("python3" "-m" "pip" "install" "--upgrade" ,(convert-standard-filename jedi:source-dir)))
 
 ;;;###autoload
 (defun jedi:install-server ()
@@ -1177,9 +1179,20 @@ See also:
   (interactive)
   
   (deferred:$
-    (python-environment-run jedi:install-server--command
-                            jedi:environment-root
-                            jedi:environment-virtualenv)
+    ;; This has all sorts of problems. I'm probably not using deferred
+    ;; correctly since each time this is run from scratch there is an
+    ;; error about a file already existing; so it sounds like the
+    ;; python3 -m venv command is being run multiple times.
+    ;; It works fine after the initial setup.
+    (python-environment-run `("python3" "-m" "pip" "install" "-U" "setuptools" "pip" "wheel")
+                              jedi:environment-root
+                              jedi:environment-virtualenv)
+    (deferred:nextc it
+      (lambda () (message "Finished updating venv, now installing jedi")))
+    (deferred:nextc it
+      (python-environment-run jedi:install-server--command
+                              jedi:environment-root
+                              jedi:environment-virtualenv))
     (deferred:watch it
       (lambda (_)
         (setq-default jedi:server-command (jedi:-env-server-command))))))

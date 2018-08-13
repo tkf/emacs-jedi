@@ -379,6 +379,8 @@ def add_virtualenv_path(venv):
     venv = os.path.abspath(venv)
     paths = glob.glob(os.path.join(
         venv, 'lib', 'python*', 'site-packages'))
+    if not paths:
+        raise ValueError('Invalid venv: no site-packages found: %s' % venv)
     for path in paths:
         site.addsitedir(path)
 

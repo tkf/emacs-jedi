@@ -29,10 +29,13 @@ import argparse
 import glob
 import itertools
 import logging
+import logging.handlers
+
 import os
 import re
 import site
 import sys
+from collections import namedtuple
 
 
 parser = argparse.ArgumentParser(
@@ -52,11 +55,19 @@ parser.add_argument(
     '--virtual-env', '-v', default=[], action='append',
     help='paths to be used as if VIRTUAL_ENV is set to it.')
 parser.add_argument(
-    '--log', help='save server log to this file.')
+    '--log', help='Save server log to this file.')
 parser.add_argument(
     '--log-level',
     choices=['CRITICAL', 'ERROR', 'WARN', 'INFO', 'DEBUG'],
-    help='logging level for log file.')
+    help='Logging level for log file.')
+parser.add_argument(
+    '--log-rotate-max-size', default=0, type=int,
+    help='Rotate log file after it reaches this size',
+)
+parser.add_argument(
+    '--log-rotate-max-count', default=3, type=int,
+    help='Max number of log rotations before removal',
+)
 parser.add_argument(
     '--log-traceback', action='store_true', default=False,
     help='Include traceback in logging output.')
@@ -68,11 +79,21 @@ parser.add_argument(
     help='start ipdb when error occurs.')
 
 
-
 jedi = None  # I will load it later
 
 PY3 = (sys.version_info[0] >= 3)
 NEED_ENCODE = not PY3
+
+
+LogSettings = namedtuple(
+    'LogSettings',
+    [
+        'log_file',
+        'log_level',
+        'log_rotate_max_size',
+        'log_rotate_max_count',
+    ],
+)
 
 
 def jedi_script(source, line, column, source_path):
@@ -259,10 +280,43 @@ def path_expand_vars_and_user(p):
     return os.path.expandvars(os.path.expanduser(p))
 
 
-def jedi_epc_server(address='localhost', port=0, port_file=sys.stdout,
-                    sys_path=[], virtual_env=[],
-                    debugger=None, log=None, log_level=None,
-                    log_traceback=None):
+def configure_logging(log_settings):
+    """
+    :type log_settings: LogSettings
+    """
+    if not log_settings.log_file:
+        return
+
+    fmter = logging.Formatter('%(asctime)s:' + logging.BASIC_FORMAT)
+    if log_settings.log_rotate_max_size > 0:
+        handler = logging.handlers.RotatingFileHandler(
+            filename=log_settings.log_file,
+            mode='w',
+            maxBytes=log_settings.log_rotate_max_size,
+            backupCount=log_settings.log_rotate_max_count,
+        )
+    else:
+        handler = logging.FileHandler(filename=log_settings.log_file, mode='w')
+    handler.setFormatter(fmter)
+    if log_settings.log_level:
+        logging.root.setLevel(log_settings.log_level.upper())
+    logging.root.addHandler(handler)
+
+
+def jedi_epc_server(
+        address='localhost',
+        port=0,
+        port_file=sys.stdout,
+        sys_path=[],
+        virtual_env=[],
+        debugger=None,
+        log_traceback=None,
+):
+    """Start EPC server.
+
+    :type log_settings: LogSettings
+
+    """
     default_venv = os.getenv('VIRTUAL_ENV')
     if default_venv:
         add_virtualenv_path(default_venv)
@@ -301,20 +355,14 @@ def jedi_epc_server(address='localhost', port=0, port_file=sys.stdout,
     # it should be passed to the constructor.
     server.log_traceback = bool(log_traceback)
 
-    if log:
-        handler = logging.FileHandler(filename=log, mode='w')
-        if log_level:
-            log_level = getattr(logging, log_level.upper())
-            handler.setLevel(log_level)
-            server.logger.setLevel(log_level)
-        server.logger.addHandler(handler)
     if debugger:
         server.set_debugger(debugger)
         handler = logging.StreamHandler()
+        fmter = logging.Formatter('%(asctime)s:' + logging.BASIC_FORMAT)
+        handler.setFormatter(fmter)
         handler.setLevel(logging.DEBUG)
         server.logger.addHandler(handler)
         server.logger.setLevel(logging.DEBUG)
-
     return server
 
 
@@ -335,7 +383,16 @@ def add_virtualenv_path(venv):
 
 def main(args=None):
     ns = parser.parse_args(args)
-    server = jedi_epc_server(**vars(ns))
+
+    ns_vars = vars(ns).copy()
+    log_settings = LogSettings(
+        log_file=ns_vars.pop('log'),
+        log_level=ns_vars.pop('log_level'),
+        log_rotate_max_size=ns_vars.pop('log_rotate_max_size'),
+        log_rotate_max_count=ns_vars.pop('log_rotate_max_count'),
+    )
+    configure_logging(log_settings)
+    server = jedi_epc_server(**ns_vars)
     server.serve_forever()
     server.logger.info('exit')
 

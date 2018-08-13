@@ -180,6 +180,11 @@ def defined_names(*args):
 
 
 def get_module_version(module):
+    notfound = object()
+    for key in ['__version__', 'version']:
+        version = getattr(module, key, notfound)
+        if version is not notfound:
+            return version
     try:
         from pkg_resources import get_distribution, DistributionNotFound
         try:
@@ -189,11 +194,6 @@ def get_module_version(module):
     except ImportError:
         pass
 
-    notfound = object()
-    for key in ['__version__', 'version']:
-        version = getattr(module, key, notfound)
-        if version is not notfound:
-            return version
 
 
 def get_jedi_version():

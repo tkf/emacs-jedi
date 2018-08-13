@@ -96,16 +96,16 @@ def get_in_function_call(*args):
     sig = jedi_script(*args).call_signatures()
     call_def = sig[0] if sig else None
 
-    if call_def:
-        return dict(
-            # p.get_code(False) should do the job.  But jedi-vim use replace.
-            # So follow what jedi-vim does...
-            params=[p.get_code().replace('\n', '') for p in call_def.params],
-            index=call_def.index,
-            call_name=call_def.call_name,
-        )
-    else:
-        return []  # nil
+    if not call_def:
+        return []
+
+    return dict(
+        # p.description should do the job.  But jedi-vim use replace.
+        # So follow what jedi-vim does...
+        params=[p.description.replace('\n', '') for p in call_def.params],
+        index=call_def.index,
+        call_name=call_def.call_name,
+    )
 
 
 def _goto(method, *args):

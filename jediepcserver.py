@@ -176,7 +176,7 @@ def get_names_recursively(definition, parent=None):
 
 
 def defined_names(*args):
-    return list(map(get_names_recursively, jedi.api.defined_names(*args)))
+    return list(map(get_names_recursively, jedi.api.names(*args)))
 
 
 def get_module_version(module):

@@ -104,7 +104,7 @@ def get_in_function_call(*args):
         # So follow what jedi-vim does...
         params=[p.description.replace('\n', '') for p in call_def.params],
         index=call_def.index,
-        call_name=call_def.call_name,
+        call_name=call_def.name,
     )
 
 

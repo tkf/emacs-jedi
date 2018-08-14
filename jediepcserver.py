@@ -35,7 +35,6 @@ import glob
 
 jedi = None  # I will load it later
 
-
 PY3 = (sys.version_info[0] >= 3)
 NEED_ENCODE = not PY3
 
@@ -92,6 +91,9 @@ def complete(*args):
     return reply
 
 
+PARAM_PREFIX_RE = re.compile(r'^param\s+')
+"""RE to strip unwanted "param " prefix returned by param.description."""
+
 def get_in_function_call(*args):
     sig = jedi_script(*args).call_signatures()
     call_def = sig[0] if sig else None
@@ -102,7 +104,8 @@ def get_in_function_call(*args):
     return dict(
         # p.description should do the job.  But jedi-vim use replace.
         # So follow what jedi-vim does...
-        params=[p.description.replace('\n', '') for p in call_def.params],
+        params=[PARAM_PREFIX_RE.sub('', p.description).replace('\n', '')
+                for p in call_def.params],
         index=call_def.index,
         call_name=call_def.name,
     )

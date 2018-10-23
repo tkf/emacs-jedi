@@ -19,7 +19,6 @@ env:
   - TOXENV=py
 matrix:
   include:
-    - env: EVM_EMACS=emacs-24.3-travis
     - env: EVM_EMACS=emacs-24.4-travis
     - env: EVM_EMACS=emacs-24.5-travis
     - env: EVM_EMACS=emacs-25.1-travis

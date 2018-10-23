@@ -179,7 +179,17 @@ def get_names_recursively(definition, parent=None):
 
 
 def defined_names(*args):
-    return list(map(get_names_recursively, jedi.api.names(*args)))
+    # XXX: there's a bug in Jedi that returns returns definitions from inside
+    # classes or functions even though all_scopes=False is set by
+    # default. Hence some additional filtering is in order.
+    #
+    # See https://github.com/davidhalter/jedi/issues/1202
+    top_level_names = [
+        defn
+        for defn in jedi.api.names(*args)
+        if defn.parent().type == 'module'
+    ]
+    return list(map(get_names_recursively, top_level_names))
 
 
 def get_module_version(module):

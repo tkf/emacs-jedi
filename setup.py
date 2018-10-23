@@ -15,7 +15,7 @@ setup(
     version='0.2.7',
     py_modules=['jediepcserver'],
     install_requires=[
-        "jedi>=0.8.1",
+        "jedi>=0.11.0",
         "epc>=0.0.4",
         "argparse",
     ],

@@ -89,3 +89,24 @@ def test_defined_names_nested_classes():
         def f(): pass
     def f(): pass
     """, keys, dicts)
+
+
+def _get_jedi_script_params(src, filename='example.py'):
+    source = textwrap.dedent(src)
+    lines = source.splitlines()
+    return source, len(lines), len(lines[-1]), filename
+
+
+def test_get_in_function_call():
+    params = _get_jedi_script_params("""
+    def foo(bar, baz, *qux, **quux):
+        pass
+
+    foo(
+    """)
+    result = jep.get_in_function_call(*params)
+    assert result == {
+        'params': ['bar', 'baz', '*qux', '**quux'],
+        'index': 0,
+        'call_name': 'foo',
+    }

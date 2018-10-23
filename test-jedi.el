@@ -68,14 +68,16 @@ json.l
 (ert-deftest jedi:get-in-function-call-request ()
   (with-python-temp-buffer
     "
-isinstance(obj,
+def foobar(qux, quux):
+    pass
+foobar(obj,
 "
     (goto-char (1- (point-max)))
     (destructuring-bind (&key params index call_name)
         (jedi-testing:sync (jedi:call-deferred 'get_in_function_call))
-      (should (equal params '("object" "class_or_type_or_tuple")))
+      (should (equal params '("qux" "quux")))
       (should (equal index 1))
-      (should (equal call_name "isinstance")))))
+      (should (equal call_name "foobar")))))
 
 (ert-deftest jedi:goto-request ()
   (with-python-temp-buffer

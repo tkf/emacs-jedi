@@ -35,7 +35,6 @@ import glob
 
 jedi = None  # I will load it later
 
-
 PY3 = (sys.version_info[0] >= 3)
 NEED_ENCODE = not PY3
 
@@ -92,20 +91,24 @@ def complete(*args):
     return reply
 
 
+PARAM_PREFIX_RE = re.compile(r'^param\s+')
+"""RE to strip unwanted "param " prefix returned by param.description."""
+
 def get_in_function_call(*args):
     sig = jedi_script(*args).call_signatures()
     call_def = sig[0] if sig else None
 
-    if call_def:
-        return dict(
-            # p.get_code(False) should do the job.  But jedi-vim use replace.
-            # So follow what jedi-vim does...
-            params=[p.get_code().replace('\n', '') for p in call_def.params],
-            index=call_def.index,
-            call_name=call_def.call_name,
-        )
-    else:
-        return []  # nil
+    if not call_def:
+        return []
+
+    return dict(
+        # p.description should do the job.  But jedi-vim use replace.
+        # So follow what jedi-vim does...
+        params=[PARAM_PREFIX_RE.sub('', p.description).replace('\n', '')
+                for p in call_def.params],
+        index=call_def.index,
+        call_name=call_def.name,
+    )
 
 
 def _goto(method, *args):
@@ -176,10 +179,25 @@ def get_names_recursively(definition, parent=None):
 
 
 def defined_names(*args):
-    return list(map(get_names_recursively, jedi.api.defined_names(*args)))
+    # XXX: there's a bug in Jedi that returns returns definitions from inside
+    # classes or functions even though all_scopes=False is set by
+    # default. Hence some additional filtering is in order.
+    #
+    # See https://github.com/davidhalter/jedi/issues/1202
+    top_level_names = [
+        defn
+        for defn in jedi.api.names(*args)
+        if defn.parent().type == 'module'
+    ]
+    return list(map(get_names_recursively, top_level_names))
 
 
 def get_module_version(module):
+    notfound = object()
+    for key in ['__version__', 'version']:
+        version = getattr(module, key, notfound)
+        if version is not notfound:
+            return version
     try:
         from pkg_resources import get_distribution, DistributionNotFound
         try:
@@ -189,11 +207,6 @@ def get_module_version(module):
     except ImportError:
         pass
 
-    notfound = object()
-    for key in ['__version__', 'version']:
-        version = getattr(module, key, notfound)
-        if version is not notfound:
-            return version
 
 
 def get_jedi_version():

@@ -30,13 +30,11 @@ import glob
 import itertools
 import logging
 import logging.handlers
-
 import os
 import re
 import site
 import sys
 from collections import namedtuple
-
 
 parser = argparse.ArgumentParser(
     formatter_class=argparse.RawTextHelpFormatter,
@@ -51,6 +49,9 @@ parser.add_argument(
 parser.add_argument(
     '--sys-path', '-p', default=[], action='append',
     help='paths to be inserted at the top of `sys.path`.')
+parser.add_argument(
+    '--sys-path-append', default=[], action='append',
+    help='paths to be appended at the end of `sys.path`.')
 parser.add_argument(
     '--virtual-env', '-v', default=[], action='append',
     help='paths to be used as if VIRTUAL_ENV is set to it.')
@@ -309,6 +310,7 @@ def jedi_epc_server(
         port_file=sys.stdout,
         sys_path=[],
         virtual_env=[],
+        sys_path_append=[],
         debugger=None,
         log_traceback=None,
 ):
@@ -324,7 +326,7 @@ def jedi_epc_server(
     for p in virtual_env:
         add_virtualenv_path(path_expand_vars_and_user(p))
     sys_path = map(path_expand_vars_and_user, sys_path)
-    sys.path = [''] + list(filter(None, itertools.chain(sys_path, sys.path)))
+    sys.path = [''] + list(filter(None, itertools.chain(sys_path, sys.path, sys_path_append)))
     # Workaround Jedi's module cache.  Use this workaround until Jedi
     # got an API to set module paths.
     # See also: https://github.com/davidhalter/jedi/issues/36

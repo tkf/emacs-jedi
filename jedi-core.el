@@ -478,15 +478,23 @@ Python module imports." :error))))
 (defvar jedi:server-pool--table (make-hash-table :test 'equal)
   "A hash table that holds a pool of EPC server instances.")
 
+(defun jedi:server-pool--resolve-command (command)
+  "Resolve COMMAND using current environment.
+Tries to find (car command) in \"exec-path\"."
+  (let (command-path (executable-find (car command)))
+    (if command-path
+        (cons command-path (cdr command))
+      command)))
+
 (defun jedi:server-pool--start (command)
-  "Get an EPC server instance from server pool by COMMAND as a
-key, or start new one if there is none."
-  (let ((cached (gethash command jedi:server-pool--table)))
+  "Get an EPC server for COMMAND from server pool or start a new one."
+  (let* ((resolved-command (jedi:server-pool--resolve-command command))
+         (cached (gethash resolved-command jedi:server-pool--table)))
     (if (and cached (jedi:epc--live-p cached))
         cached
       (let* ((default-directory "/")
-             (mngr (jedi:epc--start-epc (car command) (cdr command))))
-        (puthash command mngr jedi:server-pool--table)
+             (mngr (jedi:epc--start-epc (car resolved-command) (cdr command))))
+        (puthash resolved-command mngr jedi:server-pool--table)
         (jedi:server-pool--gc-when-idle)
         mngr))))
 

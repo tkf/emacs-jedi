@@ -25,13 +25,49 @@ If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-import os
-import sys
-import re
+import argparse
+import glob
 import itertools
 import logging
+import os
+import re
 import site
-import glob
+import sys
+
+
+parser = argparse.ArgumentParser(
+    formatter_class=argparse.RawTextHelpFormatter,
+    description=__doc__)
+parser.add_argument(
+    '--address', default='localhost')
+parser.add_argument(
+    '--port', default=0, type=int)
+parser.add_argument(
+    '--port-file', '-f', default='-', type=argparse.FileType('wt'),
+    help='file to write port on.  default is stdout.')
+parser.add_argument(
+    '--sys-path', '-p', default=[], action='append',
+    help='paths to be inserted at the top of `sys.path`.')
+parser.add_argument(
+    '--virtual-env', '-v', default=[], action='append',
+    help='paths to be used as if VIRTUAL_ENV is set to it.')
+parser.add_argument(
+    '--log', help='save server log to this file.')
+parser.add_argument(
+    '--log-level',
+    choices=['CRITICAL', 'ERROR', 'WARN', 'INFO', 'DEBUG'],
+    help='logging level for log file.')
+parser.add_argument(
+    '--log-traceback', action='store_true', default=False,
+    help='Include traceback in logging output.')
+parser.add_argument(
+    '--pdb', dest='debugger', const='pdb', action='store_const',
+    help='start pdb when error occurs.')
+parser.add_argument(
+    '--ipdb', dest='debugger', const='ipdb', action='store_const',
+    help='start ipdb when error occurs.')
+
+
 
 jedi = None  # I will load it later
 
@@ -298,38 +334,6 @@ def add_virtualenv_path(venv):
 
 
 def main(args=None):
-    import argparse
-    parser = argparse.ArgumentParser(
-        formatter_class=argparse.RawTextHelpFormatter,
-        description=__doc__)
-    parser.add_argument(
-        '--address', default='localhost')
-    parser.add_argument(
-        '--port', default=0, type=int)
-    parser.add_argument(
-        '--port-file', '-f', default='-', type=argparse.FileType('wt'),
-        help='file to write port on.  default is stdout.')
-    parser.add_argument(
-        '--sys-path', '-p', default=[], action='append',
-        help='paths to be inserted at the top of `sys.path`.')
-    parser.add_argument(
-        '--virtual-env', '-v', default=[], action='append',
-        help='paths to be used as if VIRTUAL_ENV is set to it.')
-    parser.add_argument(
-        '--log', help='save server log to this file.')
-    parser.add_argument(
-        '--log-level',
-        choices=['CRITICAL', 'ERROR', 'WARN', 'INFO', 'DEBUG'],
-        help='logging level for log file.')
-    parser.add_argument(
-        '--log-traceback', action='store_true', default=False,
-        help='Include traceback in logging output.')
-    parser.add_argument(
-        '--pdb', dest='debugger', const='pdb', action='store_const',
-        help='start pdb when error occurs.')
-    parser.add_argument(
-        '--ipdb', dest='debugger', const='ipdb', action='store_const',
-        help='start ipdb when error occurs.')
     ns = parser.parse_args(args)
     server = jedi_epc_server(**vars(ns))
     server.serve_forever()

@@ -36,11 +36,14 @@ import site
 import sys
 from collections import namedtuple
 
-import epc.server
 import jedi
 import jedi.api
+
 import epc
+import epc.server
 import sexpdata
+
+logger = logging.getLogger('jediepcserver')
 
 
 parser = argparse.ArgumentParser(
@@ -148,9 +151,16 @@ class JediEPCHandler(object):
         if can_use_environment:
             # Only one virtualenv and jedi has "environments" -> use them.
             path = path_expand_vars_and_user(virtual_envs[0])
-            return {
-                'environment': jedi_create_environment(path),
-            }
+            try:
+                environment = jedi_create_environment(path, safe=False)
+            except Exception:
+                logger.warning(
+                    'Cannot create environment for %r', path, exc_info=1
+                )
+            else:
+                return {
+                    'environment': environment,
+                }
 
         # Either multiple environments or custom sys_path extensions are
         # specified, or jedi version doesn't support environments.
@@ -387,13 +397,26 @@ def jedi_epc_server(
     :type log_settings: LogSettings
 
     """
+    logger.debug(
+        'jedi_epc_server: sys_path=%r virtual_env=%r sys_path_append=%r',
+        sys_path, virtual_env, sys_path_append,
+    )
+
     if not virtual_env and os.getenv('VIRTUAL_ENV'):
+        logger.debug(
+            'Taking virtual env from VIRTUAL_ENV: %r',
+            os.environ['VIRTUAL_ENV'],
+        )
         virtual_env = [os.environ['VIRTUAL_ENV']]
 
     handler = JediEPCHandler(
         sys_path=sys_path,
         virtual_envs=virtual_env,
         sys_path_append=sys_path_append,
+    )
+    logger.debug(
+        'Starting Jedi EPC server with the following sys.path: %r',
+        handler.get_sys_path(),
     )
     server = epc.server.EPCServer((address, port))
     server.register_function(handler.complete)

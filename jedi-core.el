@@ -1200,7 +1200,7 @@ See also:
 
 (defcustom jedi:install-python-jedi-dev-command
   '("pip" "install" "--upgrade"
-    "git+https://github.com/davidhalter/jedi.git@dev#egg=jedi")
+    "git+https://github.com/davidhalter/jedi.git@master#egg=jedi")
   "Pip command to be used for `jedi:install-python-jedi-dev'."
   :group 'jedi)
 

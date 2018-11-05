@@ -1,8 +1,11 @@
 import os
+import subprocess
+import sys
 import textwrap
 from contextlib import contextmanager
 
 import jediepcserver as jep
+
 jep.import_jedi()
 
 
@@ -30,10 +33,10 @@ def test_epc_server_runs_fine_in_non_virtualenv():
 
 
 def test_epc_server_runs_fine_in_virtualenv():
-    import sys
-    major_version = sys.version_info[:2][0]
-    minor_version = sys.version_info[:2][1]
-    relative_venv_path = ".tox/py"
+    major_version, minor_version = sys.version_info[:2]
+    envname = 'py{}{}'.format(major_version, minor_version)
+    subprocess.check_call(['tox', '-e', envname, '--notest'])
+    relative_venv_path = ".tox/" + envname
     full_venv_path = os.path.join(os.getcwd(), relative_venv_path)
 
     with osenv(VIRTUAL_ENV=full_venv_path):

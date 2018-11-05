@@ -6,8 +6,6 @@ from contextlib import contextmanager
 
 import jediepcserver as jep
 
-jep.import_jedi()
-
 
 @contextmanager
 def osenv(*args, **kwds):
@@ -39,19 +37,19 @@ def test_epc_server_runs_fine_in_virtualenv():
     relative_venv_path = ".tox/" + envname
     full_venv_path = os.path.join(os.getcwd(), relative_venv_path)
 
-    with osenv(VIRTUAL_ENV=full_venv_path):
-        jep.jedi_epc_server()
-
-    venv_path = '{0}/lib/python{1}.{2}/site-packages'.format(full_venv_path,
-                                                             major_version,
-                                                             minor_version)
-    assert venv_path in sys.path
+    handler = jep.JediEPCHandler(virtual_envs=[full_venv_path])
+    sys_path = handler.get_sys_path()
+    venv_path = '{0}/lib/python{1}.{2}/site-packages'.format(
+        full_venv_path, major_version, minor_version,
+    )
+    assert venv_path in sys_path
 
 
 def check_defined_names(source, keys, deftree):
     stripdict = lambda d: dict((k, d[k]) for k in keys)
     striptree = lambda ds: [stripdict(ds[0])] + list(map(striptree, ds[1:]))
-    fulldicts = jep.defined_names(textwrap.dedent(source), 'example.py')
+    handler = jep.JediEPCHandler()
+    fulldicts = handler.defined_names(textwrap.dedent(source), 'example.py')
     dicts = list(map(striptree, fulldicts))
     assert dicts == deftree
 
@@ -107,7 +105,8 @@ def test_get_in_function_call():
 
     foo(
     """)
-    result = jep.get_in_function_call(*params)
+    handler = jep.JediEPCHandler()
+    result = handler.get_in_function_call(*params)
     assert result == {
         'params': ['bar', 'baz', '*qux', '**quux'],
         'index': 0,

@@ -36,6 +36,13 @@ import site
 import sys
 from collections import namedtuple
 
+import epc.server
+import jedi
+import jedi.api
+import epc
+import sexpdata
+
+
 parser = argparse.ArgumentParser(
     formatter_class=argparse.RawTextHelpFormatter,
     description=__doc__)
@@ -80,8 +87,6 @@ parser.add_argument(
     help='start ipdb when error occurs.')
 
 
-jedi = None  # I will load it later
-
 PY3 = (sys.version_info[0] >= 3)
 NEED_ENCODE = not PY3
 
@@ -97,11 +102,166 @@ LogSettings = namedtuple(
 )
 
 
-def jedi_script(source, line, column, source_path):
-    if NEED_ENCODE:
-        source = source.encode('utf-8')
-        source_path = source_path and source_path.encode('utf-8')
-    return jedi.Script(source, line, column, source_path or '')
+try:
+    jedi_create_environment = jedi.create_environment
+except AttributeError:
+    jedi_create_environment = None
+
+
+def get_venv_sys_path(venv):
+    if jedi_create_environment is not None:
+        return jedi_create_environment(venv).get_sys_path()
+    from jedi.evaluate.sys_path import get_venv_path
+    return get_venv_path(venv)
+
+
+class JediEPCHandler(object):
+    def __init__(self, sys_path=(), virtual_envs=(), sys_path_append=()):
+        self.script_kwargs = self._get_script_path_kwargs(
+            sys_path=sys_path,
+            virtual_envs=virtual_envs,
+            sys_path_append=sys_path_append,
+        )
+
+    def get_sys_path(self):
+        environment = self.script_kwargs.get('environment')
+        if environment is not None:
+            return environment.get_sys_path()
+        sys_path = self.script_kwargs.get('sys_path')
+        if sys_path is not None:
+            return sys_path
+        return sys.path
+
+    @classmethod
+    def _get_script_path_kwargs(cls, sys_path, virtual_envs, sys_path_append):
+        if not sys_path and not virtual_envs and not sys_path_append:
+            # No path customizations.
+            return {}
+
+        # Here at least one path customization is necessary.
+        can_use_environment = (
+            jedi_create_environment is not None
+            and not sys_path
+            and not sys_path_append
+            and 1 <= len(virtual_envs) < 2
+        )
+        if can_use_environment:
+            # Only one virtualenv and jedi has "environments" -> use them.
+            path = path_expand_vars_and_user(virtual_envs[0])
+            return {
+                'environment': jedi_create_environment(path),
+            }
+
+        # Either multiple environments or custom sys_path extensions are
+        # specified, or jedi version doesn't support environments.
+        final_sys_path = []
+        final_sys_path.extend(path_expand_vars_and_user(p) for p in sys_path)
+        for p in virtual_envs:
+            final_sys_path.extend(get_venv_sys_path(path_expand_vars_and_user(p)))
+        final_sys_path.extend(
+            path_expand_vars_and_user(p) for p in sys_path_append
+        )
+        dupes = set()
+
+        def not_seen_yet(val):
+            if val in dupes:
+                return False
+            dupes.add(val)
+            return True
+        final_sys_path = [p for p in final_sys_path if not_seen_yet(p)]
+        return {
+            'sys_path': final_sys_path,
+        }
+
+    def jedi_script(self, source, line, column, source_path):
+        if NEED_ENCODE:
+            source = source.encode('utf-8')
+            source_path = source_path and source_path.encode('utf-8')
+        return jedi.Script(
+            source, line, column, source_path or '', **self.script_kwargs
+        )
+
+    def complete(self, *args):
+        reply = []
+        for comp in self.jedi_script(*args).completions():
+            try:
+                docstr = comp.docstring()
+            except KeyError:
+                docstr = ""
+
+            reply.append(dict(
+                word=comp.name,
+                doc=docstr,
+                description=candidates_description(comp),
+                symbol=candidate_symbol(comp),
+            ))
+        return reply
+
+    def get_in_function_call(self, *args):
+        sig = self.jedi_script(*args).call_signatures()
+        call_def = sig[0] if sig else None
+
+        if not call_def:
+            return []
+
+        return dict(
+            # p.description should do the job.  But jedi-vim use replace.
+            # So follow what jedi-vim does...
+            params=[PARAM_PREFIX_RE.sub('', p.description).replace('\n', '')
+                    for p in call_def.params],
+            index=call_def.index,
+            call_name=call_def.name,
+        )
+
+    def _goto(self, method, *args):
+        """
+        Helper function for `goto_assignments` and `usages`.
+
+        :arg  method: `jedi.Script.goto_assignments` or `jedi.Script.usages`
+        :arg    args: Arguments to `jedi_script`
+
+        """
+        # `definitions` is a list. Each element is an instances of
+        # `jedi.api_classes.BaseOutput` subclass, i.e.,
+        # `jedi.api_classes.RelatedName` or `jedi.api_classes.Definition`.
+        definitions = method(self.jedi_script(*args))
+        return [dict(
+            column=d.column,
+            line_nr=d.line,
+            module_path=d.module_path if d.module_path != '__builtin__' else [],
+            module_name=d.module_name,
+            description=d.description,
+        ) for d in definitions]
+
+    def goto(self, *args):
+        return self._goto(jedi.Script.goto_assignments, *args)
+
+    def related_names(self, *args):
+        return self._goto(jedi.Script.usages, *args)
+
+    def get_definition(self, *args):
+        definitions = self.jedi_script(*args).goto_definitions()
+        return [definition_to_dict(d) for d in definitions]
+
+    def defined_names(self, *args):
+        # XXX: there's a bug in Jedi that returns returns definitions from inside
+        # classes or functions even though all_scopes=False is set by
+        # default. Hence some additional filtering is in order.
+        #
+        # See https://github.com/davidhalter/jedi/issues/1202
+        top_level_names = [
+            defn
+            for defn in jedi.api.names(*args)
+            if defn.parent().type == 'module'
+        ]
+        return list(map(get_names_recursively, top_level_names))
+
+    def get_jedi_version(self):
+        return [dict(
+            name=module.__name__,
+            file=getattr(module, '__file__', []),
+            version=get_module_version(module) or [],
+        ) for module in [sys, jedi, epc, sexpdata]]
 
 
 def candidate_symbol(comp):
@@ -132,70 +292,8 @@ def candidates_description(comp):
 _WHITESPACES_RE = re.compile(r'\s+')
 
 
-def complete(*args):
-    reply = []
-    for comp in jedi_script(*args).completions():
-        try:
-            docstr = comp.docstring()
-        except KeyError:
-            docstr = ""
-
-        reply.append(dict(
-            word=comp.name,
-            doc=docstr,
-            description=candidates_description(comp),
-            symbol=candidate_symbol(comp),
-        ))
-    return reply
-
-
 PARAM_PREFIX_RE = re.compile(r'^param\s+')
 """RE to strip unwanted "param " prefix returned by param.description."""
-
-def get_in_function_call(*args):
-    sig = jedi_script(*args).call_signatures()
-    call_def = sig[0] if sig else None
-
-    if not call_def:
-        return []
-
-    return dict(
-        # p.description should do the job.  But jedi-vim use replace.
-        # So follow what jedi-vim does...
-        params=[PARAM_PREFIX_RE.sub('', p.description).replace('\n', '')
-                for p in call_def.params],
-        index=call_def.index,
-        call_name=call_def.name,
-    )
-
-
-def _goto(method, *args):
-    """
-    Helper function for `goto_assignments` and `usages`.
-
-    :arg  method: `jedi.Script.goto_assignments` or `jedi.Script.usages`
-    :arg    args: Arguments to `jedi_script`
-
-    """
-    # `definitions` is a list. Each element is an instances of
-    # `jedi.api_classes.BaseOutput` subclass, i.e.,
-    # `jedi.api_classes.RelatedName` or `jedi.api_classes.Definition`.
-    definitions = method(jedi_script(*args))
-    return [dict(
-        column=d.column,
-        line_nr=d.line,
-        module_path=d.module_path if d.module_path != '__builtin__' else [],
-        module_name=d.module_name,
-        description=d.description,
-    ) for d in definitions]
-
-
-def goto(*args):
-    return _goto(jedi.Script.goto_assignments, *args)
-
-
-def related_names(*args):
-    return _goto(jedi.Script.usages, *args)
 
 
 def definition_to_dict(d):
@@ -210,11 +308,6 @@ def definition_to_dict(d):
         full_name=getattr(d, 'full_name', []),
         type=getattr(d, 'type', []),
     )
-
-
-def get_definition(*args):
-    definitions = jedi_script(*args).goto_definitions()
-    return list(map(definition_to_dict, definitions))
 
 
 def get_names_recursively(definition, parent=None):
@@ -236,20 +329,6 @@ def get_names_recursively(definition, parent=None):
         return [d]
 
 
-def defined_names(*args):
-    # XXX: there's a bug in Jedi that returns returns definitions from inside
-    # classes or functions even though all_scopes=False is set by
-    # default. Hence some additional filtering is in order.
-    #
-    # See https://github.com/davidhalter/jedi/issues/1202
-    top_level_names = [
-        defn
-        for defn in jedi.api.names(*args)
-        if defn.parent().type == 'module'
-    ]
-    return list(map(get_names_recursively, top_level_names))
-
-
 def get_module_version(module):
     notfound = object()
     for key in ['__version__', 'version']:
@@ -264,17 +343,6 @@ def get_module_version(module):
             pass
     except ImportError:
         pass
-
-
-
-def get_jedi_version():
-    import epc
-    import sexpdata
-    return [dict(
-        name=module.__name__,
-        file=getattr(module, '__file__', []),
-        version=get_module_version(module) or [],
-    ) for module in [sys, jedi, epc, sexpdata]]
 
 
 def path_expand_vars_and_user(p):
@@ -319,27 +387,22 @@ def jedi_epc_server(
     :type log_settings: LogSettings
 
     """
-    default_venv = os.getenv('VIRTUAL_ENV')
-    if default_venv:
-        add_virtualenv_path(default_venv)
+    if not virtual_env and os.getenv('VIRTUAL_ENV'):
+        virtual_env = [os.environ['VIRTUAL_ENV']]
 
-    for p in virtual_env:
-        add_virtualenv_path(path_expand_vars_and_user(p))
-    sys_path = map(path_expand_vars_and_user, sys_path)
-    sys.path = [''] + list(filter(None, itertools.chain(sys_path, sys.path, sys_path_append)))
-    # Workaround Jedi's module cache.  Use this workaround until Jedi
-    # got an API to set module paths.
-    # See also: https://github.com/davidhalter/jedi/issues/36
-    import_jedi()
-    import epc.server
+    handler = JediEPCHandler(
+        sys_path=sys_path,
+        virtual_envs=virtual_env,
+        sys_path_append=sys_path_append,
+    )
     server = epc.server.EPCServer((address, port))
-    server.register_function(complete)
-    server.register_function(get_in_function_call)
-    server.register_function(goto)
-    server.register_function(related_names)
-    server.register_function(get_definition)
-    server.register_function(defined_names)
-    server.register_function(get_jedi_version)
+    server.register_function(handler.complete)
+    server.register_function(handler.get_in_function_call)
+    server.register_function(handler.goto)
+    server.register_function(handler.related_names)
+    server.register_function(handler.get_definition)
+    server.register_function(handler.defined_names)
+    server.register_function(handler.get_jedi_version)
 
     @server.register_function
     def toggle_log_traceback():
@@ -368,21 +431,15 @@ def jedi_epc_server(
     return server
 
 
-def import_jedi():
-    global jedi
-    import jedi
-    import jedi.api
-
-
-def add_virtualenv_path(venv):
-    """Add virtualenv's site-packages to `sys.path`."""
-    venv = os.path.abspath(venv)
-    paths = glob.glob(os.path.join(
-        venv, 'lib', 'python*', 'site-packages'))
-    if not paths:
-        raise ValueError('Invalid venv: no site-packages found: %s' % venv)
-    for path in paths:
-        site.addsitedir(path)
+# def add_virtualenv_path(venv):
+#     """Add virtualenv's site-packages to `sys.path`."""
+#     venv = os.path.abspath(venv)
+#     paths = glob.glob(os.path.join(
+#         venv, 'lib', 'python*', 'site-packages'))
+#     if not paths:
+#         raise ValueError('Invalid venv: no site-packages found: %s' % venv)
+#     for path in paths:
+#         site.addsitedir(path)
 
 
 def main(args=None):

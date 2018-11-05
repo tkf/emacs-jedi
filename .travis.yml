@@ -15,8 +15,6 @@ env:
   global:
   # Turn on --use-mirrors option everywhere (even in tox):
   - PIP_USE_MIRRORS=t
-  # Use Python version of the one used for running tox
-  - TOXENV=py
 matrix:
   include:
     - env: EVM_EMACS=emacs-24.4-travis

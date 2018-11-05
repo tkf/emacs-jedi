@@ -26,7 +26,7 @@ matrix:
     - env: EVM_EMACS=emacs-25.3-travis
 
 before_install:
-  - pip install -q virtualenv tox
+  - pip install -q virtualenv tox tox-travis
   - curl -fsSkL https://gist.github.com/rejeep/ebcd57c3af83b049833b/raw > x.sh && source ./x.sh
   - evm install $EVM_EMACS --use --skip
   - cask

@@ -1,4 +1,4 @@
-ENV = env
+ENV = $(PWD)/env
 
 VIRTUALENV_SYSTEM_SITE_PACKAGES ?= true
 VIRTUALENV = \
@@ -19,7 +19,7 @@ ELPA_DIR = $(shell EMACS=$(EMACS) $(CASK) package-directory)
 
 VIRTUAL_EMACS = ${CASK} exec ${EMACS} -Q \
 --eval "(setq python-environment--verbose t)" \
---eval "(setq jedi:environment-root \"$(PWD)/$(ENV)\")"
+--eval "(setq jedi:environment-root \"$(ENV)\")"
 
 .PHONY : test test-1 tryout clean-elpa requirements env clean-env clean \
 	print-deps travis-ci doc
@@ -72,9 +72,11 @@ install-jedi-dev:
 	${PIP_INSTALL} --upgrade ${JEDI_DEV_URL}
 
 env: $(ENV)/$(BINDIR)/jediepcserver
-$(ENV)/$(BINDIR)/jediepcserver: ${ELPA_DIR} jediepcserver.py setup.py
-	${VIRTUAL_EMACS} -batch -L . -l jedi.el -f "jedi:install-server-block"
-	test -f $@
+$(ENV)/$(BINDIR)/jediepcserver: setup.py
+	${VIRTUAL_EMACS} -batch -L . -l jedi.el \
+		--eval "(setq jedi:install-server--command '(\"pip\" \"install\" \"--editable\" \"$(PWD)\"))" \
+		-f "jedi:install-server-block"
+	test -x $@
 
 clean-env:
 	rm -rf $(ENV)

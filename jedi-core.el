@@ -552,7 +552,19 @@ later when it is needed."
   (setq jedi:get-in-function-call--d nil)
   (setq jedi:defined-names--singleton-d nil))
 
+(defun jedi:stop-all-servers ()
+  "Stop all live Jedi servers.
+This is useful to apply new settings or VIRTUAL_ENV variable
+value to all buffers."
+  (interactive)
+  (cl-dolist (buf (buffer-list))
+    (when (buffer-live-p buf)
+      (with-current-buffer buf
+        (when (jedi:epc--live-p jedi:epc)
+          (jedi:stop-server))))))
+
 (defun jedi:get-epc ()
+  "Get an EPC instance of a running server or start a new one."
   (if (jedi:epc--live-p jedi:epc)
       jedi:epc
     (jedi:start-server)))

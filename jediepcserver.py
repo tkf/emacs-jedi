@@ -106,9 +106,20 @@ LogSettings = namedtuple(
 
 
 try:
-    jedi_create_environment = jedi.create_environment
+    jedi.create_environment
 except AttributeError:
     jedi_create_environment = None
+else:
+    _cached_jedi_environments = {}
+
+    def jedi_create_environment(venv, safe=True):
+        """Cache jedi environments to avoid startup cost."""
+        try:
+            return _cached_jedi_environments[venv]
+        except KeyError:
+            jedienv = jedi.create_environment(venv, safe=safe)
+            _cached_jedi_environments[venv] = jedienv
+            return jedienv
 
 
 def get_venv_sys_path(venv):

@@ -112,12 +112,16 @@ except AttributeError:
 else:
     _cached_jedi_environments = {}
 
-    def jedi_create_environment(venv, safe=True):
+    def jedi_create_environment(venv, safe=False):
         """Cache jedi environments to avoid startup cost."""
         try:
             return _cached_jedi_environments[venv]
         except KeyError:
-            jedienv = jedi.create_environment(venv, safe=safe)
+            logger.info('Creating jedi environment: %s', venv)
+            if venv is None:
+                jedienv = jedi.api.environment.get_default_environment()
+            else:
+                jedienv = jedi.create_environment(venv, safe=safe)
             _cached_jedi_environments[venv] = jedienv
             return jedienv
 
@@ -148,30 +152,28 @@ class JediEPCHandler(object):
 
     @classmethod
     def _get_script_path_kwargs(cls, sys_path, virtual_envs, sys_path_append):
-        if not sys_path and not virtual_envs and not sys_path_append:
-            # No path customizations.
-            return {}
-
-        # Here at least one path customization is necessary.
-        can_use_environment = (
-            jedi_create_environment is not None
-            and not sys_path
-            and not sys_path_append
-            and 1 <= len(virtual_envs) < 2
-        )
-        if can_use_environment:
-            # Only one virtualenv and jedi has "environments" -> use them.
-            path = path_expand_vars_and_user(virtual_envs[0])
+        result = {}
+        if jedi_create_environment:
+            # Need to specify some environment explicitly to workaround
+            # https://github.com/davidhalter/jedi/issues/1242. Otherwise jedi
+            # will create a lot of child processes.
+            if virtual_envs:
+                primary_env, virtual_envs = virtual_envs[0], virtual_envs[1:]
+                primary_env = path_expand_vars_and_user(primary_env)
+            else:
+                primary_env = None
             try:
-                environment = jedi_create_environment(path, safe=False)
+                result['environment'] = jedi_create_environment(primary_env)
             except Exception:
                 logger.warning(
-                    'Cannot create environment for %r', path, exc_info=1
+                    'Cannot create environment for %r', primary_env, exc_info=1
                 )
-            else:
-                return {
-                    'environment': environment,
-                }
+                if primary_env is not None:
+                    result['environment'] = jedi_create_environment(None)
+
+        if not sys_path and not virtual_envs and not sys_path_append:
+            # No additional path customizations.
+            return result
 
         # Either multiple environments or custom sys_path extensions are
         # specified, or jedi version doesn't support environments.
@@ -189,10 +191,8 @@ class JediEPCHandler(object):
                 return False
             dupes.add(val)
             return True
-        final_sys_path = [p for p in final_sys_path if not_seen_yet(p)]
-        return {
-            'sys_path': final_sys_path,
-        }
+        result['sys_path'] = [p for p in final_sys_path if not_seen_yet(p)]
+        return result
 
     def jedi_script(self, source, line, column, source_path):
         if NEED_ENCODE:

@@ -356,7 +356,7 @@ avoid collision by something like this::
   :group 'jedi)
 
 (defcustom jedi:import-python-el-settings t
-  "Automatically import setting from python.el variables."
+  "Automatically import settings from python.el variables."
   :group 'jedi)
 
 (defcustom jedi:goto-definition-marker-ring-length 16
@@ -367,10 +367,10 @@ avoid collision by something like this::
 ;;; Internal variables
 
 (defvar jedi:get-in-function-call--d nil
-  "Bounded to deferred object while requesting get-in-function-call.")
+  "Bound to deferred object while requesting get-in-function-call")
 
 (defvar jedi:defined-names--singleton-d nil
-  "Bounded to deferred object while requesting defined_names.")
+  "Bound to deferred object while requesting defined_names")
 
 
 ;;; Jedi mode
@@ -836,6 +836,16 @@ INDEX-th result."
   (forward-line (1- line))
   (forward-char column))
 
+(defvar jedi:find-file-function #'jedi:find-file
+  "Function that reads a source file for jedi navigation.
+It must take these arguments: (file-to-read other-window-flag line_number column_number).")
+
+(defun jedi:find-file (file line column other-window)
+  "Default function used by jedi to find a source FILE, LINE= and COLUMN, possibly in OTHER-WINDOW."
+  (funcall (if other-window #'find-file-other-window #'find-file)
+           file)
+  (jedi:goto--line-column line column))
+
 (defun jedi:goto-definition--nth (other-window &optional try-next)
   (let* ((len (length jedi:goto-definition--cache))
          (n jedi:goto-definition--index)
@@ -856,9 +866,7 @@ INDEX-th result."
           (message "File '%s' does not exist." module_path)))
        (t
         (jedi:goto-definition-push-marker)
-        (funcall (if other-window #'find-file-other-window #'find-file)
-                 module_path)
-        (jedi:goto--line-column line_nr column)
+        (jedi:find-file module_path line_nr column other-window)
         (jedi:goto-definition--notify-alternatives len n))))))
 
 (defun jedi:goto-definition--notify-alternatives (len n)

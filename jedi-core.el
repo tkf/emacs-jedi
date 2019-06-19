@@ -255,6 +255,11 @@ at the top."
   :type 'hook
   :group 'jedi)
 
+(defcustom jedi:goto-definition-hook nil
+  "The hook that's run after jumping to a definition location."
+  :type 'hook
+  :group 'jedi)
+
 (defcustom jedi:doc-display-buffer 'display-buffer
   "A function to be called with a buffer to show document."
   :group 'jedi)
@@ -859,6 +864,7 @@ INDEX-th result."
         (funcall (if other-window #'find-file-other-window #'find-file)
                  module_path)
         (jedi:goto--line-column line_nr column)
+        (run-hooks 'jedi:goto-definition-hook)
         (jedi:goto-definition--notify-alternatives len n))))))
 
 (defun jedi:goto-definition--notify-alternatives (len n)

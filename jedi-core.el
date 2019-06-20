@@ -255,6 +255,11 @@ at the top."
   :type 'hook
   :group 'jedi)
 
+(defcustom jedi:goto-definition-hook nil
+  "The hook that's run after jumping to a definition location."
+  :type 'hook
+  :group 'jedi)
+
 (defcustom jedi:doc-display-buffer 'display-buffer
   "A function to be called with a buffer to show document."
   :group 'jedi)
@@ -867,6 +872,7 @@ It must take these arguments: (file-to-read other-window-flag line_number column
        (t
         (jedi:goto-definition-push-marker)
         (jedi:find-file module_path line_nr column other-window)
+        (run-hooks 'jedi:goto-definition-hook)
         (jedi:goto-definition--notify-alternatives len n))))))
 
 (defun jedi:goto-definition--notify-alternatives (len n)

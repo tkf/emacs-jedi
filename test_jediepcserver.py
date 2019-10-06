@@ -112,3 +112,32 @@ def test_get_in_function_call():
         'index': 0,
         'call_name': 'foo',
     }
+
+
+def test_completion_docstring_raises(monkeypatch):
+    """Test "complete" handler does not fail if "comp.docstring" raises
+
+    Ref. #339
+    """
+    def raise_exception(*args, **kwargs):
+        raise Exception('hello, world')
+
+    monkeypatch.setattr(
+        'jedi.api.classes.Completion.docstring', raise_exception
+    )
+
+    params = _get_jedi_script_params("""
+    import os
+
+    os.chd
+    """)
+    handler = jep.JediEPCHandler()
+    result = handler.complete(*params)
+    assert result == [
+        {
+            'word': 'chdir',
+            'doc': '',
+            'description': 'def chdir',
+            'symbol': 'f',
+        },
+    ]

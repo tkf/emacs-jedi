@@ -27,6 +27,7 @@ before_install:
   - pip install -q virtualenv tox tox-travis
   - curl -fsSkL https://gist.github.com/rejeep/ebcd57c3af83b049833b/raw > x.sh && source ./x.sh
   - evm install $EVM_EMACS --use --skip
+  - emacs --version
   - cask
   - make before-test
 script:

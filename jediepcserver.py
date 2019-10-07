@@ -203,20 +203,25 @@ class JediEPCHandler(object):
         )
 
     def complete(self, *args):
-        reply = []
-        for comp in self.jedi_script(*args).completions():
+        def _wrap_completion_result(comp):
             try:
                 docstr = comp.docstring()
-            except KeyError:
+            except Exception:
+                logger.warning(
+                    "Cannot get docstring for completion %s", comp, exc_info=1
+                )
                 docstr = ""
-
-            reply.append(dict(
+            return dict(
                 word=comp.name,
                 doc=docstr,
                 description=candidates_description(comp),
                 symbol=candidate_symbol(comp),
-            ))
-        return reply
+            )
+
+        return [
+            _wrap_completion_result(comp)
+            for comp in self.jedi_script(*args).completions()
+        ]
 
     def get_in_function_call(self, *args):
         sig = self.jedi_script(*args).call_signatures()

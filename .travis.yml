@@ -1,4 +1,4 @@
-dist: trusty
+dist: xenial
 sudo: false
 language: python
 git:
@@ -28,6 +28,7 @@ before_install:
   - pip install -q virtualenv tox tox-travis
   - curl -fsSkL https://gist.github.com/rejeep/ebcd57c3af83b049833b/raw > x.sh && source ./x.sh
   - evm install $EVM_EMACS --use --skip
+  - evm list
   - emacs --version
   - cask
   - make before-test

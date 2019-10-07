@@ -12,7 +12,7 @@ python:
   - "2.7"
 env:
   matrix:
-    - EVM_EMACS=emacs-26.1-travis
+    - EVM_EMACS=emacs-26.3-travis-linux-xenial
   global:
   # Turn on --use-mirrors option everywhere (even in tox):
   - PIP_USE_MIRRORS=t
@@ -23,6 +23,9 @@ matrix:
     - env: EVM_EMACS=emacs-25.1-travis
     - env: EVM_EMACS=emacs-25.2-travis
     - env: EVM_EMACS=emacs-25.3-travis
+    - env: EVM_EMACS=emacs-26.1-travis-linux-xenial
+    - env: EVM_EMACS=emacs-26.2-travis-linux-xenial
+    - env: EVM_EMACS=emacs-git-snapshot-travis-linux-xenial
 
 before_install:
   - pip install -q virtualenv tox tox-travis

@@ -662,11 +662,14 @@ later when it is needed."
 This is useful to apply new settings or VIRTUAL_ENV variable
 value to all buffers."
   (interactive)
+  ;; Kill all servers attached to buffers
   (cl-dolist (buf (buffer-list))
     (when (buffer-live-p buf)
       (with-current-buffer buf
         (when (jedi:epc--live-p jedi:epc)
-          (jedi:stop-server))))))
+          (jedi:stop-server)))))
+  ;; Kill all unused servers too.
+  (jedi:server-pool--gc))
 
 (defun jedi:get-epc ()
   "Get an EPC instance of a running server or start a new one."

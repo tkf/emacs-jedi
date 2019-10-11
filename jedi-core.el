@@ -519,12 +519,12 @@ connection."
         is-part lines)
     (if (not (buffer-live-p epc-buffer))
         ""
-      (save-excursion
-        (set-buffer epc-buffer)
-        (goto-char (point-max))
-        (forward-line -10)
-        (setq is-part (not (eq (point) (point-min))))
-        (setq lines (buffer-substring-no-properties (point) (point-max))))
+      (with-current-buffer epc-buffer
+        (save-excursion
+          (goto-char (point-max))
+          (forward-line -10)
+          (setq is-part (not (eq (point) (point-min))))
+          (setq lines (buffer-substring-no-properties (point) (point-max)))))
       (format "*** EPC Server Output (last %s lines) ***\n%s%s\n"
               line-count
               (if is-part "<...snipped, see all with `epc:pop-to-last-server-process-buffer'...>\n" "")

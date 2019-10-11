@@ -586,7 +586,7 @@ Python module imports."
 (defun jedi:server-pool--resolve-command (command)
   "Resolve COMMAND using current environment.
 Tries to find (car command) in \"exec-path\"."
-  (let (command-path (executable-find (car command)))
+  (let ((command-path (executable-find (car command))))
     (if command-path
         (cons command-path (cdr command))
       command)))

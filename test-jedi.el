@@ -130,6 +130,11 @@ json.load
             buffers))
      (mocker-let
          ((jedi:epc--start-epc (x y) ,start-epc-records)
+          ;; FIXME: test suite is not yet adapted to resolving the command to
+          ;; absolute path, so it is mocked to return the command untouched.
+          (jedi:server-pool--resolve-command (command)
+           ((:input-matcher (lambda (&rest _) t)
+                            :output-generator (lambda (command) command))))
           (jedi:epc--live-p (x) ,epc--live-p-records)
           ;; Probably this mocking is too "strong".  What I need to
           ;; mock is only `buffer-list' in `jedi:-get-servers-in-use'.

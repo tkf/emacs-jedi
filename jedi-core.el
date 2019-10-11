@@ -203,9 +203,8 @@ This is a list which may contain symbol(s) `pos-tip' and/or
 `popup'.  It determines tooltip method to use.  Setting this
 value to nil means to use minibuffer instead of tooltip."
   :group 'jedi
-  :type '(list (choice (const pos-tip)
-                       (const popup))))
-
+  :type '(repeat (choice (const pos-tip)
+                         (const popup))))
 
 (defcustom jedi:get-in-function-call-timeout 3000
   "Cancel request to server for call signature after this period
@@ -263,13 +262,15 @@ use the setting like this::
 You can rearrange the order to have most useful sets of arguments
 at the top."
   :group 'jedi
-  :type '(list sexp))
+  :type '(repeat (choice (const nil)
+                         (const t)
+                         (const definition))))
 
 
 (defcustom jedi:doc-mode 'rst-mode
   "Major mode to use when showing document."
   :group 'jedi
-  :type 'symbol)
+  :type 'function)
 
 
 (defcustom jedi:doc-hook '(view-mode)

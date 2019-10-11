@@ -68,7 +68,10 @@ If it is nil, `python-environment-default-root-name' is used.
 You can specify a full path instead of a name (relative path).
 In that case, `python-environment-directory' is ignored and
 Python virtual environment is created at the specified path."
-  :group 'jedi)
+  :group 'jedi
+  :type '(choice (directory
+                  (const nil))))
+
 
 (defcustom jedi:environment-virtualenv nil
   "``virtualenv`` command to use.  A list of string.
@@ -76,7 +79,9 @@ If it is nil, `python-environment-virtualenv' is used instead.
 
 You must set non-`nil' value to `jedi:environment-root' in order
 to make this setting work."
-  :group 'jedi)
+  :group 'jedi
+  :type '(repeat string))
+
 
 (defun jedi:-env-server-command ()
   (let* ((getbin (lambda (x) (python-environment-bin x jedi:environment-root)))
@@ -127,7 +132,9 @@ reinstall jediepcserver.py.
 If you want to pass some arguments to the Jedi server command,
 use `jedi:server-args' instead of appending them
 `jedi:server-command'."
-  :group 'jedi)
+  :group 'jedi
+  :type '(repeat string))
+
 
 (defcustom jedi:server-args nil
   "Command line arguments to be appended to `jedi:server-command'.
@@ -178,30 +185,41 @@ for Jedi.el and other EPC applications.
 
 If you want to start a new ad-hoc server for the current buffer,
 use the command `jedi:start-dedicated-server'."
-  :group 'jedi)
+  :group 'jedi
+  :type '(repeat string))
+
 
 (defcustom jedi:complete-on-dot nil
   "Non-`nil' means automatically start completion after inserting a dot.
 To make this option work, you need to use `jedi:setup' instead of
 `jedi:ac-setup' to start Jedi."
-  :group 'jedi)
+  :group 'jedi
+  :type 'boolean)
+
 
 (defcustom jedi:tooltip-method '(pos-tip popup)
   "Configuration for `jedi:tooltip-show'.
 This is a list which may contain symbol(s) `pos-tip' and/or
 `popup'.  It determines tooltip method to use.  Setting this
 value to nil means to use minibuffer instead of tooltip."
-  :group 'jedi)
+  :group 'jedi
+  :type '(list (choice (const pos-tip)
+                       (const popup))))
+
 
 (defcustom jedi:get-in-function-call-timeout 3000
   "Cancel request to server for call signature after this period
 specified in in millisecond."
-  :group 'jedi)
+  :group 'jedi
+  :type 'integer)
+
 
 (defcustom  jedi:get-in-function-call-delay 1000
   "How long Jedi should wait before showing call signature
 tooltip in millisecond."
-  :group 'jedi)
+  :group 'jedi
+  :type 'integer)
+
 
 (defcustom jedi:goto-definition-config
   '((nil nil        nil)
@@ -244,11 +262,15 @@ use the setting like this::
 
 You can rearrange the order to have most useful sets of arguments
 at the top."
-  :group 'jedi)
+  :group 'jedi
+  :type '(list sexp))
+
 
 (defcustom jedi:doc-mode 'rst-mode
   "Major mode to use when showing document."
-  :group 'jedi)
+  :group 'jedi
+  :type 'symbol)
+
 
 (defcustom jedi:doc-hook '(view-mode)
   "The hook that's run after showing a document."
@@ -262,11 +284,13 @@ at the top."
 
 (defcustom jedi:doc-display-buffer 'display-buffer
   "A function to be called with a buffer to show document."
-  :group 'jedi)
+  :group 'jedi
+  :type 'function)
 
 (defcustom jedi:install-imenu nil
   "If `t', use Jedi to create `imenu' index."
-  :group 'jedi)
+  :group 'jedi
+  :type 'boolean)
 
 (defcustom jedi:imenu-create-index-function 'jedi:create-nested-imenu-index
   "`imenu-create-index-function' for Jedi.el.
@@ -274,7 +298,8 @@ It must be a function that takes no argument and return an object
 described in `imenu--index-alist'.
 This can be set to `jedi:create-flat-imenu-index'.
 Default is `jedi:create-nested-imenu-index'."
-  :group 'jedi)
+  :group 'jedi
+  :type 'function)
 
 (make-obsolete-variable 'jedi:setup-keys nil "0.1.3")
 (defcustom jedi:setup-keys nil
@@ -329,28 +354,53 @@ ropemacs's `rope-show-doc' is same as `jedi:show-doc'.  You can
 avoid collision by something like this::
 
     (setq jedi:key-show-doc (kbd \"C-c D\"))"
-  :group 'jedi)
+  :group 'jedi
+  :type 'boolean)
 
-(defcustom jedi:key-complete (kbd "<C-tab>")
+(defun jedi:-custom-set-key-string (sym defs)
+  "Convert key sequence DEFS from string and store into in SYM."
+  (custom-set-default sym (kbd defs)))
+
+(defun jedi:-custom-get-key-string (sym)
+  "Convert key sequence stored in SYM to string representation."
+  (key-description (default-value sym)))
+
+(defcustom jedi:key-complete "<C-tab>"
   "Keybind for command `jedi:complete'."
-  :group 'jedi)
+  :group 'jedi
+  :type 'string
+  :set #'jedi:-custom-set-key-string
+  :get #'jedi:-custom-get-key-string)
 
-(defcustom jedi:key-goto-definition (kbd "C-.")
+(defcustom jedi:key-goto-definition "C-."
   "Keybind for command `jedi:goto-definition'."
-  :group 'jedi)
+  :group 'jedi
+  :type 'string
+  :set #'jedi:-custom-set-key-string
+  :get #'jedi:-custom-get-key-string)
 
-(defcustom jedi:key-show-doc (kbd "C-c d")
+(defcustom jedi:key-show-doc "C-c d"
   "Keybind for command `jedi:show-doc'."
-  :group 'jedi)
+  :group 'jedi
+  :type 'string
+  :set #'jedi:-custom-set-key-string
+  :get #'jedi:-custom-get-key-string)
 
-(defcustom jedi:key-related-names (kbd "C-c r")
+(defcustom jedi:key-related-names "C-c r"
   "Keybind for command `helm-jedi-related-names' or
 `anything-jedi-related-names'."
-  :group 'jedi)
+  :group 'jedi
+  :type 'string
+  :set #'jedi:-custom-set-key-string
+  :get #'jedi:-custom-get-key-string)
 
-(defcustom jedi:key-goto-definition-pop-marker (kbd "C-,")
+(defcustom jedi:key-goto-definition-pop-marker "C-,"
   "Keybind for command `jedi:goto-definition-pop-marker'."
-  :group 'jedi)
+  :group 'jedi
+  :type 'string
+  :set #'jedi:-custom-set-key-string
+  :get #'jedi:-custom-get-key-string)
+
 
 (defcustom jedi:use-shortcuts nil
   "If non-`nil', enable the following shortcuts:
@@ -358,15 +408,18 @@ avoid collision by something like this::
 | ``M-.``  `jedi:goto-definition'
 | ``M-,``  `jedi:goto-definition-pop-marker'
 "
-  :group 'jedi)
+  :group 'jedi
+  :type 'boolean)
 
 (defcustom jedi:import-python-el-settings t
   "Automatically import settings from python.el variables."
-  :group 'jedi)
+  :group 'jedi
+  :type 'boolean)
 
 (defcustom jedi:goto-definition-marker-ring-length 16
   "Length of marker ring to store `jedi:goto-definition' call positions"
-  :group 'jedi)
+  :group 'jedi
+  :type 'integer)
 
 
 ;;; Internal variables
@@ -1275,7 +1328,9 @@ See also:
   '("pip" "install" "--upgrade"
     "git+https://github.com/davidhalter/jedi.git@master#egg=jedi")
   "Pip command to be used for `jedi:install-python-jedi-dev'."
-  :group 'jedi)
+  :group 'jedi
+  :type '(repeat string)
+  )
 
 (defun jedi:install-python-jedi-dev ()
   "Install developmental version of Python-Jedi from GitHub."

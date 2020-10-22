@@ -43,9 +43,12 @@
 
 (defconst jedi:version "0.2.8")
 
-(defvar jedi:source-dir (if load-file-name
-                            (file-name-directory load-file-name)
-                          default-directory))
+(defvar jedi:source-dir
+  (if (string-match "\*Org Src" (buffer-name (current-buffer)))
+      (file-name-directory (buffer-file-name (org-src-source-buffer (current-buffer))))
+    (if load-file-name
+        (file-name-directory load-file-name)
+      default-directory)))
 
 (defvar jedi:epc nil)
 (make-variable-buffer-local 'jedi:epc)

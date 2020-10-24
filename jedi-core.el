@@ -711,18 +711,24 @@ See also: `jedi:server-args'."
 (defun jedi:-buffer-file-name ()
   "Return `buffer-file-name' without text properties.
 See: https://github.com/tkf/emacs-jedi/issues/54"
-  (substring-no-properties (or (buffer-file-name) "")))
+  (substring-no-properties (or (if (string-match "\*Org Src" (buffer-name (current-buffer)))
+                                   (buffer-file-name (org-src-source-buffer))
+                                 (buffer-file-name))
+                               "")))
 
 (defun jedi:call-deferred (method-name)
   "Call ``Script(...).METHOD-NAME`` and return a deferred object."
-  (let ((source      (buffer-substring-no-properties (point-min) (point-max)))
-        ;; line=0 is an error for jedi, but is possible for empty buffers.
-        (line        (max 1 (count-lines (point-min) (min (1+ (point)) (point-max)))))
-        (column      (- (point) (line-beginning-position)))
-        (source-path (jedi:-buffer-file-name)))
-    (epc:call-deferred (jedi:get-epc)
-                       method-name
-                       (list source line column source-path))))
+  (with-current-buffer (if (string-match "\*Org Src" (buffer-name (current-buffer)))
+                           (org-src-source-buffer)
+                         (current-buffer))
+    (let ((source      (buffer-substring-no-properties (point-min) (point-max)))
+          ;; line=0 is an error for jedi, but is possible for empty buffers.
+          (line        (max 1 (count-lines (point-min) (min (1+ (point)) (point-max)))))
+          (column      (- (point) (line-beginning-position)))
+          (source-path (jedi:-buffer-file-name)))
+      (epc:call-deferred (jedi:get-epc)
+                         method-name
+                         (list source line column source-path)))))
 
 
 ;;; Completion

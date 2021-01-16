@@ -194,12 +194,12 @@ class JediEPCHandler(object):
         result['sys_path'] = [p for p in final_sys_path if not_seen_yet(p)]
         return result
 
-    def jedi_script(self, source, line, column, source_path):
+    def jedi_script(self, source, source_path):
         if NEED_ENCODE:
             source = source.encode('utf-8')
             source_path = source_path and source_path.encode('utf-8')
         return jedi.Script(
-            source, line, column, source_path or '', **self.script_kwargs
+            code=source,  path=source_path or '', **self.script_kwargs
         )
 
     def complete(self, *args):
@@ -217,14 +217,15 @@ class JediEPCHandler(object):
                 description=candidates_description(comp),
                 symbol=candidate_symbol(comp),
             )
-
+        source, line, column, source_path = args
         return [
             _wrap_completion_result(comp)
-            for comp in self.jedi_script(*args).completions()
+            for comp in self.jedi_script(source, source_path).complete(line, column)
         ]
 
     def get_in_function_call(self, *args):
-        sig = self.jedi_script(*args).call_signatures()
+        source, line, column, source_path = args
+        sig = self.jedi_script(source, source_path).get_signatures(line, column)
         call_def = sig[0] if sig else None
 
         if not call_def:
@@ -250,34 +251,31 @@ class JediEPCHandler(object):
         # `definitions` is a list. Each element is an instances of
         # `jedi.api_classes.BaseOutput` subclass, i.e.,
         # `jedi.api_classes.RelatedName` or `jedi.api_classes.Definition`.
-        definitions = method(self.jedi_script(*args))
+        source, line, column, source_path = args
+        definitions = method(self.jedi_script(source, source_path), line, column)
         return [dict(
             column=d.column,
             line_nr=d.line,
-            module_path=d.module_path if d.module_path != '__builtin__' else [],
+            module_path=str(d.module_path) if d.module_path != '__builtin__' else [],
             module_name=d.module_name,
             description=d.description,
         ) for d in definitions]
 
     def goto(self, *args):
-        return self._goto(jedi.Script.goto_assignments, *args)
+        return self._goto(jedi.Script.goto, *args)
 
     def related_names(self, *args):
-        return self._goto(jedi.Script.usages, *args)
+        return self._goto(jedi.Script.get_references, *args)
 
     def get_definition(self, *args):
-        definitions = self.jedi_script(*args).goto_definitions()
+        source, line, column, source_path = args
+        definitions = self.jedi_script(source, source_path).infer(line, column)
         return [definition_to_dict(d) for d in definitions]
 
     def defined_names(self, *args):
-        # XXX: there's a bug in Jedi that returns returns definitions from inside
-        # classes or functions even though all_scopes=False is set by
-        # default. Hence some additional filtering is in order.
-        #
-        # See https://github.com/davidhalter/jedi/issues/1202
         top_level_names = [
             defn
-            for defn in jedi.api.names(*args)
+            for defn in self.jedi_script(*args).get_names()
             if defn.parent().type == 'module'
         ]
         return list(map(get_names_recursively, top_level_names))
@@ -295,7 +293,7 @@ def candidate_symbol(comp):
     Return a character representing completion type.
 
     :type comp: jedi.api.Completion
-    :arg  comp: A completion object returned by `jedi.Script.completions`.
+    :arg  comp: A completion object returned by `jedi.Script.complete`.
 
     """
     try:
@@ -326,10 +324,10 @@ def definition_to_dict(d):
     return dict(
         doc=d.docstring(),
         description=d.description,
-        desc_with_module=d.desc_with_module,
+        desc_with_module=d.full_name,
         line_nr=d.line,
         column=d.column,
-        module_path=d.module_path,
+        module_path=str(d.module_path),
         name=getattr(d, 'name', []),
         full_name=getattr(d, 'full_name', []),
         type=getattr(d, 'type', []),

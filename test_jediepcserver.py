@@ -95,7 +95,7 @@ def test_defined_names_nested_classes():
 def _get_jedi_script_params(src, filename='example.py'):
     source = textwrap.dedent(src)
     lines = source.splitlines()
-    return source, len(lines), len(lines[-1]), filename
+    return source, filename, len(lines), len(lines[-1])
 
 
 def test_get_in_function_call():

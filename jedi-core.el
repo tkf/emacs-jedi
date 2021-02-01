@@ -722,7 +722,7 @@ See: https://github.com/tkf/emacs-jedi/issues/54"
         (column      (- (point) (line-beginning-position))))
     (epc:call-deferred (jedi:get-epc)
                        method-name
-                       (list source source-path line column))))
+                       (list source line column source-path))))
 
 
 ;;; Completion

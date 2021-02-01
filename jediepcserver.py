@@ -245,7 +245,7 @@ class JediEPCHandler(object):
             source_path = source_path and source_path.encode('utf-8')
         return jedi_script_wrapper(code=source, path=source_path, **self.script_kwargs)
 
-    def complete(self, source, source_path, line, column):
+    def complete(self, source, line, column, source_path):
         def _wrap_completion_result(comp):
             try:
                 docstr = comp.docstring()
@@ -265,7 +265,7 @@ class JediEPCHandler(object):
             for comp in self.jedi_script(source, source_path).complete(line, column)
         ]
 
-    def get_in_function_call(self, source, source_path, line, column):
+    def get_in_function_call(self, source, line, column, source_path):
         sig = self.jedi_script(source, source_path).get_signatures(line, column)
         call_def = sig[0] if sig else None
 
@@ -281,15 +281,15 @@ class JediEPCHandler(object):
             call_name=call_def.name,
         )
 
-    def goto(self, source, source_path, line, column):
+    def goto(self, source, line, column, source_path):
         definitions = self.jedi_script(source, source_path).goto(line, column)
         return [definition_to_short_dict(d) for d in definitions]
 
-    def related_names(self, source, source_path, line, column):
+    def related_names(self, source, line, column, source_path):
         definitions = self.jedi_script(source, source_path).get_references(line, column)
         return [definition_to_short_dict(d) for d in definitions]
 
-    def get_definition(self, source, source_path, line, column):
+    def get_definition(self, source, line, column, source_path):
         definitions = self.jedi_script(source, source_path).infer(line, column)
         return [definition_to_dict(d) for d in definitions]
 

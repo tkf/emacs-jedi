@@ -87,11 +87,14 @@ json.load
 "
     (goto-char (1- (point-max)))
     (let ((reply (jedi-testing:sync (jedi:call-deferred 'goto))))
-      (destructuring-bind (&key line_nr module_path
-                                column module_name description)
+      (destructuring-bind (&key column line_nr module_path
+                                module_name description)
           (car reply)
+        (should (integerp column))
         (should (integerp line_nr))
-        (should (stringp module_path))))))
+        (should (stringp module_path))
+        (should (stringp module_name))
+        (should (stringp description))))))
 
 (ert-deftest jedi:get-definition-request ()
   (with-python-temp-buffer
@@ -101,14 +104,17 @@ json.load
 "
     (goto-char (1- (point-max)))
     (let ((reply (jedi-testing:sync (jedi:call-deferred 'get_definition))))
-      (destructuring-bind (&key doc desc_with_module line_nr column module_path
-                                full_name name type description)
+      (destructuring-bind (&key doc description line_nr column module_path
+                                name full_name type)
           (car reply)
         (should (stringp doc))
-        (should (stringp desc_with_module))
+        (should (stringp description))
         (should (integerp line_nr))
         (should (integerp column))
-        (should (stringp module_path))))))
+        (should (stringp module_path))
+        (should (stringp name))
+        (should (stringp full_name))
+        (should (stringp type))))))
 
 (ert-deftest jedi:show-version-info ()
   (kill-buffer (get-buffer-create "*jedi:version*"))
@@ -296,7 +302,7 @@ if True:
       (search-forward "func(x)")
       (goto-char (match-beginning 0))
       (let ((reply (jedi-testing:sync (jedi:call-deferred 'get_definition))))
-        (destructuring-bind (&key doc desc_with_module line_nr column module_path
+        (destructuring-bind (&key doc line_nr column module_path
                                   full_name name type description)
             (car reply)
           (should (= line_nr def-line)))))))

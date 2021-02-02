@@ -18,7 +18,6 @@ ELPA_DIR = $(shell EMACS=$(EMACS) $(CASK) package-directory)
 # See: cask-elpa-dir
 
 VIRTUAL_EMACS = ${CASK} exec ${EMACS} -Q \
---eval "(setq python-environment--verbose t)" \
 --eval "(setq jedi:environment-root \"$(ENV)\")"
 
 .PHONY : test test-1 tryout clean-elpa requirements env clean-env clean \

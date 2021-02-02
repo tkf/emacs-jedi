@@ -2,7 +2,7 @@
 
 ;; Author: Takafumi Arakaki <aka.tkf at gmail.com>
 ;; Package-Requires: ((emacs "24") (epc "0.1.0") (python-environment "0.0.2") (cl-lib "0.5"))
-;; Version: 0.2.8
+;; Version: 0.3.0
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -41,7 +41,7 @@
   :group 'completion
   :prefix "jedi:")
 
-(defconst jedi:version "0.2.8")
+(defconst jedi:version "0.3.0")
 
 (defvar jedi:source-dir (if load-file-name
                             (file-name-directory load-file-name)
@@ -714,12 +714,12 @@ See: https://github.com/tkf/emacs-jedi/issues/54"
   (substring-no-properties (or (buffer-file-name) "")))
 
 (defun jedi:call-deferred (method-name)
-  "Call ``Script(...).METHOD-NAME`` and return a deferred object."
+  "Call ``Script(...).METHOD-NAME()`` and return a deferred object."
   (let ((source      (buffer-substring-no-properties (point-min) (point-max)))
+        (source-path (jedi:-buffer-file-name))
         ;; line=0 is an error for jedi, but is possible for empty buffers.
         (line        (max 1 (count-lines (point-min) (min (1+ (point)) (point-max)))))
-        (column      (- (point) (line-beginning-position)))
-        (source-path (jedi:-buffer-file-name)))
+        (column      (- (point) (line-beginning-position))))
     (epc:call-deferred (jedi:get-epc)
                        method-name
                        (list source line column source-path))))
@@ -1028,13 +1028,13 @@ It must take these arguments: (file-to-read other-window-flag line_number column
                  initially (erase-buffer)
                  for def in reply
                  do (cl-destructuring-bind
-                        (&key doc desc_with_module &allow-other-keys)
+                        (&key doc full_name &allow-other-keys)
                         def
                       (unless (or (null doc) (equal doc ""))
                         (if first
                             (setq first nil)
                           (insert "\n\n---\n\n"))
-                        (insert "Docstring for " desc_with_module "\n\n" doc)
+                        (insert "Docstring for " full_name "\n\n" doc)
                         (setq has-doc t)))
                  finally do
                  (if (not has-doc)

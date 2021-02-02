@@ -1,39 +1,44 @@
+os: linux
 dist: xenial
-sudo: false
 language: python
 git:
   depth: 3
 python:
   # First python version in this list is the default for matrix.include
-  # - "3.7"
+  - "3.7"
+  - "3.9"
+  - "3.8"
   - "3.6"
   - "3.5"
-  - "3.4"
   - "2.7"
 env:
-  matrix:
-    - EVM_EMACS=emacs-26.3-travis-linux-xenial
+  jobs:
+    - EVM_EMACS=emacs-27.1-travis-linux-xenial
   global:
-  # Turn on --use-mirrors option everywhere (even in tox):
-  - PIP_USE_MIRRORS=t
-matrix:
+    # Turn on --use-mirrors option everywhere (even in tox):
+    - PIP_USE_MIRRORS=t
+jobs:
   include:
-    - env: EVM_EMACS=emacs-24.4-travis
-    - env: EVM_EMACS=emacs-24.5-travis
     - env: EVM_EMACS=emacs-25.1-travis
     - env: EVM_EMACS=emacs-25.2-travis
     - env: EVM_EMACS=emacs-25.3-travis
     - env: EVM_EMACS=emacs-26.1-travis-linux-xenial
-    - env: EVM_EMACS=emacs-26.2-travis-linux-xenial
+    - env: EVM_EMACS=emacs-26.3-travis-linux-xenial
+    - env: EVM_EMACS=emacs-27.1-travis-linux-xenial
     - env: EVM_EMACS=emacs-git-snapshot-travis-linux-xenial
 
 before_install:
   - pip install -q virtualenv tox tox-travis
-  - curl -fsSkL https://gist.github.com/rejeep/ebcd57c3af83b049833b/raw > x.sh && source ./x.sh
+  - curl -fsSL https://raw.githubusercontent.com/cask/cask/v0.8.5/go | python
+  - export PATH="/home/travis/.cask/bin:$PATH"
+  - git clone https://github.com/rejeep/evm.git /home/travis/.evm
+  - export PATH="/home/travis/.evm/bin:$PATH"
+  - evm config path /tmp
   - evm install $EVM_EMACS --use --skip
   - evm list
   - emacs --version
   - cask
   - make before-test
+
 script:
   make travis-ci

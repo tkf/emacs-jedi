@@ -18,6 +18,7 @@ setup(
         "jedi>=0.11.0",
         "epc>=0.0.4",
         "argparse",
+        "setuptools",
     ],
     entry_points={
         'console_scripts': ['jediepcserver = jediepcserver:main'],

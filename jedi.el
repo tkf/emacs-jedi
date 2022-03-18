@@ -90,7 +90,7 @@ in their Emacs configuration."
   (unless (or (/= nchars 1) ;; don't complete if inserted 2+ dots
               (ac-cursor-on-diable-face-p)
               ;; don't complete if the dot is immediately after int literal
-              (looking-back "\\(\\`\\|[^._[:alnum:]]\\)[0-9]+\\."))
+              (looking-back "\\(\\`\\|[^._[:alnum:]]\\)[0-9]+\\." (beginning-of-line)))
     (jedi:complete :expand nil)))
 
 ;;;###autoload

@@ -34,8 +34,8 @@ import os
 import re
 import site
 import sys
-import pkg_resources
 from collections import namedtuple
+import packaging.version
 
 import jedi
 import jedi.api
@@ -127,8 +127,8 @@ else:
             return jedienv
 
 jedi_script_wrapper = jedi.Script
-JEDI_VERSION = pkg_resources.parse_version(jedi.__version__)
-if JEDI_VERSION < pkg_resources.parse_version('0.16.0'):
+JEDI_VERSION = packaging.version.parse(jedi.__version__)
+if JEDI_VERSION < packaging.version.parse('0.16.0'):
     class JediScriptCompatWrapper:
         def __init__(self, code, path, **kwargs):
             self.source = code
@@ -382,19 +382,18 @@ def get_names_recursively(definition, parent=None):
 
 
 def get_module_version(module):
-    notfound = object()
-    for key in ['__version__', 'version']:
-        version = getattr(module, key, notfound)
-        if version is not notfound:
-            return version
     try:
-        from pkg_resources import get_distribution, DistributionNotFound
+        from importlib.metadata import version, PackageNotFoundError
         try:
-            return get_distribution(module.__name__).version
-        except DistributionNotFound:
+            return version(module.__name__)
+        except PackageNotFoundError:
             pass
     except ImportError:
-        pass
+        notfound = object()
+        for key in ['__version__', 'version']:
+            version = getattr(module, key, notfound)
+            if version is not notfound:
+                return version
 
 
 def path_expand_vars_and_user(p):

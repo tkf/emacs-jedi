@@ -26,13 +26,10 @@ If not, see <http://www.gnu.org/licenses/>.
 """
 
 import argparse
-import glob
-import itertools
 import logging
 import logging.handlers
 import os
 import re
-import site
 import sys
 from collections import namedtuple
 import packaging.version

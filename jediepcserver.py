@@ -34,6 +34,8 @@ import os
 import re
 import site
 import sys
+import warnings
+warnings.filterwarnings('ignore', category=DeprecationWarning, message='^pkg_resources is deprecated')
 import pkg_resources
 from collections import namedtuple
 

@@ -304,7 +304,7 @@ class JediEPCHandler(object):
     def get_jedi_version(self):
         return [dict(
             name=module.__name__,
-            file=getattr(module, '__file__', []),
+            file=get_module_path(module),
             version=get_module_version(module) or [],
         ) for module in [sys, jedi, epc, sexpdata]]
 
@@ -379,6 +379,12 @@ def get_names_recursively(definition, parent=None):
         return [d] + [get_names_recursively(c, d) for c in ds]
     else:
         return [d]
+
+
+def get_module_path(module):
+    if module.__name__ in sys.builtin_module_names:
+        return '%s <built-in>' % sys.executable
+    return getattr(module, '__file__', [])
 
 
 def get_module_version(module):

@@ -120,6 +120,23 @@ else:
             _cached_jedi_environments[venv] = jedienv
             return jedienv
 
+try:
+    jedi.get_default_project
+except AttributeError:
+    jedi_get_default_project = None
+else:
+    _cached_jedi_projects = {}
+
+    def jedi_get_default_project(path):
+        """Cache jedi projects to avoid detection cost."""
+        try:
+            return _cached_jedi_projects[path]
+        except KeyError:
+            proj = _cached_jedi_projects[path] = jedi.get_default_project(path)
+            logger.debug('Calculated jedi project for %s: %s', path, proj.path)
+            return proj
+
+
 def _parse_version(version_str):
     """Return (MAJOR, MINOR, *REST) version parts
 
@@ -135,7 +152,7 @@ def _parse_version(version_str):
     except ValueError:
         return None
 
-    
+
 jedi_script_wrapper = jedi.Script
 JEDI_VERSION = _parse_version(jedi.__version__)
 if JEDI_VERSION is not None and JEDI_VERSION[:2] < (0, 16):
@@ -180,13 +197,16 @@ if JEDI_VERSION is not None and JEDI_VERSION[:2] < (0, 16):
 
     jedi_script_wrapper = JediScriptCompatWrapper
 
-elif JEDI_VERSION is not None and JEDI_VERSION[:2] >= (0, 18):
-    def script_wrapper(code, path, **kwargs):
-        project = jedi.api.Project(path, sys_path=kwargs.pop('sys_path', []))
-        kwargs['project'] = project
-        return jedi.Script(code=code, path=path, **kwargs)
 
-    jedi_script_wrapper = script_wrapper
+def _dedupe(elements):
+    dupes = set()
+
+    def not_seen_yet(val):
+        if val in dupes:
+            return False
+        dupes.add(val)
+        return True
+    return [e for e in elements if not_seen_yet(e)]
 
 
 def get_venv_sys_path(venv):
@@ -196,11 +216,28 @@ def get_venv_sys_path(venv):
     return get_venv_path(venv)
 
 
+def _wrap_completion_result(comp):
+    try:
+        docstr = comp.docstring()
+    except Exception:
+        logger.warning(
+            "Cannot get docstring for completion %s", comp, exc_info=1
+        )
+        docstr = ""
+    return dict(
+        word=comp.name,
+        doc=docstr,
+        description=candidates_description(comp),
+        symbol=candidate_symbol(comp),
+    )
+
+
 class JediEPCHandler(object):
     def __init__(self, sys_path=None, virtual_envs=None, sys_path_append=None):
         self.script_kwargs = JediEPCHandler._get_script_path_kwargs(
             sys_path, virtual_envs, sys_path_append
         )
+        logger.debug('jedi_epc_server: project kwargs=%r', self.script_kwargs)
 
     def get_sys_path(self):
         environment = self.script_kwargs.get('environment')
@@ -255,27 +292,23 @@ class JediEPCHandler(object):
             dupes.add(val)
             return True
 
-        result['sys_path'] = [p for p in final_sys_path if not_seen_yet(p)]
+        result['sys_path'] = _dedupe(final_sys_path)
         return result
 
     def jedi_script(self, source, source_path):
-        return jedi_script_wrapper(code=source, path=source_path, **self.script_kwargs)
+        script_kwargs = self.script_kwargs.copy()
+        if jedi_get_default_project:
+            sys_path = script_kwargs.pop('sys_path', None)
+            if sys_path:
+                environment_path = getattr(script_kwargs.get('environment'), 'path', None)
+                script_kwargs['project'] = jedi.api.Project(
+                    jedi_get_default_project(source_path).path,
+                    environment_path=environment_path,
+                    sys_path=sys_path,
+                )
+        return jedi_script_wrapper(code=source, path=source_path, **script_kwargs)
 
     def complete(self, source, line, column, source_path):
-        def _wrap_completion_result(comp):
-            try:
-                docstr = comp.docstring()
-            except Exception:
-                logger.warning(
-                    "Cannot get docstring for completion %s", comp, exc_info=1
-                )
-                docstr = ""
-            return dict(
-                word=comp.name,
-                doc=docstr,
-                description=candidates_description(comp),
-                symbol=candidate_symbol(comp),
-            )
         return [
             _wrap_completion_result(comp)
             for comp in self.jedi_script(source, source_path).complete(line, column)
@@ -454,11 +487,6 @@ def jedi_epc_server(
     :type log_settings: LogSettings
 
     """
-    logger.debug(
-        'jedi_epc_server: sys_path=%r virtual_env=%r sys_path_append=%r',
-        sys_path, virtual_env, sys_path_append,
-    )
-
     if not virtual_env and os.getenv('VIRTUAL_ENV'):
         logger.debug(
             'Taking virtual env from VIRTUAL_ENV: %r',

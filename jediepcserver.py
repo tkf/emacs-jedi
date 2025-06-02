@@ -180,6 +180,14 @@ if JEDI_VERSION is not None and JEDI_VERSION[:2] < (0, 16):
 
     jedi_script_wrapper = JediScriptCompatWrapper
 
+elif JEDI_VERSION >= pkg_resources.parse_version('0.18.0'):
+    def script_wrapper(code, path, **kwargs):
+        project = jedi.api.Project(path, sys_path=kwargs.pop('sys_path', []))
+        kwargs['project'] = project
+        return jedi.Script(code=code, path=path, **kwargs)
+
+    jedi_script_wrapper = script_wrapper
+
 
 def get_venv_sys_path(venv):
     if jedi_create_environment is not None:
@@ -246,6 +254,7 @@ class JediEPCHandler(object):
                 return False
             dupes.add(val)
             return True
+
         result['sys_path'] = [p for p in final_sys_path if not_seen_yet(p)]
         return result
 

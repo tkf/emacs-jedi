@@ -1260,6 +1260,18 @@ what jedi can do."
 (defvar jedi:install-server--command
   `("pip" "install" "--upgrade" ,(convert-standard-filename jedi:source-dir)))
 
+(defun jedi:python-environment-run (&rest args)
+  (if (and (equal (car-safe python-environment-virtualenv) "virtualenv") (not (executable-find "virtualenv")))
+      (let ((python-environment-virtualenv '("python" "-m" "venv")))
+        (apply #'python-environment-run args))
+    (apply #'python-environment-run args)))
+
+(defun jedi:python-environment-run-block (&rest args)
+  (if (and (equal (car-safe python-environment-virtualenv) "virtualenv") (not (executable-find "virtualenv")))
+      (let ((python-environment-virtualenv '("python" "-m" "venv")))
+        (apply #'python-environment-run-block args))
+    (apply #'python-environment-run-block args)))
+
 ;;;###autoload
 (defun jedi:install-server ()
   "This command installs Jedi server script jediepcserver.py in a
@@ -1302,12 +1314,12 @@ See also:
 - https://github.com/tkf/emacs-jedi/issues/140#issuecomment-37358527"
   (interactive)
   (deferred:$
-    (python-environment-run jedi:install-server--command
-                            jedi:environment-root
-                            jedi:environment-virtualenv)
-    (deferred:watch it
-      (lambda (_)
-        (setq-default jedi:server-command (jedi:-env-server-command))))))
+   (jedi:python-environment-run jedi:install-server--command
+                                jedi:environment-root
+                                jedi:environment-virtualenv)
+   (deferred:watch it
+                   (lambda (_)
+                     (setq-default jedi:server-command (jedi:-env-server-command))))))
 
 ;;;###autoload
 (defun jedi:reinstall-server ()
@@ -1323,9 +1335,9 @@ See also:
 (defun jedi:install-server-block ()
   "Blocking version `jedi:install-server'."
   (prog1
-      (python-environment-run-block jedi:install-server--command
-                                    jedi:environment-root
-                                    jedi:environment-virtualenv)
+      (jedi:python-environment-run-block jedi:install-server--command
+                                         jedi:environment-root
+                                         jedi:environment-virtualenv)
     (setq-default jedi:server-command (jedi:-env-server-command))))
 
 (defcustom jedi:install-python-jedi-dev-command
@@ -1340,12 +1352,12 @@ See also:
   "Install developmental version of Python-Jedi from GitHub."
   (interactive)
   (deferred:$
-    (python-environment-run jedi:install-python-jedi-dev-command
-                            jedi:environment-root
-                            jedi:environment-virtualenv)
-    (deferred:watch it
-      (lambda (_)
-        (message "\
+   (jedi:python-environment-run jedi:install-python-jedi-dev-command
+                                jedi:environment-root
+                                jedi:environment-virtualenv)
+   (deferred:watch it
+                   (lambda (_)
+                     (message "\
 Now restart EPC servers.  Then you are ready to go with Jedi-dev!")))))
 
 

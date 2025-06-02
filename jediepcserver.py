@@ -26,16 +26,14 @@ If not, see <http://www.gnu.org/licenses/>.
 """
 
 import argparse
-import glob
-import itertools
+
 import logging
 import logging.handlers
 import os
 import re
-import site
 import sys
-import pkg_resources
 from collections import namedtuple
+from importlib import metadata
 
 import jedi
 import jedi.api
@@ -91,10 +89,6 @@ parser.add_argument(
     help='start ipdb when error occurs.')
 
 
-PY3 = (sys.version_info[0] >= 3)
-NEED_ENCODE = not PY3
-
-
 LogSettings = namedtuple(
     'LogSettings',
     [
@@ -126,9 +120,25 @@ else:
             _cached_jedi_environments[venv] = jedienv
             return jedienv
 
+def _parse_version(version_str):
+    """Return (MAJOR, MINOR, *REST) version parts
+
+    MAJOR and MINOR are integers, REST is an array of strings.
+
+    Return None on failure.
+    """
+    parts = version_str.split('.', 2)
+    if len(parts) < 2:
+        return None
+    try:
+        return int(parts[0]), int(parts[1]), parts[2:]
+    except ValueError:
+        return None
+
+    
 jedi_script_wrapper = jedi.Script
-JEDI_VERSION = pkg_resources.parse_version(jedi.__version__)
-if JEDI_VERSION < pkg_resources.parse_version('0.16.0'):
+JEDI_VERSION = _parse_version(jedi.__version__)
+if JEDI_VERSION is not None and JEDI_VERSION[:2] < (0, 16):
     class JediScriptCompatWrapper:
         def __init__(self, code, path, **kwargs):
             self.source = code
@@ -240,9 +250,6 @@ class JediEPCHandler(object):
         return result
 
     def jedi_script(self, source, source_path):
-        if NEED_ENCODE:
-            source = source.encode('utf-8')
-            source_path = source_path and source_path.encode('utf-8')
         return jedi_script_wrapper(code=source, path=source_path, **self.script_kwargs)
 
     def complete(self, source, line, column, source_path):
@@ -393,14 +400,7 @@ def get_module_version(module):
         version = getattr(module, key, notfound)
         if version is not notfound:
             return version
-    try:
-        from pkg_resources import get_distribution, DistributionNotFound
-        try:
-            return get_distribution(module.__name__).version
-        except DistributionNotFound:
-            pass
-    except ImportError:
-        pass
+    return metadata.version(module.__name__)
 
 
 def path_expand_vars_and_user(p):

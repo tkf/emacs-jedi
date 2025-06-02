@@ -14,6 +14,8 @@ setup(
     name='jediepcserver',
     version='0.3.0',
     py_modules=['jediepcserver'],
+    # Requires python 3.8 for importlib.metadata
+    python_requires='>=3.8',
     install_requires=[
         "jedi>=0.11.0",
         "epc>=0.0.4",

@@ -2,6 +2,7 @@ import os
 import subprocess
 import sys
 import textwrap
+import venv
 from contextlib import contextmanager
 
 import jediepcserver as jep
@@ -142,22 +143,20 @@ def test_completion_docstring_raises(monkeypatch):
     ]
 
 
-def test_compelte_with_multiple_virtualenvs():
+def test_complete_with_multiple_virtualenvs(tmpdir):
     params = _get_jedi_script_params("""
     import os
-
     os.chd
     """)
 
     def create_venv(envname):
-        subprocess.check_call(['tox', '-e', envname, '--notest'])
-        relative_venv_path = ".tox/" + envname
-        full_venv_path = os.path.join(os.getcwd(), relative_venv_path)
-        return full_venv_path
+        subdir = tmpdir.join(envname)
+        venv.create(subdir)
+        return subdir
 
-    venv = create_venv('some-env')
-    other_venv = create_venv('other-env')
-    handler = jep.JediEPCHandler(virtual_envs=[venv, other_venv])
+    venv1 = create_venv('some-env')
+    venv2 = create_venv('other-env')
+    handler = jep.JediEPCHandler(virtual_envs=[venv1, venv2])
     result = handler.complete(*params)
     assert result == [
         {

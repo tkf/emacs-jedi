@@ -180,7 +180,7 @@ if JEDI_VERSION is not None and JEDI_VERSION[:2] < (0, 16):
 
     jedi_script_wrapper = JediScriptCompatWrapper
 
-elif JEDI_VERSION >= pkg_resources.parse_version('0.18.0'):
+elif JEDI_VERSION is not None and JEDI_VERSION[:2] >= (0, 18):
     def script_wrapper(code, path, **kwargs):
         project = jedi.api.Project(path, sys_path=kwargs.pop('sys_path', []))
         kwargs['project'] = project
